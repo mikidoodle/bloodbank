@@ -6,7 +6,8 @@ export default function RootLayout() {
       headerShown: false,
       contentStyle: {
         backgroundColor: "white",
-      }
+      },
+      animation: "fade"
     }}>
       <Stack.Screen name="index" />
     </Stack>

@@ -9,7 +9,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "simulator": "eas build --platform ios --profile development"
   },
   "jest": {
     "preset": "jest-expo"
@@ -35,7 +36,8 @@
     "react-native-screens": "3.31.1",
     "react-native-web": "~0.19.10",
     "expo-dev-client": "~4.0.23",
-    "expo-secure-store": "~13.0.2"
+    "expo-secure-store": "~13.0.2",
+    "@react-native-picker/picker": "2.7.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

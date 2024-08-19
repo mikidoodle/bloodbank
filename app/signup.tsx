@@ -11,14 +11,18 @@ import * as SecureStore from 'expo-secure-store'
 import { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from '../assets/styles/styles'
+import { Picker } from '@react-native-picker/picker'
 import Button from '@/components/Button'
 import { Link } from 'expo-router'
-export default function Index() {
+export default function Signup() {
     let [phoneNumber, setPhoneNumber] = useState<string>('')
     let [password, setPassword] = useState<string>('')
-    let [loginProcess, setLoginProcess] = useState<boolean>(false)
-    function login() {
-        setLoginProcess(true)
+    let [bloodtype, setBloodtype] = useState<
+        'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-'
+    >('A+')
+    let [signupProcess, setSignupProcess] = useState<boolean>(false)
+    function signup() {
+        setSignupProcess(true)
         fetch(`http://localhost:3000/api/login`, {
             method: 'POST',
             headers: {
@@ -31,7 +35,7 @@ export default function Index() {
         })
             .then((response) => response.json())
             .then((response) => {
-                setLoginProcess(false)
+                setSignupProcess(false)
                 if (response.error) {
                     alert(response.error)
                 } else {
@@ -39,7 +43,7 @@ export default function Index() {
                 }
             })
             .catch((error) => {
-                setLoginProcess(false)
+                setSignupProcess(false)
                 alert(error)
             })
     }
@@ -58,7 +62,11 @@ export default function Index() {
             > */}
             <SafeAreaView>
                 <Text style={{ fontSize: 24, textAlign: 'center' }}>
-                    JIPMER <Text style={{ color: '#7469B6' }}>Blood Bank</Text>
+                    <Text style={{ color: '#7469B6' }}>Sign up</Text>
+                    {'\n'}
+                    <Text style={{ fontSize: 18, color: 'gray' }}>
+                        preliminary
+                    </Text>
                 </Text>
                 <View style={{ marginTop: 20 }}>
                     <TextInput
@@ -77,11 +85,26 @@ export default function Index() {
                         onChangeText={setPassword}
                         style={styles.input}
                     />
+                    <Picker
+                        selectedValue={bloodtype}
+                        onValueChange={(itemValue, itemIndex) =>
+                            setBloodtype(itemValue)
+                        }
+                    >
+                        <Picker.Item label="A+" value="A+" />
+                        <Picker.Item label="A-" value="A-" />
+                        <Picker.Item label="B+" value="B+" />
+                        <Picker.Item label="B-" value="B-" />
+                        <Picker.Item label="AB+" value="AB+" />
+                        <Picker.Item label="AB-" value="AB-" />
+                        <Picker.Item label="O+" value="O+" />
+                        <Picker.Item label="O-" value="O-" />
+                    </Picker>
                 </View>
-                <Button onPress={login} disabled={loginProcess}>
-                    {loginProcess ? 'Logging in...' : 'Login'}
+                <Button onPress={signup} disabled={signupProcess}>
+                    {signupProcess ? 'Creating account...' : 'Create Account'}
                 </Button>
-                <Link href="/signup">
+                <Link href="/">
                     <Text
                         style={{
                             textAlign: 'center',
@@ -89,7 +112,7 @@ export default function Index() {
                             color: '#7469B6',
                         }}
                     >
-                        Don't have an account? Sign up.
+                        Log in
                     </Text>
                 </Link>
             </SafeAreaView>
