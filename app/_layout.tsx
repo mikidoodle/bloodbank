@@ -10,6 +10,7 @@ export default function RootLayout() {
       animation: "fade"
     }}>
       <Stack.Screen name="index" />
+      <Stack.Screen name="signup" />
     </Stack>
   );
 }

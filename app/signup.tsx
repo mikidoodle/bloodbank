@@ -1,4 +1,5 @@
 import {
+    Alert,
     Keyboard,
     Pressable,
     ScrollView,
@@ -14,16 +15,20 @@ import styles from '../assets/styles/styles'
 import { Picker } from '@react-native-picker/picker'
 import Button from '@/components/Button'
 import { Link } from 'expo-router'
+import TwoRowInput from '@/components/TwoRowInput'
 export default function Signup() {
     let [phoneNumber, setPhoneNumber] = useState<string>('')
     let [password, setPassword] = useState<string>('')
+    let [weight, setWeight] = useState<string>('')
+    let [height, setHeight] = useState<string>('')
+    let [age, setAge] = useState<string>('')
     let [bloodtype, setBloodtype] = useState<
         'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-'
     >('A+')
     let [signupProcess, setSignupProcess] = useState<boolean>(false)
     function signup() {
         setSignupProcess(true)
-        fetch(`http://localhost:3000/api/login`, {
+        fetch(`http://localhost:3000/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -36,6 +41,7 @@ export default function Signup() {
             .then((response) => response.json())
             .then((response) => {
                 setSignupProcess(false)
+                Alert.alert('Signup', JSON.stringify(response))
                 if (response.error) {
                     alert(response.error)
                 } else {
@@ -69,6 +75,15 @@ export default function Signup() {
                     </Text>
                 </Text>
                 <View style={{ marginTop: 20 }}>
+                    <Text
+                        style={{
+                            textAlign: 'left',
+                            fontSize: 20,
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        Info
+                    </Text>
                     <TextInput
                         placeholder="phone number"
                         autoComplete="tel"
@@ -85,11 +100,60 @@ export default function Signup() {
                         onChangeText={setPassword}
                         style={styles.input}
                     />
+
+                    <Text
+                        style={{
+                            textAlign: 'left',
+                            fontSize: 20,
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        Biodata
+                    </Text>
+                    <TwoRowInput
+                        placeholder="age"
+                        value={age}
+                        setValue={setAge}
+                        keyboardType="numeric"
+                    >
+                        years
+                    </TwoRowInput>
+                    <TwoRowInput
+                        placeholder="height"
+                        value={height}
+                        setValue={setHeight}
+                        keyboardType="numeric"
+                    >
+                        cm
+                    </TwoRowInput>
+                    <TwoRowInput
+                        placeholder="weight"
+                        value={weight}
+                        setValue={setWeight}
+                        keyboardType="numeric"
+                    >
+                        kg
+                    </TwoRowInput>
+                    <Text
+                        style={{
+                            textAlign: 'left',
+                            fontSize: 16,
+                            marginLeft: 10,
+                            color: 'gray',
+                        }}
+                    >
+                        Blood Type
+                    </Text>
                     <Picker
                         selectedValue={bloodtype}
                         onValueChange={(itemValue, itemIndex) =>
                             setBloodtype(itemValue)
                         }
+                        style={{
+                            margin: 10,
+                            borderRadius: 9,
+                            backgroundColor: '#F3F3F3',
+                        }}
                     >
                         <Picker.Item label="A+" value="A+" />
                         <Picker.Item label="A-" value="A-" />

@@ -12,14 +12,14 @@ import { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from '../assets/styles/styles'
 import Button from '@/components/Button'
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
 export default function Index() {
     let [phoneNumber, setPhoneNumber] = useState<string>('')
     let [password, setPassword] = useState<string>('')
     let [loginProcess, setLoginProcess] = useState<boolean>(false)
     function login() {
         setLoginProcess(true)
-        fetch(`http://localhost:3000/api/login`, {
+        fetch(`http://localhost:3000/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -32,6 +32,7 @@ export default function Index() {
             .then((response) => response.json())
             .then((response) => {
                 setLoginProcess(false)
+                alert(JSON.stringify(response))
                 if (response.error) {
                     alert(response.error)
                 } else {
@@ -81,7 +82,9 @@ export default function Index() {
                 <Button onPress={login} disabled={loginProcess}>
                     {loginProcess ? 'Logging in...' : 'Login'}
                 </Button>
-                <Link href="/signup">
+                <Pressable onPress={()=>{
+                    router.push('/signup')
+                }}>
                     <Text
                         style={{
                             textAlign: 'center',
@@ -91,7 +94,7 @@ export default function Index() {
                     >
                         Don't have an account? Sign up.
                     </Text>
-                </Link>
+                </Pressable>
             </SafeAreaView>
             {/* </TouchableWithoutFeedback> */}
         </ScrollView>

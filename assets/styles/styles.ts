@@ -8,6 +8,6 @@ export default StyleSheet.create({
         width: 300,
         margin: 10,
         borderRadius: 9,
-        backgroundColor: '#F3f3f3',
+        backgroundColor: '#F3F3F3',
     },
 })
