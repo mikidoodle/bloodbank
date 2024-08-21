@@ -1,6 +1,7 @@
 node_modules/
 .expo/
 package-lock.json
+yarn.lock
 dist/
 npm-debug.*
 *.jks

@@ -18,6 +18,7 @@ import { Link } from 'expo-router'
 import TwoRowInput from '@/components/TwoRowInput'
 export default function Signup() {
     let [phoneNumber, setPhoneNumber] = useState<string>('')
+    let [name, setName] = useState<string>('')
     let [password, setPassword] = useState<string>('')
     let [weight, setWeight] = useState<string>('')
     let [height, setHeight] = useState<string>('')
@@ -28,20 +29,33 @@ export default function Signup() {
     let [signupProcess, setSignupProcess] = useState<boolean>(false)
     function signup() {
         setSignupProcess(true)
-        fetch(`http://localhost:3000/login`, {
+        console.log({
+            phoneNumber,
+            password,
+            name,
+            weight,
+            height,
+            age,
+            bloodtype,
+        })
+        fetch(`http://localhost:3000/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                phoneNumber,
-                password,
+                phonenumber: phoneNumber,
+                password: password,
+                name: name,
+                weight: weight,
+                height: height,
+                age: age,
+                bloodtype: bloodtype,
             }),
         })
             .then((response) => response.json())
             .then((response) => {
                 setSignupProcess(false)
-                Alert.alert('Signup', JSON.stringify(response))
                 if (response.error) {
                     alert(response.error)
                 } else {
@@ -56,7 +70,6 @@ export default function Signup() {
     return (
         <ScrollView
             contentContainerStyle={{
-                flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
             }}
@@ -90,6 +103,13 @@ export default function Signup() {
                         keyboardType="phone-pad"
                         value={phoneNumber}
                         onChangeText={setPhoneNumber}
+                        style={styles.input}
+                    />
+                    <TextInput
+                        placeholder="Name"
+                        autoComplete="name"
+                        value={name}
+                        onChangeText={setName}
                         style={styles.input}
                     />
                     <TextInput

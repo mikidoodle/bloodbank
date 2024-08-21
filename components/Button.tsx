@@ -1,3 +1,4 @@
+import styles from '@/assets/styles/styles'
 import { Pressable, Text } from 'react-native'
 
 export default function Button(props: {
@@ -8,23 +9,16 @@ export default function Button(props: {
     return (
         <Pressable
             onPress={props.onPress}
-            style={{
-                backgroundColor: '#AD88C6',
-                padding: 10,
-                margin: 10,
-                borderRadius: 9,
-                width: 300,
-                shadowColor: '#E1AFD1',
-                shadowRadius: 20,
-                shadowOffset: {
-                    width: 0,
-                    height: 0,
-                },
-                shadowOpacity: 0.5,
-            }}
+            style={props.disabled ? styles.disabledButton : styles.button}
             disabled={props.disabled}
         >
-            <Text style={{ textAlign: 'center', fontSize: 20 }}>
+            <Text
+                style={{
+                    textAlign: 'center',
+                    fontSize: 20,
+                    color: props.disabled ? 'grey' : 'black',
+                }}
+            >
                 {props.children}
             </Text>
         </Pressable>

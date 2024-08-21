@@ -1,21 +1,25 @@
 {
-  "cli": {
-    "version": ">= 10.2.3"
-  },
-  "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal",
-      "ios": {
-        "simulator": true
-      }
+    "cli": {
+        "version": ">= 10.2.3"
     },
-    "preview": {
-      "distribution": "internal"
+    "build": {
+        "base-local": {
+            "prebuildCommand": "prebuild --npm"
+        },
+        "development": {
+            "developmentClient": true,
+
+            "distribution": "internal",
+            "ios": {
+                "simulator": true
+            }
+        },
+        "preview": {
+            "distribution": "internal"
+        },
+        "production": {}
     },
-    "production": {}
-  },
-  "submit": {
-    "production": {}
-  }
+    "submit": {
+        "production": {}
+    }
 }

@@ -8,7 +8,7 @@ import {
     View,
 } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from '../assets/styles/styles'
 import Button from '@/components/Button'
@@ -17,6 +17,13 @@ export default function Index() {
     let [phoneNumber, setPhoneNumber] = useState<string>('')
     let [password, setPassword] = useState<string>('')
     let [loginProcess, setLoginProcess] = useState<boolean>(false)
+    useEffect(()=>{
+        SecureStore.getItemAsync('token').then((token) => {
+            if (token) {
+                router.push('/home')
+            }
+        })
+    })
     function login() {
         setLoginProcess(true)
         fetch(`http://localhost:3000/login`, {
@@ -25,18 +32,18 @@ export default function Index() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                phoneNumber,
-                password,
+                phonenumber: phoneNumber,
+                password: password,
             }),
         })
             .then((response) => response.json())
-            .then((response) => {
+            .then(async (response) => {
                 setLoginProcess(false)
-                alert(JSON.stringify(response))
                 if (response.error) {
-                    alert(response.error)
+                    alert(response.message)
                 } else {
-                    SecureStore.setItemAsync('token', response.token)
+                    alert(response.message)
+                    await SecureStore.setItemAsync('token', response.token)
                 }
             })
             .catch((error) => {
@@ -82,9 +89,12 @@ export default function Index() {
                 <Button onPress={login} disabled={loginProcess}>
                     {loginProcess ? 'Logging in...' : 'Login'}
                 </Button>
-                <Pressable onPress={()=>{
-                    router.push('/signup')
-                }}>
+                <Pressable
+                    onPress={() => {
+                        router.push('/signup')
+                    }}
+                    style={{ marginTop: 20 }}
+                >
                     <Text
                         style={{
                             textAlign: 'center',
