@@ -11,14 +11,14 @@ export default function Card(props: {
         <View
             style={{
                 width: "40%",
-                height: 100,
-                backgroundColor: '#f3f3f3',
+                height: 120,
+                backgroundColor: '#fff',
                 borderRadius: 10,
                 justifyContent: 'center',
                 alignItems: 'center',
             }}
         >
-            <Octicons name={props.icon} size={24} color={props.iconColor} />
+            <Octicons name={props.icon} size={28} color={props.iconColor} />
             <Text
                 style={{
                     fontSize: 24,

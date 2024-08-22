@@ -20,7 +20,8 @@ export default function Index() {
     useEffect(()=>{
         SecureStore.getItemAsync('token').then((token) => {
             if (token) {
-                router.push('/home')
+                console.log(token)
+                router.push('/user')
             }
         })
     })

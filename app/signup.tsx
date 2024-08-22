@@ -14,7 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from '../assets/styles/styles'
 import { Picker } from '@react-native-picker/picker'
 import Button from '@/components/Button'
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
 import TwoRowInput from '@/components/TwoRowInput'
 export default function Signup() {
     let [phoneNumber, setPhoneNumber] = useState<string>('')
@@ -60,6 +60,7 @@ export default function Signup() {
                     alert(response.error)
                 } else {
                     SecureStore.setItemAsync('token', response.token)
+                    router.push('/user')
                 }
             })
             .catch((error) => {
