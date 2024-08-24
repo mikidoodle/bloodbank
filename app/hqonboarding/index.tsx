@@ -10,12 +10,11 @@ import {
 import * as SecureStore from 'expo-secure-store'
 import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import styles from '../assets/styles/styles'
+import styles from '../../assets/styles/styles'
 import Button from '@/components/Button'
 import { Link, router } from 'expo-router'
-export default function Index() {
-    let [phoneNumber, setPhoneNumber] = useState<string>('')
-    let [password, setPassword] = useState<string>('')
+export default function Onboarding() {
+    let [loginCode, setLoginCode] = useState<string>('')
     let [loginProcess, setLoginProcess] = useState<boolean>(false)
     useEffect(()=>{
         SecureStore.getItemAsync('token').then((token) => {
@@ -27,14 +26,13 @@ export default function Index() {
     })
     function login() {
         setLoginProcess(true)
-        fetch(`http://localhost:3000/login`, {
+        fetch(`http://localhost:3000/hqlogin`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                phonenumber: phoneNumber,
-                password: password,
+                loginCode: loginCode,
             }),
         })
             .then((response) => response.json())
@@ -44,7 +42,7 @@ export default function Index() {
                     alert(response.message)
                 } else {
                     alert(response.message)
-                    await SecureStore.setItemAsync('token', response.token)
+                    await SecureStore.setItemAsync('token', 'hq-'+response.token)
                 }
             })
             .catch((error) => {
@@ -70,20 +68,17 @@ export default function Index() {
                     JIPMER <Text style={{ color: '#7469B6' }}>Blood Bank</Text>
                 </Text>
                 <View style={{ marginTop: 20 }}>
+                    <Text style={{
+                        fontSize: 16,
+                        color: '#7469B6',
+                        textAlign: 'center',
+                    }}>Login Code</Text>
                     <TextInput
-                        placeholder="phone number"
-                        autoComplete="tel"
-                        keyboardType="phone-pad"
-                        value={phoneNumber}
-                        onChangeText={setPhoneNumber}
-                        style={styles.input}
-                    />
-                    <TextInput
-                        placeholder="password"
+                        placeholder="login code"
                         autoComplete="off"
                         secureTextEntry={true}
-                        value={password}
-                        onChangeText={setPassword}
+                        value={loginCode}
+                        onChangeText={setLoginCode}
                         style={styles.input}
                     />
                 </View>
@@ -92,7 +87,7 @@ export default function Index() {
                 </Button>
                 <Pressable
                     onPress={() => {
-                        router.push('/signup')
+                        router.push('/')
                     }}
                     style={{ marginTop: 20 }}
                 >
@@ -103,23 +98,7 @@ export default function Index() {
                             color: '#7469B6',
                         }}
                     >
-                        Don't have an account? Sign up.
-                    </Text>
-                </Pressable>
-                <Pressable
-                    onPress={() => {
-                        router.push('/hqonboarding')
-                    }}
-                    style={{ marginTop: 20 }}
-                >
-                    <Text
-                        style={{
-                            textAlign: 'center',
-                            fontSize: 16,
-                            color: '#7469B6',
-                        }}
-                    >
-                        Blood Bank login
+                        Donor Log In
                     </Text>
                 </Pressable>
             </SafeAreaView>
