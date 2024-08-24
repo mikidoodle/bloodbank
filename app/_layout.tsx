@@ -14,6 +14,7 @@ export default function RootLayout() {
       <Stack.Screen name="signup" />
       <Stack.Screen name="user/index" />
       <Stack.Screen name="hqonboarding/index" />
+      <Stack.Screen name="hq/index" />
     </Stack>
   );
 }

@@ -14,23 +14,21 @@ import { Link, router } from 'expo-router'
 import Card from '@/components/Card'
 import Octicons from '@expo/vector-icons/Octicons'
 
-export default function Home() {
+export default function HQHome() {
     let [refreshing, setRefreshing] = useState<boolean>(false)
-    let [name, setName] = useState<string>('')
-    let [donated, setDonated] = useState<number | null>(null)
-    let [lastDonation, setLastDonation] = useState<string>('')
     let [totalDonators, setTotalDonators] = useState<number | null>(null)
-    let [donatingSince, setDonatingSince] = useState<string>('')
+    let [totalDonations, setTotalDonations] = useState<number | null>(null)
+
     async function load(refresh = false) {
         if (refresh) setRefreshing(true)
         let token = await SecureStore.getItemAsync('token')
-        fetch(`http://localhost:3000/getUserData`, {
+        fetch(`http://localhost:3000/hq/getStats`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                token,
+                loginCode: token,
             }),
         })
             .then((response) => response.json())
@@ -38,11 +36,11 @@ export default function Home() {
                 if (refresh) setRefreshing(false)
                 if (response.error) {
                     Alert.alert(
-                        'Error',
+                        'Unauthorized Access',
                         response.error, //login again redirect
                         [
                             {
-                                text: 'Sign in',
+                                text: 'Go back',
                                 onPress: () => {
                                     SecureStore.deleteItemAsync('token')
                                     router.navigate('/')
@@ -51,16 +49,9 @@ export default function Home() {
                         ]
                     )
                 } else {
-                    setName(response.data.name)
-                    setDonated(response.data.donated)
-                    setLastDonation(response.data.lastDonated)
-                    setTotalDonators(response.data.totalDonators)
-                    setDonatingSince(response.data.donatingSince)
+                    setTotalDonators(response.data.totalDonors)
+                    setTotalDonations(response.data.totalDonated)
                 }
-            })
-            .catch((error) => {
-                if (refresh) setRefreshing(true)
-                console.log(error)
             })
     }
     useEffect(() => {
@@ -81,11 +72,12 @@ export default function Home() {
                     justifyContent: 'space-between',
                     width: '80%',
                     marginBottom: 40,
-                    marginTop: 20
+                    marginTop: 20,
                 }}
             >
                 <Text style={{ fontSize: 24, textAlign: 'center' }}>
-                    JIPMER <Text style={{ color: '#7469B6' }}>Blood Bank</Text>
+                    JIPMER{' '}
+                    <Text style={{ color: '#7469B6' }}>Blood Center HQ</Text>
                 </Text>
                 <Pressable
                     onPress={() => load(true)}
@@ -119,11 +111,15 @@ export default function Home() {
                         justifyContent: 'center',
                     }}
                 >
-                    <Text style={{ fontSize: 28, textAlign: 'left' }}>
-                        Hello{name.trim() === '' ? '!' : ', '}
-                        <Text style={{ color: '#7469B6', fontWeight: 'bold' }}>
-                            {name}
-                        </Text>
+                    <Text
+                        style={{
+                            fontSize: 28,
+                            textAlign: 'left',
+                            color: '#7469B6',
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        Stats
                     </Text>
                 </View>
                 <View
@@ -146,40 +142,18 @@ export default function Home() {
                         }}
                     >
                         <Card
-                            icon="heart-fill"
-                            iconColor="#AD88C6"
-                            title={donated?.toString() || ''}
-                            subtitle="units donated"
-                        />
-                        <Card
-                            icon="calendar"
-                            iconColor="#AD88C6"
-                            title={lastDonation}
-                            subtitle="last donation"
-                        />
-                    </View>
-                    <View
-                        style={{
-                            width: '100%',
-                            gap: 10,
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginBottom: 20,
-                        }}
-                    >
-                        <Card
                             icon="code-of-conduct"
                             iconColor="#AD88C6"
                             title={totalDonators?.toString() || ''}
                             subtitle="total donators"
                         />
                         <Card
-                            icon="graph"
+                            icon="heart-fill"
                             iconColor="#AD88C6"
-                            title={donatingSince}
-                            subtitle="donating since"
+                            title={totalDonations?.toString() || ''}
+                            subtitle="total donated"
                         />
+                        
                     </View>
                 </View>
             </ScrollView>

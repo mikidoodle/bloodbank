@@ -4,10 +4,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
 const Tab = createBottomTabNavigator()
 const ModalStack = createStackNavigator()
-import Home from './home'
-import QR from './qr'
-import Settings from './settings'
-export default function Index() {
+import HQHome from './home'
+import Camera from './camera'
+export default function HQIndex() {
     return (
         <>
             <Tab.Navigator
@@ -18,10 +17,6 @@ export default function Index() {
                     headerShown: false,
                     tabBarShowLabel: false,
                     tabBarStyle: {
-                        /*position: "absolute",
-            bottom: 25,
-            left: 33.5,
-            width: 325,*/
                         position: 'absolute',
                         bottom: '0%',
                         left: '0%',
@@ -47,17 +42,8 @@ export default function Index() {
                 initialRouteName="home"
             >
                 <Tab.Screen
-                    name="qr"
-                    component={QR}
-                    options={{
-                        tabBarIcon: ({ color, size }) => (
-                            <Octicons name="heart" color={color} size={size} />
-                        ),
-                    }}
-                />
-                <Tab.Screen
                     name="home"
-                    component={Home}
+                    component={HQHome}
                     options={{
                         tabBarIcon: ({ color, size }) => (
                             <Octicons name="home" color={color} size={size} />
@@ -65,11 +51,11 @@ export default function Index() {
                     }}
                 />
                 <Tab.Screen
-                    name="settings"
-                    component={Settings}
+                    name="camera"
+                    component={Camera}
                     options={{
                         tabBarIcon: ({ color, size }) => (
-                            <Octicons name="gear" color={color} size={size} />
+                            <Octicons name="paste" color={color} size={size} />
                         ),
                     }}
                 />

@@ -20,13 +20,13 @@ export default function Onboarding() {
         SecureStore.getItemAsync('token').then((token) => {
             if (token) {
                 console.log(token)
-                router.push('/user')
+                router.push('/hq')
             }
         })
     })
     function login() {
         setLoginProcess(true)
-        fetch(`http://localhost:3000/hqlogin`, {
+        fetch(`http://localhost:3000/hq/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export default function Onboarding() {
             > */}
             <SafeAreaView>
                 <Text style={{ fontSize: 24, textAlign: 'center' }}>
-                    JIPMER <Text style={{ color: '#7469B6' }}>Blood Bank</Text>
+                    JIPMER <Text style={{ color: '#7469B6' }}>Blood Center</Text>
                 </Text>
                 <View style={{ marginTop: 20 }}>
                     <Text style={{

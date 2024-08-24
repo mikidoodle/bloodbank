@@ -17,11 +17,15 @@ export default function Index() {
     let [phoneNumber, setPhoneNumber] = useState<string>('')
     let [password, setPassword] = useState<string>('')
     let [loginProcess, setLoginProcess] = useState<boolean>(false)
-    useEffect(()=>{
+    useEffect(() => {
         SecureStore.getItemAsync('token').then((token) => {
             if (token) {
-                console.log(token)
-                router.push('/user')
+                if (token.startsWith('hq-')) {
+                    router.push('/hq')
+                } else {
+                    console.log(token)
+                    router.push('/user')
+                }
             }
         })
     })
@@ -67,7 +71,8 @@ export default function Index() {
             > */}
             <SafeAreaView>
                 <Text style={{ fontSize: 24, textAlign: 'center' }}>
-                    JIPMER <Text style={{ color: '#7469B6' }}>Blood Bank</Text>
+                    JIPMER{' '}
+                    <Text style={{ color: '#7469B6' }}>Blood Center</Text>
                 </Text>
                 <View style={{ marginTop: 20 }}>
                     <TextInput
@@ -103,7 +108,7 @@ export default function Index() {
                             color: '#7469B6',
                         }}
                     >
-                        Don't have an account? Sign up.
+                        Sign up
                     </Text>
                 </Pressable>
                 <Pressable
@@ -119,7 +124,7 @@ export default function Index() {
                             color: '#7469B6',
                         }}
                     >
-                        Blood Bank login
+                        Blood Center login
                     </Text>
                 </Pressable>
             </SafeAreaView>
