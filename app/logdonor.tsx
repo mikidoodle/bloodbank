@@ -1,4 +1,4 @@
-import { View, Platform, Text } from 'react-native'
+import { View, Platform, Text, Alert } from 'react-native'
 import { Link, router, useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useState } from 'react'
@@ -32,6 +32,7 @@ export default function Modal() {
     const token = local.token
     let [donorData, setDonorData] = useState<any>({})
     let [verifying, setVerifying] = useState<boolean>(false)
+    let [marking, setMarking] = useState<boolean>(false)
     let [loading, setLoading] = useState<boolean>(true)
     useEffect(() => {
         fetch(`http://192.168.0.214:3000/hq/getDonor`, {
@@ -82,6 +83,31 @@ export default function Modal() {
                     newDonorData.verified = true
                     newDonorData.bloodtype = bloodtype
                     setDonorData(newDonorData)
+                }
+            })
+    }
+
+    function markAsDonated() {
+        setMarking(true)
+        fetch(`http://192.168.0.214:3000/hq/markDonated`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: token,
+                uuid: uuid,
+            }),
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.error) {
+                    setMarking(false)
+                    alert(response.message)
+                } else {
+                    setMarking(false)
+                    alert(response.message)
+                    router.dismiss()
                 }
             })
     }
@@ -207,11 +233,41 @@ export default function Modal() {
                                     value="Bombay blood group"
                                 />
                             </Picker>
-                            <Button onPress={verifyDonor} disabled={verifying}>
-                                <Text>Verify</Text>
+                            <Button
+                                onPress={() => {
+                                    if (bloodtype !== donorData.bloodtype) {
+                                        Alert.alert(
+                                            'Warning',
+                                            "The blood type you selected is different from the donor's entered blood type. Are you sure you want to verify the donor with this blood type?",
+                                            [
+                                                {
+                                                    text: 'No',
+                                                    style: 'cancel',
+                                                },
+                                                {
+                                                    text: 'Yes',
+                                                    onPress: verifyDonor,
+                                                    style: 'destructive',
+                                                },
+                                            ]
+                                        )
+                                    } else {
+                                        verifyDonor()
+                                    }
+                                }}
+                                disabled={verifying}
+                            >
+                                <Text>Verify{verifying ? 'ing...' : ''}</Text>
                             </Button>
                         </View>
                     ) : null}
+                    <Button
+                        onPress={markAsDonated}
+                        disabled={!donorData.verified || marking}
+                    >
+                        Mark{marking ? 'ing' : ''} as donated
+                        {marking ? '...' : ''}
+                    </Button>
                 </View>
             )}
             <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />

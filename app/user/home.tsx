@@ -24,7 +24,7 @@ export default function Home() {
     async function load(refresh = false) {
         if (refresh) setRefreshing(true)
         let token = await SecureStore.getItemAsync('token')
-        fetch(`http://localhost:3000/getUserData`, {
+        fetch(`http://192.168.0.214:3000/getUserData`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -67,6 +67,28 @@ export default function Home() {
         console.log('loading')
         load(false)
     }, [])
+    function sendnotif() {
+        fetch(`https://exp.host/--/api/v2/push/send`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+            body: JSON.stringify({
+                to: 'ExponentPushToken[bUJ1daKtyCmekpPkxcnHy-]',
+                title: 'Hello',
+                body: 'World',
+                
+            }),
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                console.log(response)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
     return (
         <SafeAreaView
             style={{
@@ -81,11 +103,12 @@ export default function Home() {
                     justifyContent: 'space-between',
                     width: '80%',
                     marginBottom: 40,
-                    marginTop: 20
+                    marginTop: 20,
                 }}
             >
                 <Text style={{ fontSize: 24, textAlign: 'center' }}>
-                    JIPMER <Text style={{ color: '#7469B6' }}>Blood Center</Text>
+                    JIPMER{' '}
+                    <Text style={{ color: '#7469B6' }}>Blood Center</Text>
                 </Text>
                 <Pressable
                     onPress={() => load(true)}
@@ -181,6 +204,9 @@ export default function Home() {
                             subtitle="donating since"
                         />
                     </View>
+                    <Button onPress={sendnotif}>
+                        Notifications
+                    </Button>
                 </View>
             </ScrollView>
         </SafeAreaView>

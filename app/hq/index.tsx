@@ -6,7 +6,10 @@ const Tab = createBottomTabNavigator()
 const ModalStack = createStackNavigator()
 import HQHome from './home'
 import Camera from './camera'
+import { useEffect } from 'react'
+
 export default function HQIndex() {
+    
     return (
         <>
             <Tab.Navigator

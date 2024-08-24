@@ -155,6 +155,9 @@ export default function HQHome() {
                         />
                         
                     </View>
+                    <Button onPress={() => router.navigate('/notifications')}>
+                        Notifications
+                        </Button>
                 </View>
             </ScrollView>
         </SafeAreaView>
