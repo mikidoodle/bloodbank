@@ -1,5 +1,5 @@
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
     Pressable,
     StyleSheet,
@@ -9,15 +9,22 @@ import {
 } from 'react-native'
 import Button from '@/components/Button'
 import Octicons from '@expo/vector-icons/Octicons'
+import * as SecureStore from 'expo-secure-store'
 import { router } from 'expo-router'
 export default function Camera() {
-    const [facing, setFacing] = useState<CameraType>('back')
     const [permission, requestPermission] = useCameraPermissions()
     const [flash, setFlash] = useState(false)
     const [side, setSide] = useState<'front' | 'back'>('back')
     const [currentData, setCurrentData] = useState<any>('')
-    const [height, setHeight] = useState(0)
-    const [width, setWidth] = useState(0)
+    const [token, setToken] = useState<string | null>('')
+
+    useEffect(() => {
+        async function getToken() {
+        let t = await SecureStore.getItemAsync('token')
+        setToken(t)
+        }
+        getToken()
+    }, [])
     function toggleFlash() {
         setFlash(!flash)
     }
@@ -56,56 +63,15 @@ export default function Camera() {
                     barcodeTypes: ['qr'],
                 }}
                 onBarcodeScanned={(result) => {
-                    if (
-                        //scanShutoff ||
-                        result.data.startsWith('bloodbank-') !== true
-                    ) {
+                    if (result.data.startsWith('bloodbank-') !== true) {
                         setCurrentData('')
                     } else {
-
                         setCurrentData(result.data)
-                        setHeight(result.cornerPoints[0].y-200)
-                        setWidth(result.cornerPoints[0].x)
-                        /*
-                        router.push({
-                            pathname: '/logdonor',
-                            params: {
-                                uuid: result.data,
-                            },
-                        })
-                        setScanShutoff(true)*/
                     }
                 }}
                 enableTorch={flash}
             ></CameraView>
-            { currentData !== '' ? <Pressable
-                style={{
-                    borderRadius: 64,
-                    backgroundColor: '#fff',
-                    padding: 10,
-                    position: 'absolute',
-                    //use the height and width to position the button
-                    transform: [{ translateY: height }, { translateX: width }],
-                    elevation: 10,
-                }}
-                onPress={() => {
-                    router.push({
-                        pathname: '/logdonor',
-                        params: {
-                            uuid: currentData,
-                        },
-                    })
-                }}
-            >
-                <Text
-                    style={{
-                        fontSize: 18,
-                        color: '#7469B6',
-                    }}
-                >
-                    Scan!
-                </Text>
-            </Pressable> : null}
+
             <View
                 style={{
                     flexDirection: 'row',
@@ -131,6 +97,33 @@ export default function Camera() {
                 >
                     <Octicons name="sync" size={28} color="#7469B6" />
                 </Pressable>
+                {currentData !== '' ? (
+                    <Pressable
+                        style={{
+                            borderRadius: 64,
+                            backgroundColor: '#fff',
+                            padding: 10,
+                        }}
+                        onPress={() => {
+                            router.push({
+                                pathname: '/logdonor',
+                                params: {
+                                    uuid: currentData,
+                                    token: token
+                                },
+                            })
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontSize: 20,
+                                color: '#7469B6',
+                            }}
+                        >
+                            Scan!
+                        </Text>
+                    </Pressable>
+                ) : null}
                 <Pressable
                     style={{
                         borderRadius: 64,

@@ -24,7 +24,7 @@ export default function Signup() {
     let [height, setHeight] = useState<string>('')
     let [age, setAge] = useState<string>('')
     let [bloodtype, setBloodtype] = useState<
-        'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-'
+        'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-' | 'Bombay blood group'
     >('A+')
     let [signupProcess, setSignupProcess] = useState<boolean>(false)
     function signup() {
@@ -184,6 +184,7 @@ export default function Signup() {
                         <Picker.Item label="AB-" value="AB-" />
                         <Picker.Item label="O+" value="O+" />
                         <Picker.Item label="O-" value="O-" />
+                        <Picker.Item label="Bombay blood group" value="Bombay blood group" />
                     </Picker>
                 </View>
                 <Button onPress={signup} disabled={signupProcess}>
