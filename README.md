@@ -16,7 +16,7 @@ I wrote the app using React Native w/ Expo and decided to try using NestJS for t
 
 # Running The App
 
-> ⚠️ This is an unfinished project. I’ll make a post on #ship when it’s ready, but as it stands nothing will work as the backend is not public.
+> ⚠️ This is an unfinished project. I’ll make a post on #ship when it’s ready, but as it stands nothing will work as you'd need to clone the [backend](https://github.com/mikidoodle/bloodbankapi) and set up an expo access token, a postgres DB and much more.
 
 cd into the project, and then follow the [Expo guide](https://docs.expo.dev/get-started/set-up-your-environment/)
 Make sure you click **Development build** and toggle **Build with Expo Application Services** if you haven’t done this before. After that, run the project with the command ```npx expo start```
