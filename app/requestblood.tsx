@@ -1,4 +1,4 @@
-import { View, Platform, Text, Alert } from 'react-native'
+import { View, Platform, Text, Alert, TextInput } from 'react-native'
 import { Link, router, useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useState } from 'react'
@@ -7,10 +7,12 @@ import { Picker } from '@react-native-picker/picker'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Button from '@/components/Button'
 import TwoRowInput from '@/components/TwoRowInput'
+import styles from '@/assets/styles/styles'
 export default function Modal() {
     const local = useLocalSearchParams()
     let uuid = local.uuid
     let [bloodtype, setBloodtype] = useState<string>('A+')
+    let [phoneNumber, setPhoneNumber] = useState<string>('')
     const token = local.token
     let [unitsRequired, setUnitsRequired] = useState<string>('0')
     let [minimumMonths, setMinimumMonths] = useState<string>('0')
@@ -18,6 +20,13 @@ export default function Modal() {
 
     function requestBlood() {
         setLoading(true)
+        //check if units and months are numbers
+        if (isNaN(Number(unitsRequired)) || isNaN(Number(minimumMonths))) {
+            setLoading(false)
+            Alert.alert('Error', 'Please enter valid numbers')
+            return
+        }
+        console.log(unitsRequired, minimumMonths)
         fetch(`http://192.168.0.141:3000/hq/requestBlood`, {
             method: 'POST',
             headers: {
@@ -27,6 +36,8 @@ export default function Modal() {
                 token: token,
                 type: bloodtype,
                 units: unitsRequired,
+                months: minimumMonths,
+                contact: phoneNumber,
             }),
         })
             .then((response) => response.json())
@@ -119,6 +130,16 @@ export default function Modal() {
                 >
                     months
                 </TwoRowInput>
+                <Text style={{ fontSize: 24, textAlign: 'center' }}>
+                    What phone number should the donors contact?
+                </Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="9123456789"
+                    keyboardType="phone-pad"
+                    value={phoneNumber}
+                    onChangeText={setPhoneNumber}
+                />
                 <Button onPress={requestBlood} disabled={loading}>
                     {loading ? 'Processing request...' : 'Request Blood'}
                 </Button>

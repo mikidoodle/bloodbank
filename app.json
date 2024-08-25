@@ -43,13 +43,14 @@
                     "icon": "./assets/icon.png",
                     "color": "#ffffff",
                     "defaultChannel": "default"
+                    
                 }
             ],
             [
                 "expo-camera",
                 {
-                    "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
-                    "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+                    "cameraPermission": "$(PRODUCT_NAME) requires the camera to scan donor codes",
+                    "microphonePermission": "$(PRODUCT_NAME) requires access to the microphone to record audio",
                     "recordAudioAndroid": true
                 }
             ],

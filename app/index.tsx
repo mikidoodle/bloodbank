@@ -10,7 +10,7 @@ import {
 import * as SecureStore from 'expo-secure-store'
 import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import styles from '../assets/styles/styles'
+import styles from '@/assets/styles/styles'
 import Button from '@/components/Button'
 import { Link, router } from 'expo-router'
 export default function Index() {

@@ -11,7 +11,7 @@ import {
 import * as SecureStore from 'expo-secure-store'
 import { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import styles from '../assets/styles/styles'
+import styles from '@/assets/styles/styles'
 import { Picker } from '@react-native-picker/picker'
 import Button from '@/components/Button'
 import { Link, router } from 'expo-router'

@@ -7,6 +7,7 @@ const ModalStack = createStackNavigator()
 import HQHome from './home'
 import Camera from './camera'
 import { useEffect } from 'react'
+import Settings from './settings'
 
 export default function HQIndex() {
     
@@ -43,7 +44,15 @@ export default function HQIndex() {
                     },
                 }}
                 initialRouteName="home"
-            >
+            ><Tab.Screen
+            name="camera"
+            component={Camera}
+            options={{
+                tabBarIcon: ({ color, size }) => (
+                    <Octicons name="database" color={color} size={size} />
+                ),
+            }}
+        />
                 <Tab.Screen
                     name="home"
                     component={HQHome}
@@ -54,11 +63,11 @@ export default function HQIndex() {
                     }}
                 />
                 <Tab.Screen
-                    name="camera"
-                    component={Camera}
+                    name="settings"
+                    component={Settings}
                     options={{
                         tabBarIcon: ({ color, size }) => (
-                            <Octicons name="paste" color={color} size={size} />
+                            <Octicons name="gear" color={color} size={size} />
                         ),
                     }}
                 />

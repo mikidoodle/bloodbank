@@ -29,7 +29,7 @@ export default function Settings() {
         >
             <View>
                 <Text style={{ fontSize: 24, textAlign: 'center', margin: 20 }}>
-                    JIPMER <Text style={{ color: '#7469B6' }}>Blood Center</Text>
+                    JIPMER <Text style={{ color: '#7469B6' }}>Blood Center HQ</Text>
                 </Text>
             </View>
             <ScrollView
