@@ -57,6 +57,13 @@ export default function RootLayout() {
                     presentation: 'modal',
                 }}
             />
+            <Stack.Screen
+            name="requestblood"
+            options={{
+                // Set the presentation mode to modal for our modal route.
+                presentation: 'modal',
+            }}
+        />
         </Stack>
     )
 }

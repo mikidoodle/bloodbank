@@ -18,11 +18,19 @@ export default function HQHome() {
     let [refreshing, setRefreshing] = useState<boolean>(false)
     let [totalDonators, setTotalDonators] = useState<number | null>(null)
     let [totalDonations, setTotalDonations] = useState<number | null>(null)
-
+    let [token, setToken] = useState<string | null>('')
+    useEffect(() => {
+        async function getToken() {
+            let t = await SecureStore.getItemAsync('token')
+            console.log(t)
+            setToken(t)
+        }
+        getToken()
+    }, [])
     async function load(refresh = false) {
         if (refresh) setRefreshing(true)
         let token = await SecureStore.getItemAsync('token')
-        fetch(`http://192.168.0.214:3000/hq/getStats`, {
+        fetch(`http://192.168.0.141:3000/hq/getStats`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -153,11 +161,19 @@ export default function HQHome() {
                             title={totalDonations?.toString() || ''}
                             subtitle="total donated"
                         />
-                        
                     </View>
-                    <Button onPress={() => router.navigate('/notifications')}>
-                        Notifications
-                        </Button>
+                    <Button
+                        onPress={() =>
+                            router.push({
+                                pathname: '/requestblood',
+                                params: {
+                                    token: token,
+                                },
+                            })
+                        }
+                    >
+                        Request Blood
+                    </Button>
                 </View>
             </ScrollView>
         </SafeAreaView>
