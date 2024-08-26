@@ -12,7 +12,7 @@ When there’s an urgent need for blood, the blood bank can send a request throu
 
 We’re also working to get donations as digitally signed certificates on [DigiLocker](https://www.digilocker.gov.in), and if it works at JIPMER I’ll try expanding to other blood banks.
 
-I wrote the app using React Native w/ Expo and decided to try using NestJS for the backend. TypeScript is yummy 😋😋😋
+I wrote the app using React Native w/ Expo and Next.js route handlers for the backend. I'll migrate to NestJS once everything is stable. TypeScript is yummy 😋😋😋
 
 # Running The App
 
