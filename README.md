@@ -12,11 +12,11 @@ When there’s an urgent need for blood, the blood bank can send a request throu
 
 We’re also working to get donations as digitally signed certificates on [DigiLocker](https://www.digilocker.gov.in), and if it works at JIPMER I’ll try expanding to other blood banks.
 
-I wrote the app using React Native w/ Expo and Next.js route handlers for the backend. I'll migrate to NestJS once everything is stable. TypeScript is yummy 😋😋😋
+I wrote the app using React Native w/ Expo and decided to try using NestJS for the backend. TypeScript is yummy 😋😋😋
 
 # Running The App
 
-> ⚠️ This is an unfinished project. I’ll make a post on #ship when it’s ready, but as it stands nothing will work as you'd need to clone the [backend](https://github.com/mikidoodle/bloodbankapi) and set up an expo access token, a postgres DB and much more.
+> ⚠️ This is an unfinished project. I’ll make a post on #ship when it’s ready, but as it stands nothing will work as the backend is not public.
 
 cd into the project, and then follow the [Expo guide](https://docs.expo.dev/get-started/set-up-your-environment/)
 Make sure you click **Development build** and toggle **Build with Expo Application Services** if you haven’t done this before. After that, run the project with the command ```npx expo start```
