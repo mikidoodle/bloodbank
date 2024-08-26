@@ -75,37 +75,6 @@ export default function Two({
                         borderRadius={10}
                     />
                 </View>
-                <Text
-                    style={{
-                        fontSize: 28,
-                        textAlign: 'center',
-                        margin: 'auto',
-                    }}
-                >
-                    Sign up
-                </Text>
-                <Text
-                    style={{
-                        fontSize: 20,
-                        marginBottom: 20,
-                    }}
-                >
-                    Enter your phone number
-                </Text>
-                <TextInput
-                    placeholder="Enter your phone number"
-                    value={phoneNumber}
-                    onChangeText={setPhoneNumber}
-                    keyboardType="phone-pad"
-                    style={styles.input}
-                />
-                <Button
-                    onPress={() => {
-                        router.push('/signup')
-                    }}
-                >
-                    Next
-                </Button>
             </SafeAreaView>
         </KeyboardAwareScrollView>
     )

@@ -47,7 +47,7 @@ export default function RootLayout() {
             }}
         >
             <Stack.Screen name="index" />
-            <Stack.Screen name="signup" />
+            <Stack.Screen name="signup/index" />
             <Stack.Screen name="user/index" />
             <Stack.Screen name="hqonboarding/index" />
             <Stack.Screen name="hq/index" />

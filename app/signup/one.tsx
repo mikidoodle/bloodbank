@@ -19,8 +19,8 @@ import TwoRowInput from '@/components/TwoRowInput'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as Progress from 'react-native-progress'
 import { Octicons } from '@expo/vector-icons'
-export default function One({ navigation }: { navigation: any }) {
-    let [phoneNumber, setPhoneNumber] = useState<string>('')
+export default function One({ navigation, route }: { navigation: any, route: any }) {
+    let [phoneNumber, setPhoneNumber] = useState<string>(route.params?.phoneNumber || '')
     let [affiliated, setAffiliated] = useState<string | null>(null)
     return (
         <KeyboardAwareScrollView
@@ -79,21 +79,6 @@ export default function One({ navigation }: { navigation: any }) {
                 >
                     Sign up
                 </Text>
-                <Text
-                    style={{
-                        fontSize: 20,
-                        marginBottom: 20,
-                    }}
-                >
-                    Enter your phone number
-                </Text>
-                <TextInput
-                    placeholder="Enter your phone number"
-                    value={phoneNumber}
-                    onChangeText={setPhoneNumber}
-                    keyboardType="phone-pad"
-                    style={styles.input}
-                />
                 <Text
                     style={{
                         fontSize: 20,

@@ -27,7 +27,7 @@ export default function Modal() {
             return
         }
         console.log(unitsRequired, minimumMonths)
-        fetch(`http://192.168.0.141:3000/hq/requestBlood`, {
+        fetch(`http://localhost:3000/hq/requestBlood`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -60,15 +60,19 @@ export default function Modal() {
         <View
             style={{
                 flex: 1,
-                alignItems: 'flex-start',
-                justifyContent: 'flex-start',
+                alignItems: 'center',
+                justifyContent: 'center',
                 margin: 20,
+
             }}
         >
             <KeyboardAwareScrollView
                 style={{
                     flexDirection: 'column',
                     gap: 20,
+                    width: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                 }}
             >
                 <Text

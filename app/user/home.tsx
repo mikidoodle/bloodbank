@@ -20,11 +20,35 @@ export default function Home() {
     let [donated, setDonated] = useState<number | null>(null)
     let [lastDonation, setLastDonation] = useState<string>('')
     let [totalDonators, setTotalDonators] = useState<number | null>(null)
+    let [log, setLog] = useState<{ x: string; y: number }[]>([])
     let [donatingSince, setDonatingSince] = useState<string>('')
+
+    function humanizeDate(date: string) {
+        let d = new Date(date)
+        //return DDth MMM, YYYY at HH:MM AM/PM
+        return `${d.getDate()}th ${
+            [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May',
+                'Jun',
+                'Jul',
+                'Aug',
+                'Sep',
+                'Oct',
+                'Nov',
+                'Dec',
+            ][d.getMonth()]
+        } ${d.getFullYear()} at ${d.getHours() % 12 || 12}:${
+            d.getMinutes() < 10 ? '0' : ''
+        }${d.getMinutes()} ${d.getHours() > 12 ? 'PM' : 'AM'}`
+    }
     async function load(refresh = false) {
         if (refresh) setRefreshing(true)
         let token = await SecureStore.getItemAsync('token')
-        fetch(`http://192.168.0.141:3000/getUserData`, {
+        fetch(`http://localhost:3000/getUserData`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -56,6 +80,7 @@ export default function Home() {
                     setLastDonation(response.data.lastDonated)
                     setTotalDonators(response.data.totalDonators)
                     setDonatingSince(response.data.donatingSince)
+                    setLog(response.data.log.reverse())
                 }
             })
             .catch((error) => {
@@ -67,28 +92,6 @@ export default function Home() {
         console.log('loading')
         load(false)
     }, [])
-    function sendnotif() {
-        fetch(`https://exp.host/--/api/v2/push/send`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-            body: JSON.stringify({
-                to: 'ExponentPushToken[aKG1HLIsJaNoiWtIa1L3ZV]',
-                title: 'Hello',
-                body: 'World',
-                
-            }),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                console.log(response)
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    }
     return (
         <SafeAreaView
             style={{
@@ -204,9 +207,74 @@ export default function Home() {
                             subtitle="donating since"
                         />
                     </View>
-                    <Button onPress={sendnotif}>
-                        Notifications
-                    </Button>
+                </View>
+                <Text
+                    style={{
+                        fontSize: 24,
+                        textAlign: 'left',
+                        marginBottom: 20,
+                        width: '80%',
+                        marginTop: 20,
+                    }}
+                >
+                    Log
+                </Text>
+                <View
+                    style={{
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '100%',
+                        gap: 20,
+                    }}
+                >
+                    {log.map((item, index) => {
+                        let { x, y } = item
+                        let parsedXString = ''
+                        if (x.startsWith('v')) {
+                            parsedXString = `Verified blood type as ${
+                                x.split('-')[1]
+                            }`
+                        } else if (x.startsWith('d')) {
+                            parsedXString = `Donated blood`
+                        }
+
+                        return (
+                            <View
+                                key={index}
+                                style={{
+                                    width: '80%',
+                                    backgroundColor: '#fff',
+                                    borderRadius: 10,
+                                    justifyContent: 'center',
+                                    alignItems: 'flex-start',
+                                    padding: 20,
+                                    shadowColor: '#7469B6',
+                                    shadowOpacity: 0.3,
+                                    shadowRadius: 20,
+                                    elevation: 10,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 18,
+                                        fontWeight: 'bold',
+                                        marginBottom: 10,
+                                    }}
+                                >
+                                    {parsedXString}
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontSize: 14,
+                                        color: 'gray',
+                                    }}
+                                >
+                                    {humanizeDate(y.toString())}
+                                </Text>
+                            </View>
+                        )
+                    })}
                 </View>
             </ScrollView>
         </SafeAreaView>

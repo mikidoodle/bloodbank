@@ -17,6 +17,10 @@ export default function Index() {
     let [phoneNumber, setPhoneNumber] = useState<string>('')
     let [password, setPassword] = useState<string>('')
     let [loginProcess, setLoginProcess] = useState<boolean>(false)
+    let [otp, setOtp] = useState<string>('')
+    let [newUserOTP, setNewUserOTP] = useState<string>('')
+    let [allowOTP, setAllowOTP] = useState<boolean>(false)
+    let [newUser, setNewUser] = useState<boolean>(false)
     useEffect(() => {
         SecureStore.getItemAsync('token').then((token) => {
             if (token) {
@@ -30,15 +34,30 @@ export default function Index() {
         })
     })
     function login() {
+        if (newUser) {
+            console.log(otp)
+            console.log(newUserOTP)
+            if (parseInt(otp) === parseInt(newUserOTP)) {
+                router.push('/signup')
+            } else {
+                alert('Invalid OTP')
+            }
+            return
+        }
+        console.log(otp)
         setLoginProcess(true)
-        fetch(`http://192.168.0.141:3000/login`, {
+        fetch(`http://localhost:3000/sendOTP`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                phonenumber: phoneNumber,
-                password: password,
+                /*phonenumber: phoneNumber,
+                password: password,*/
+                phone: phoneNumber,
+                allowSignup: true,
+                intentVerifyOTPlogin: allowOTP,
+                userEnteredOTP: allowOTP ? otp : null,
             }),
         })
             .then((response) => response.json())
@@ -47,8 +66,18 @@ export default function Index() {
                 if (response.error) {
                     alert(response.message)
                 } else {
-                    alert(response.message)
-                    await SecureStore.setItemAsync('token', response.token)
+                    //alert(response.message)
+                    if (response.otpSent) {
+                        setAllowOTP(true)
+                    } else if (response.otp) {
+                        setAllowOTP(true)
+                        setNewUser(true)
+                        setNewUserOTP(response.otp)
+                        console.log(response.otp)
+                        console.log('new user')
+                    } else if (response.uuid) {
+                        await SecureStore.setItemAsync('token', response.uuid)
+                    }
                 }
             })
             .catch((error) => {
@@ -83,19 +112,21 @@ export default function Index() {
                         onChangeText={setPhoneNumber}
                         style={styles.input}
                     />
-                    <TextInput
-                        placeholder="password"
-                        autoComplete="off"
-                        secureTextEntry={true}
-                        value={password}
-                        onChangeText={setPassword}
-                        style={styles.input}
-                    />
+                    {allowOTP ? (
+                        <TextInput
+                            placeholder="enter OTP"
+                            autoComplete="off"
+                            secureTextEntry={false}
+                            value={otp}
+                            onChangeText={setOtp}
+                            style={styles.input}
+                        />
+                    ) : null}
                 </View>
                 <Button onPress={login} disabled={loginProcess}>
-                    {loginProcess ? 'Logging in...' : 'Login'}
+                    {loginProcess ? newUser ? 'Verifying...' : 'Logging in...' : 'Continue'}
                 </Button>
-                <Pressable
+                {/*<Pressable
                     onPress={() => {
                         router.push('/signup')
                     }}
@@ -110,7 +141,7 @@ export default function Index() {
                     >
                         Sign up
                     </Text>
-                </Pressable>
+                </Pressable>*/}
                 <Pressable
                     onPress={() => {
                         router.push('/hqonboarding')
