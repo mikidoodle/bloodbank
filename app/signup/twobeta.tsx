@@ -74,7 +74,7 @@ export default function TwoBeta({ route, navigation }: { route: any, navigation:
                         margin: 'auto',
                     }}
                 >
-                    Sign up
+                    Sign up | <Text style={{ color: '#7469B6' }}>Employee Details</Text>
                 </Text>
                 <Text
                     style={{
@@ -137,7 +137,7 @@ export default function TwoBeta({ route, navigation }: { route: any, navigation:
                             department
                         })
                     }}
-                    disabled={designation === ''}
+                    disabled={department === ''}
                 >
                     Next
                 </Button>

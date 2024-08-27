@@ -103,7 +103,6 @@ export default function One({ navigation, route }: { navigation: any, route: any
                             { phoneNumber, affiliated }
                         )
                     }}
-                    disabled={phoneNumber.length != 10}
                 >
                     Next
                 </Button>
