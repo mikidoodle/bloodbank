@@ -33,11 +33,12 @@ export default function Index() {
             }
         })
     })
-    function login() {
+    async function login() {
         if (newUser) {
             console.log(otp)
             console.log(newUserOTP)
             if (parseInt(otp) === parseInt(newUserOTP)) {
+                let storePhoneLocally = await SecureStore.setItemAsync('userSignupPhone', phoneNumber)
                 router.push('/signup')
             } else {
                 alert('Invalid OTP')
@@ -110,21 +111,49 @@ export default function Index() {
                         keyboardType="phone-pad"
                         value={phoneNumber}
                         onChangeText={setPhoneNumber}
-                        style={styles.input}
+                        style={{
+                            ...styles.input,
+                            color: newUser || allowOTP ? 'grey' : 'black',
+                        }}
+                        editable={!loginProcess && (!newUser || !allowOTP)}
                     />
                     {allowOTP ? (
-                        <TextInput
-                            placeholder="enter OTP"
-                            autoComplete="off"
-                            secureTextEntry={false}
-                            value={otp}
-                            onChangeText={setOtp}
-                            style={styles.input}
-                        />
+                        <>
+                            <Pressable
+                                onPress={() => {
+                                    //let the user input a new phone number
+                                    setAllowOTP(false)
+                                    setNewUser(false)
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        textAlign: 'left',
+                                        fontSize: 16,
+                                        color: '#7469B6',
+                                        
+                                    }}
+                                >
+                                    Try a different number
+                                </Text>
+                            </Pressable>
+                            <TextInput
+                                placeholder="enter OTP"
+                                autoComplete="off"
+                                secureTextEntry={false}
+                                value={otp}
+                                onChangeText={setOtp}
+                                style={styles.input}
+                            />
+                        </>
                     ) : null}
                 </View>
                 <Button onPress={login} disabled={loginProcess}>
-                    {loginProcess ? newUser ? 'Verifying...' : 'Logging in...' : 'Continue'}
+                    {loginProcess
+                        ? newUser
+                            ? 'Verifying...'
+                            : 'Loading...'
+                        : 'Continue'}
                 </Button>
                 {/*<Pressable
                     onPress={() => {

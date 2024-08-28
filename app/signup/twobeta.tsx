@@ -19,10 +19,27 @@ import TwoRowInput from '@/components/TwoRowInput'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as Progress from 'react-native-progress'
 import { Octicons } from '@expo/vector-icons'
-export default function TwoBeta({ route, navigation }: { route: any, navigation: any }) {
-    let [designation, setDesignation] = useState<string>('')
-    let [yearOfJoining, setYearOfJoining] = useState<any>('')
-    let [department, setDepartment] = useState<string>('')
+import FreeButton from '@/components/FreeButton'
+export default function TwoBeta({
+    route,
+    navigation,
+}: {
+    route: any
+    navigation: any
+}) {
+    console.log(route.params)
+    let [designation, setDesignation] = useState<string>(
+        route.params?.designation || 'Faculty'
+    )
+    let [yearOfJoining, setYearOfJoining] = useState<any>(
+        route.params?.yearOfJoining || ''
+    )
+    let [department, setDepartment] = useState<string>(
+        route.params?.department || ''
+    )
+    delete route.params?.designation
+    delete route.params?.yearOfJoining
+    delete route.params?.department
     return (
         <KeyboardAwareScrollView
             contentContainerStyle={{
@@ -46,11 +63,15 @@ export default function TwoBeta({ route, navigation }: { route: any, navigation:
                             flexDirection: 'row',
                             justifyContent: 'flex-start',
                             alignItems: 'center',
-                            gap:20
+                            gap: 20,
                         }}
                     >
                         <Pressable onPress={() => router.push('/')}>
-                            <Octicons name="arrow-left" size={24} color="black" />
+                            <Octicons
+                                name="arrow-left"
+                                size={24}
+                                color="black"
+                            />
                         </Pressable>
                         <Text style={{ fontSize: 24, textAlign: 'center' }}>
                             JIPMER{' '}
@@ -74,7 +95,8 @@ export default function TwoBeta({ route, navigation }: { route: any, navigation:
                         margin: 'auto',
                     }}
                 >
-                    Sign up | <Text style={{ color: '#7469B6' }}>Employee Details</Text>
+                    Sign up |{' '}
+                    <Text style={{ color: '#7469B6' }}>Employee Details</Text>
                 </Text>
                 <Text
                     style={{
@@ -89,16 +111,19 @@ export default function TwoBeta({ route, navigation }: { route: any, navigation:
                     onValueChange={(itemValue, itemIndex) =>
                         setDesignation(itemValue)
                     }
-                    >
-                        <Picker.Item label="Faculty" value="Faculty" />
-                        <Picker.Item label="Resident" value="Resident" />
-                        <Picker.Item label="MBBS" value="MBBS" />
-                        <Picker.Item label="B.Sc. Nursing" value="B Sc. Nursing" />
-                        <Picker.Item label="B.Sc. Allied Medical Sciences" value="B.Sc. Allied Medical Sciences" />
-                        <Picker.Item label="Nursing staff" value="Nursing staff" />
-                        <Picker.Item label="Other" value="Other" />
-                    </Picker>
-                    <Text
+                >
+                    <Picker.Item label="Faculty" value="Faculty" />
+                    <Picker.Item label="Resident" value="Resident" />
+                    <Picker.Item label="MBBS" value="MBBS" />
+                    <Picker.Item label="B.Sc. Nursing" value="B Sc. Nursing" />
+                    <Picker.Item
+                        label="B.Sc. Allied Medical Sciences"
+                        value="B.Sc. Allied Medical Sciences"
+                    />
+                    <Picker.Item label="Nursing staff" value="Nursing staff" />
+                    <Picker.Item label="Other" value="Other" />
+                </Picker>
+                <Text
                     style={{
                         fontSize: 18,
                         marginBottom: 20,
@@ -113,13 +138,14 @@ export default function TwoBeta({ route, navigation }: { route: any, navigation:
                     keyboardType="numeric"
                     style={styles.input}
                 />
-                     <Text
+                <Text
                     style={{
                         fontSize: 18,
                         marginBottom: 20,
                     }}
                 >
-                    Enter your department.{"\n"}(If you are an intern, enter 'Intern')
+                    Enter your department.{'\n'}(If you are an intern, enter
+                    'Intern')
                 </Text>
                 <TextInput
                     placeholder="Enter department"
@@ -128,19 +154,44 @@ export default function TwoBeta({ route, navigation }: { route: any, navigation:
                     keyboardType="default"
                     style={styles.input}
                 />
-                <Button
-                    onPress={() => {
-                        navigation.navigate('two', {
-                            ...route.params,
-                            designation,
-                            yearOfJoining,
-                            department
-                        })
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
                     }}
-                    disabled={department === ''}
                 >
-                    Next
-                </Button>
+                    <FreeButton
+                        onPress={() => {
+                            navigation.navigate('one', {
+                                ...route.params,
+                                designation,
+                                yearOfJoining,
+                                department,
+                            })
+                        }}
+                        style={{
+                            width: '25%'
+                        }}
+                    >
+                        Back
+                    </FreeButton>
+                    <FreeButton
+                        onPress={() => {
+                            navigation.navigate('two', {
+                                ...route.params,
+                                designation,
+                                yearOfJoining,
+                                department,
+                            })
+                        }}
+                        disabled={department === ''}
+                        style={{
+                            width: '40%'
+                        }}
+                    >
+                        Next
+                    </FreeButton>
+                </View>
             </SafeAreaView>
         </KeyboardAwareScrollView>
     )

@@ -19,7 +19,8 @@ import TwoRowInput from '@/components/TwoRowInput'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as Progress from 'react-native-progress'
 import { Octicons } from '@expo/vector-icons'
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from '@react-native-community/datetimepicker'
+import FreeButton from '@/components/FreeButton'
 export default function Two({
     navigation,
     route,
@@ -75,7 +76,7 @@ export default function Two({
                         </Text>
                     </View>
                     <Progress.Bar
-                        progress={0.1}
+                        progress={0.3}
                         width={300}
                         height={10}
                         color="#7469B6"
@@ -87,6 +88,7 @@ export default function Two({
                         fontSize: 28,
                         textAlign: 'center',
                         margin: 'auto',
+                        marginBottom: 20,
                     }}
                 >
                     Sign up | <Text style={{ color: '#7469B6' }}>Biodata</Text>
@@ -103,6 +105,7 @@ export default function Two({
                     style={styles.input}
                     value={name}
                     onChangeText={(text) => setName(text)}
+                    autoComplete='name'
                 />
                 <Text
                     style={{
@@ -125,11 +128,25 @@ export default function Two({
                 >
                     Enter your date of birth
                 </Text>
-                <DateTimePicker value={new Date(dob)} mode="date" onChange={(event, date) => {
-                    if (date) setDob(date.toISOString())
-                }} 
-            display='compact'
+                <DateTimePicker
+                    value={new Date(dob)}
+                    mode="date"
+                    style={{
+                        alignSelf: 'center',
+                    }}
+                    onChange={(event, date) => {
+                        if (date) setDob(date.toISOString())
+                    }}
                 />
+                <Text
+                    style={{
+                        fontSize: 18,
+                        marginBottom: 20,
+                        marginTop: 20,
+                    }}
+                >
+                    Enter your weight and height
+                </Text>
                 <TwoRowInput
                     placeholder="weight"
                     value={weight}
@@ -146,6 +163,14 @@ export default function Two({
                 >
                     cm
                 </TwoRowInput>
+                <Text
+                    style={{
+                        fontSize: 18,
+                        marginBottom: 20,
+                    }}
+                >
+                    Enter your blood group
+                </Text>
                 <View>
                     <Picker
                         selectedValue={bloodGroup}
@@ -165,21 +190,56 @@ export default function Two({
                         />
                     </Picker>
                 </View>
-                <Button
-                    onPress={() => {
-                        navigation.navigate(`one`, {
-                            ...route.params,
-                            name,
-                            dob,
-                            sex,
-                            bloodGroup,
-                            weight,
-                            height,
-                        })
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        gap: 20,
                     }}
                 >
-                    Next
-                </Button>
+                    <FreeButton
+                        onPress={() => {
+                            navigation.navigate(`one`, {
+                                ...route.params,
+                                name,
+                                dob,
+                                sex,
+                                bloodGroup,
+                                weight,
+                                height,
+                            })
+                        }}
+                        style={{
+                            width: '25%',
+                        }}
+                    >
+                        Back
+                    </FreeButton>
+                    <FreeButton
+                        onPress={() => {
+                            navigation.navigate(`one`, {
+                                ...route.params,
+                                name,
+                                dob,
+                                sex,
+                                bloodGroup,
+                                weight,
+                                height,
+                            })
+                        }}
+                        style={{
+                            width: '40%',
+                        }}
+                        disabled={
+                            name.trim() == '' ||
+                            dob.trim() == '' ||
+                            weight.trim() == '' ||
+                            height.trim() == ''
+                        }
+                    >
+                        Next
+                    </FreeButton>
+                </View>
             </SafeAreaView>
         </KeyboardAwareScrollView>
     )

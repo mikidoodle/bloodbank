@@ -9,7 +9,7 @@ import {
     View,
 } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from '../../assets/styles/styles'
 import { Picker } from '@react-native-picker/picker'
@@ -19,9 +19,32 @@ import TwoRowInput from '@/components/TwoRowInput'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as Progress from 'react-native-progress'
 import { Octicons } from '@expo/vector-icons'
-export default function One({ navigation, route }: { navigation: any, route: any }) {
-    let [phoneNumber, setPhoneNumber] = useState<string>(route.params?.phoneNumber || '')
-    let [affiliated, setAffiliated] = useState<string | null>(null)
+export default function One({
+    navigation,
+    route,
+}: {
+    navigation: any
+    route: any
+}) {
+    console.log(route.params)
+    let [phoneNumber, setPhoneNumber] = useState<string>(
+        route.params?.phoneNumber || ''
+    )
+    let [affiliated, setAffiliated] = useState<string | null>(
+        route.params?.affiliated || 'no'
+    )
+    delete route.params?.affiliated
+
+    useEffect(() => {
+        async function loadPhoneNumber() {
+            let phone = await SecureStore.getItemAsync('userSignupPhone')
+            if (phone) {
+                setPhoneNumber(phone)
+            }
+        }
+        loadPhoneNumber()
+    }, [])
+
     return (
         <KeyboardAwareScrollView
             contentContainerStyle={{
@@ -88,19 +111,20 @@ export default function One({ navigation, route }: { navigation: any, route: any
                     Are you affiliated with JIPMER?
                 </Text>
                 <View>
-                <Picker
-                    selectedValue={affiliated}
-                    onValueChange={(itemValue) => setAffiliated(itemValue)}
-                >
-                    <Picker.Item label="No" value="no" />
-                    <Picker.Item label="Yes" value="yes" />
-                </Picker>
+                    <Picker
+                        selectedValue={affiliated}
+                        onValueChange={(itemValue) => setAffiliated(itemValue)}
+                    >
+                        <Picker.Item label="No" value="no" />
+                        <Picker.Item label="Yes" value="yes" />
+                    </Picker>
                 </View>
                 <Button
                     onPress={() => {
                         navigation.navigate(
                             `two${affiliated == 'yes' ? 'beta' : ''}`,
-                            { phoneNumber, affiliated }
+                            { ...route.params,
+                                phoneNumber, affiliated }
                         )
                     }}
                 >

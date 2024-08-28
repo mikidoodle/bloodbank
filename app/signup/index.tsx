@@ -5,9 +5,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import One from "./one";
 import Two from "./two";
 import TwoBeta from "./twobeta";
+import { useLocalSearchParams } from "expo-router";
 const Stack = createNativeStackNavigator();
 
-export default function Swipes() {
+export default function Signup() {
   return (
       <NavigationContainer independent={true}>
         <Stack.Navigator
