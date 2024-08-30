@@ -28,12 +28,27 @@ export default function Two({
     navigation: any
     route: any
 }) {
-    let [name, setName] = useState<string>('')
-    let [dob, setDob] = useState<string>(new Date().toISOString())
-    let [sex, setSex] = useState<string>('male')
-    let [bloodGroup, setBloodGroup] = useState<string>('')
-    let [weight, setWeight] = useState<string>('')
-    let [height, setHeight] = useState<string>('')
+    let [name, setName] = useState<string>(route.params?.name || '')
+    let [dob, setDob] = useState<string>(
+        route.params?.dob || new Date().toISOString()
+    )
+    let [sex, setSex] = useState<string>(route.params?.sex || 'male')
+    let [bloodGroup, setBloodGroup] = useState<string>(
+        route.params?.bloodGroup || 'A+'
+    )
+    let [weight, setWeight] = useState<string>(route.params?.weight || '')
+    let [height, setHeight] = useState<string>(route.params?.height || '')
+    delete route.params?.name
+    delete route.params?.dob
+    delete route.params?.sex
+    delete route.params?.bloodGroup
+    delete route.params?.weight
+    delete route.params?.height
+
+    let timestampNow = new Date().toISOString()
+    let timestamp18YearsAgo = new Date()
+
+    timestamp18YearsAgo.setFullYear(timestamp18YearsAgo.getFullYear() - 18)
 
     return (
         <KeyboardAwareScrollView
@@ -105,7 +120,8 @@ export default function Two({
                     style={styles.input}
                     value={name}
                     onChangeText={(text) => setName(text)}
-                    autoComplete='name'
+                    autoComplete="name"
+                    placeholder="Name"
                 />
                 <Text
                     style={{
@@ -217,15 +233,37 @@ export default function Two({
                     </FreeButton>
                     <FreeButton
                         onPress={() => {
-                            navigation.navigate(`one`, {
-                                ...route.params,
-                                name,
-                                dob,
-                                sex,
-                                bloodGroup,
-                                weight,
-                                height,
-                            })
+                            //check if date of birth is less than 18 years ago
+                            if (new Date(dob) > timestamp18YearsAgo) {
+                                Alert.alert(
+                                    'Error',
+                                    'You must be at least 18 years old to donate blood.',
+                                    [
+                                        {
+                                            text: 'Try Again',
+                                            onPress: () => {},
+                                            style: 'cancel',
+                                        },
+                                        {
+                                            text: 'Exit Sign Up',
+                                            onPress: () => {
+                                                router.replace('/')
+                                            },
+                                            style: 'destructive',
+                                        },
+                                    ]
+                                )
+                            } else {
+                                navigation.navigate(`three`, {
+                                    ...route.params,
+                                    name,
+                                    dob,
+                                    sex,
+                                    bloodGroup,
+                                    weight,
+                                    height,
+                                })
+                            }
                         }}
                         style={{
                             width: '40%',

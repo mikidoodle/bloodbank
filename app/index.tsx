@@ -38,8 +38,10 @@ export default function Index() {
             console.log(otp)
             console.log(newUserOTP)
             if (parseInt(otp) === parseInt(newUserOTP)) {
-                let storePhoneLocally = await SecureStore.setItemAsync('userSignupPhone', phoneNumber)
-                router.push('/signup')
+                router.push({
+                    pathname: '/signup',
+                    params: { phoneNumber: phoneNumber },
+                })
             } else {
                 alert('Invalid OTP')
             }

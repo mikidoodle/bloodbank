@@ -34,16 +34,7 @@ export default function One({
         route.params?.affiliated || 'no'
     )
     delete route.params?.affiliated
-
-    useEffect(() => {
-        async function loadPhoneNumber() {
-            let phone = await SecureStore.getItemAsync('userSignupPhone')
-            if (phone) {
-                setPhoneNumber(phone)
-            }
-        }
-        loadPhoneNumber()
-    }, [])
+    console.log(route.params)
 
     return (
         <KeyboardAwareScrollView

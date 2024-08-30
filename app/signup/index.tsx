@@ -6,9 +6,13 @@ import One from "./one";
 import Two from "./two";
 import TwoBeta from "./twobeta";
 import { useLocalSearchParams } from "expo-router";
+import Three from "./three";
+import Four from "./four";
 const Stack = createNativeStackNavigator();
 
 export default function Signup() {
+
+  const local = useLocalSearchParams();
   return (
       <NavigationContainer independent={true}>
         <Stack.Navigator
@@ -19,10 +23,15 @@ export default function Signup() {
             },
             animation: "fade"
           }}
+          
         >
-          <Stack.Screen name="one" component={One}/>
+          <Stack.Screen name="one" component={One} initialParams={{
+            phoneNumber: local.phoneNumber,
+          }}/>
           <Stack.Screen name="two" component={Two}/>
           <Stack.Screen name="twobeta" component={TwoBeta}/>
+          <Stack.Screen name="three" component={Three} />
+          <Stack.Screen name="four" component={Four} />
         </Stack.Navigator>
       </NavigationContainer>
   );
