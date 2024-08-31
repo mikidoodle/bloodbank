@@ -54,7 +54,7 @@ export default function Index() {
                             setExpoPushToken(token)
                             console.log(token)
                             fetch(
-                                'http://192.168.0.214:3000/updateNotifications',
+                                'http://localhost:3000/updateNotifications',
                                 {
                                     method: 'POST',
                                     headers: {

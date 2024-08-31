@@ -8,6 +8,7 @@ import HQHome from './home'
 import Camera from './camera'
 import { useEffect } from 'react'
 import Settings from './settings'
+import Query from './query'
 
 export default function HQIndex() {
     
@@ -59,6 +60,15 @@ export default function HQIndex() {
                     options={{
                         tabBarIcon: ({ color, size }) => (
                             <Octicons name="home" color={color} size={size} />
+                        ),
+                    }}
+                />
+                <Tab.Screen
+                    name="query"
+                    component={Query}
+                    options={{
+                        tabBarIcon: ({ color, size }) => (
+                            <Octicons name="person" color={color} size={size} />
                         ),
                     }}
                 />

@@ -27,7 +27,7 @@ export default function Modal() {
             return
         }
         console.log(unitsRequired, minimumMonths)
-        fetch(`http://192.168.0.214:3000/hq/requestBlood`, {
+        fetch(`http://localhost:3000/hq/requestBlood`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -57,24 +57,17 @@ export default function Modal() {
     }
 
     return (
-        <View
+        <KeyboardAwareScrollView
             style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: 20,
-
+                marginTop: 20,
             }}
         >
-            <KeyboardAwareScrollView
-                style={{
-                    flexDirection: 'column',
-                    gap: 20,
-                    width: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-            >
+            <View style={{
+                justifyContent: 'center',
+                width: '80%',
+                margin: 'auto',
+                gap: 20,
+            }}>
                 <Text
                     style={{
                         fontSize: 36,
@@ -84,19 +77,12 @@ export default function Modal() {
                 >
                     Request Blood
                 </Text>
-                <Text style={{ fontSize: 24, textAlign: 'center' }}>
+                <Text style={{ fontSize: 18, textAlign: 'center' }}>
                     What blood type do you need?
                 </Text>
                 <Picker
                     selectedValue={bloodtype}
-                    onValueChange={(itemValue, itemIndex) =>
-                        setBloodtype(itemValue)
-                    }
-                    style={{
-                        margin: 10,
-                        borderRadius: 9,
-                        backgroundColor: '#F3F3F3',
-                    }}
+                    onValueChange={(itemValue) => setBloodtype(itemValue)}
                 >
                     <Picker.Item label="A+" value="A+" />
                     <Picker.Item label="A-" value="A-" />
@@ -111,7 +97,7 @@ export default function Modal() {
                         value="Bombay blood group"
                     />
                 </Picker>
-                <Text style={{ fontSize: 24, textAlign: 'center' }}>
+                <Text style={{ fontSize: 18, textAlign: 'center' }}>
                     How many units do you need?
                 </Text>
                 <TwoRowInput
@@ -122,7 +108,7 @@ export default function Modal() {
                 >
                     units
                 </TwoRowInput>
-                <Text style={{ fontSize: 24, textAlign: 'center' }}>
+                <Text style={{ fontSize: 18, textAlign: 'center' }}>
                     What is the minimum month gap required from the last
                     donation?
                 </Text>
@@ -134,7 +120,7 @@ export default function Modal() {
                 >
                     months
                 </TwoRowInput>
-                <Text style={{ fontSize: 24, textAlign: 'center' }}>
+                <Text style={{ fontSize: 18, textAlign: 'center' }}>
                     What phone number should the donors contact?
                 </Text>
                 <TextInput
@@ -147,8 +133,8 @@ export default function Modal() {
                 <Button onPress={requestBlood} disabled={loading}>
                     {loading ? 'Processing request...' : 'Request Blood'}
                 </Button>
-            </KeyboardAwareScrollView>
-            <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-        </View>
+                <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+            </View>
+        </KeyboardAwareScrollView>
     )
 }

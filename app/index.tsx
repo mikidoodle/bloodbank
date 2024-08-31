@@ -49,7 +49,7 @@ export default function Index() {
         }
         console.log(otp)
         setLoginProcess(true)
-        fetch(`http://192.168.0.214:3000/sendOTP`, {
+        fetch(`http://localhost:3000/sendOTP`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
