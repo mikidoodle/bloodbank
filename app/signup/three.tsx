@@ -34,6 +34,26 @@ export default function Three({
     let [medications, setMedications] = useState<string>(
         route.params?.medications || ''
     )
+    const allConditions = [
+        "Epilepsy",
+        "Fainting",
+        "Heart Disease",
+        "Leprosy",
+        "Tuberculosis",
+        "Kidney Disease",
+        "Cancer",
+        "Diabetes-on insulin",
+        "Endocrine Disease",
+        "Hypotension",
+        "Hypertension",
+        "Abnormal bleeding tendencies"
+    ] 
+    const allMedications = [
+        "NSAIDs",
+        "Antibiotics",
+        "Steroids",
+        "Other"
+    ]
     delete route.params?.conditions
     delete route.params?.medications
     return (
@@ -150,15 +170,6 @@ export default function Three({
                     >
                         Do you take any chronic medications? If yes, please list
                         them below.
-                    </Text>
-                    <Text
-                        style={{
-                            fontSize: 14,
-                            marginBottom: 20,
-                            color: 'gray',
-                        }}
-                    >
-                        NSAIDS, Antibiotics, Steroids, etc.
                     </Text>
                     <TextInput
                         style={{ ...styles.input, height: 100 }}

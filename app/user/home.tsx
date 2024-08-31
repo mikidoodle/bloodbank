@@ -10,7 +10,7 @@ import * as SecureStore from 'expo-secure-store'
 import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Button from '@/components/Button'
-import { Link, router } from 'expo-router'
+import { Link, router, useLocalSearchParams } from 'expo-router'
 import Card from '@/components/Card'
 import Octicons from '@expo/vector-icons/Octicons'
 
@@ -62,7 +62,7 @@ export default function Home() {
                 if (refresh) setRefreshing(false)
                 if (response.error) {
                     Alert.alert(
-                        'Error',
+                        'User not found.',
                         response.error, //login again redirect
                         [
                             {

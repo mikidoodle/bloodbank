@@ -36,6 +36,7 @@ export default function Five({
     console.log(route.params)
 
     function signup() {
+        setLoadingProcess(true)
         /**
          * @params {phoneNumber} string [EXISTS]
          * @params {affiliated} string (convert to boolean)
@@ -51,7 +52,7 @@ export default function Five({
          * @params {distance} number
          * @params {birthdayHero} boolean
          */
-        console.log({
+        var payload = {
             phonenumber: route.params.phoneNumber,
             affiliated: route.params.affiliated === 'yes',
             affiliatedata:
@@ -67,48 +68,30 @@ export default function Five({
             dob: route.params.dob,
             weight: route.params.weight,
             height: route.params.height,
-            bloodtype: route.params.bloodgroup,
+            bloodtype: route.params.bloodtype,
             conditions: route.params.conditions,
             medications: route.params.medications,
             distance: route.params.distance,
             birthdayhero: birthdayHero,
-        })
+        }
         fetch(`http://192.168.0.214:3000/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                phonenumber: route.params.phoneNumber,
-                affiliated: route.params.affiliated === 'yes',
-                affiliatedata:
-                    route.params.affiliated === 'yes'
-                        ? {
-                              designation: route.params.designation,
-                              yearOfJoining: route.params.yearOfJoining,
-                              department: route.params.department,
-                          }
-                        : null,
-                name: route.params.name,
-                sex: route.params.sex,
-                dob: route.params.dob,
-                weight: route.params.weight,
-                height: route.params.height,
-                bloodtype: route.params.bloodgroup,
-                conditions: route.params.conditions,
-                medications: route.params.medications,
-                distance: route.params.distance,
-                birthdayhero: birthdayHero,
-            }),
+            body: JSON.stringify(payload),
         })
             .then((response) => response.json())
-            .then((response) => {
-                setLoadingProcess(false)
+            .then(async (response) => {
                 if (response.error) {
+                    setLoadingProcess(false)
                     alert(response.message)
                 } else {
-                    SecureStore.setItemAsync('token', response.token)
-                    router.push('/user')
+                    await SecureStore.setItemAsync('token', response.data.uuid)
+                    router.push({
+                        pathname: '/signupcomplete',
+                        params: response.data,
+                    })
                 }
             })
             .catch((error) => {
@@ -181,7 +164,7 @@ export default function Five({
                 >
                     <Text
                         style={{
-                            fontSize: 20,
+                            fontSize: 18,
                             marginBottom: 20,
                         }}
                     >
@@ -189,7 +172,7 @@ export default function Five({
                         else the chance too. Be a real hero in your life by
                         participating in "Birthday Heroes" initiative.
                     </Text>
-                    <Text style={{ fontSize: 20, marginBottom: 20 }}>
+                    <Text style={{ fontSize: 18, marginBottom: 20 }}>
                         Kindly give your consent for the Birthday Heroes project
                         and be a hero!
                     </Text>
@@ -233,6 +216,7 @@ export default function Five({
                         style={{
                             width: '50%',
                         }}
+                        disabled={loadingProcess}
                     >
                         {loadingProcess ? 'Loading...' : 'Sign Up!'}
                     </FreeButton>

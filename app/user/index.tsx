@@ -12,7 +12,7 @@ import * as Notifications from 'expo-notifications'
 import * as SecureStore from 'expo-secure-store'
 import { useEffect, useRef, useState } from 'react'
 import Constants from 'expo-constants'
-import { router } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
         shouldShowAlert: true,
@@ -30,6 +30,9 @@ export default function Index() {
     >(undefined)
     const notificationListener = useRef<Notifications.Subscription>()
     const responseListener = useRef<Notifications.Subscription>()
+
+    let local: any = useLocalSearchParams()
+
     useEffect(() => {
         async function checkNotifs() {
             let uuid = await SecureStore.getItemAsync('token')

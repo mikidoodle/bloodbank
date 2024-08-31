@@ -66,6 +66,13 @@ export default function RootLayout() {
                 presentation: 'modal',
             }}
         />
+        <Stack.Screen
+            name="signupcomplete"
+            options={{
+                presentation: 'modal',
+            }}
+            
+        />
         </Stack>
     )
 }

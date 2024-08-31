@@ -32,7 +32,7 @@ export default function Two({
     let [dob, setDob] = useState<string>(
         route.params?.dob || new Date().toISOString()
     )
-    let [sex, setSex] = useState<string>(route.params?.sex || 'male')   
+    let [sex, setSex] = useState<string>(route.params?.sex || 'male')
     let [bloodtype, setBloodtype] = useState<string>(
         route.params?.bloodtype || 'A+'
     )
@@ -233,7 +233,31 @@ export default function Two({
                     </FreeButton>
                     <FreeButton
                         onPress={() => {
-                            //check if date of birth is less than 18 years ago
+                            if (
+                                parseInt(height) > 275 ||
+                                parseInt(weight) > 600 ||
+                                parseInt(height) < 50
+                            ) {
+                                Alert.alert(
+                                    'Error',
+                                    'According to your height or weight inputs, you are ineligible to donate. Please review your inputs.',
+                                    [
+                                        {
+                                            text: 'Try Again',
+                                            onPress: () => {},
+                                            style: 'cancel',
+                                        },
+                                        {
+                                            text: 'Exit Sign Up',
+                                            onPress: () => {
+                                                router.replace('/')
+                                            },
+                                            style: 'destructive',
+                                        },
+                                    ]
+                                )
+                                return
+                            }
                             if (new Date(dob) > timestamp18YearsAgo) {
                                 Alert.alert(
                                     'Error',
@@ -253,17 +277,17 @@ export default function Two({
                                         },
                                     ]
                                 )
-                            } else {
-                                navigation.navigate(`three`, {
-                                    ...route.params,
-                                    name,
-                                    dob,
-                                    sex,
-                                    bloodtype,
-                                    weight,
-                                    height,
-                                })
+                                return
                             }
+                            navigation.navigate(`three`, {
+                                ...route.params,
+                                name,
+                                dob,
+                                sex,
+                                bloodtype,
+                                weight,
+                                height,
+                            })
                         }}
                         style={{
                             width: '40%',

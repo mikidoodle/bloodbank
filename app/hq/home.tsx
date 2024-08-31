@@ -44,8 +44,8 @@ export default function HQHome() {
                 if (refresh) setRefreshing(false)
                 if (response.error) {
                     Alert.alert(
+                        'Error',
                         'Unauthorized Access',
-                        response.error, //login again redirect
                         [
                             {
                                 text: 'Go back',

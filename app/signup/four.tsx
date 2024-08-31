@@ -176,7 +176,8 @@ export default function Four({
                             }}
                         >
                             Knowing your distance from our blood bank allows us
-                            to prioritize contacting you in urgent situations.{'\n\n'}
+                            to prioritize contacting you in urgent situations.
+                            {'\n\n'}
                             Your location data is only used to calculate this
                             distance and will not be stored.
                         </Text>
@@ -306,7 +307,14 @@ export default function Four({
                         )}
 
                         {distance ? (
-                            <Text style={{ fontSize: 16, textAlign: 'center', marginTop: 10, marginBottom: 10 }}>
+                            <Text
+                                style={{
+                                    fontSize: 16,
+                                    textAlign: 'center',
+                                    marginTop: 10,
+                                    marginBottom: 10,
+                                }}
+                            >
                                 Please ensure this is your permanent location.
                                 If not, sign up when you are, or move the map to
                                 your location.
