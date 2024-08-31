@@ -77,7 +77,7 @@ export default function Three({
                         </Text>
                     </View>
                     <Progress.Bar
-                        progress={0.3}
+                        progress={0.6}
                         width={300}
                         height={10}
                         color="#7469B6"
@@ -95,11 +95,24 @@ export default function Three({
                     Sign up |{' '}
                     <Text style={{ color: '#7469B6' }}>Conditions</Text>
                 </Text>
+
                 <View
                     style={{
                         width: '80%',
                     }}
                 >
+                    <Text
+                        style={{
+                            fontSize: 18,
+                            marginBottom: 30,
+                        }}
+                    >
+                        If you do not have any medical conditions or take any
+                        medications, click{' '}
+                        <Text style={{ color: '#7469B6', fontSize: 18 }}>
+                            Next
+                        </Text> at the bottom of the page.
+                    </Text>
                     <Text
                         style={{
                             fontSize: 18,

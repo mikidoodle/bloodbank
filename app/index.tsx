@@ -49,7 +49,7 @@ export default function Index() {
         }
         console.log(otp)
         setLoginProcess(true)
-        fetch(`http://localhost:3000/sendOTP`, {
+        fetch(`http://192.168.0.214:3000/sendOTP`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -133,7 +133,6 @@ export default function Index() {
                                         textAlign: 'left',
                                         fontSize: 16,
                                         color: '#7469B6',
-                                        
                                     }}
                                 >
                                     Try a different number
@@ -155,7 +154,9 @@ export default function Index() {
                         ? newUser
                             ? 'Verifying...'
                             : 'Loading...'
-                        : 'Continue'}
+                        : newUser
+                        ? 'Sign up!'
+                        : 'Log in'}
                 </Button>
                 {/*<Pressable
                     onPress={() => {

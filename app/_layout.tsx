@@ -1,6 +1,7 @@
 import { router, Stack } from 'expo-router'
 import { useEffect } from 'react'
 import * as Notifications from 'expo-notifications'
+import * as SecureStore from 'expo-secure-store'
 export default function RootLayout() {
     function useNotificationObserver() {
         useEffect(() => {

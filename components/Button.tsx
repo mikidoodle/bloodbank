@@ -17,7 +17,7 @@ export default function Button(props: {
                 style={{
                     textAlign: 'center',
                     fontSize: 20,
-                    color: props.disabled ? 'grey' : 'black',
+                    color: props.disabled ? 'grey' : 'white',
                 }}
             >
                 {props.children}

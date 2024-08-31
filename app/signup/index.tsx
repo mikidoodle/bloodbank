@@ -8,6 +8,7 @@ import TwoBeta from "./twobeta";
 import { useLocalSearchParams } from "expo-router";
 import Three from "./three";
 import Four from "./four";
+import Five from "./five";
 const Stack = createNativeStackNavigator();
 
 export default function Signup() {
@@ -32,6 +33,7 @@ export default function Signup() {
           <Stack.Screen name="twobeta" component={TwoBeta}/>
           <Stack.Screen name="three" component={Three} />
           <Stack.Screen name="four" component={Four} />
+          <Stack.Screen name="five" component={Five} />
         </Stack.Navigator>
       </NavigationContainer>
   );

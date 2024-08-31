@@ -81,7 +81,7 @@ export default function TwoBeta({
                         </Text>
                     </View>
                     <Progress.Bar
-                        progress={0.2}
+                        progress={0.25}
                         width={300}
                         height={10}
                         color="#7469B6"

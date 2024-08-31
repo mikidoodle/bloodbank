@@ -38,7 +38,7 @@ export default function Signup() {
             age,
             bloodtype,
         })
-        fetch(`http://localhost:3000/signup`, {
+        fetch(`http://192.168.0.214:3000/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

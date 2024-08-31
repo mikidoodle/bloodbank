@@ -47,6 +47,8 @@ export default function Four({
         let { status } = await Location.requestForegroundPermissionsAsync()
         if (status !== 'granted') {
             setErrorMsg('Permission to access location was denied')
+            setDistance(null)
+            setUserDefinedLocation(null)
             return
         }
 
@@ -68,8 +70,8 @@ export default function Four({
     function calcCrow(region: { latitude: number; longitude: number }) {
         let lat = region.latitude
         let lon = region.longitude
-        let bbLat = 11.9538489
-        let bbLon = 79.7951234
+        let bbLat = 11.953852
+        let bbLon = 79.797765
         var R = 6371 // km
         var dLat = toRad(bbLat - lat)
         var dLon = toRad(bbLon - lon)
@@ -132,7 +134,7 @@ export default function Four({
                         </Text>
                     </View>
                     <Progress.Bar
-                        progress={0.3}
+                        progress={0.8}
                         width={300}
                         height={10}
                         color="#7469B6"
@@ -154,18 +156,31 @@ export default function Four({
                         width: '80%',
                     }}
                 >
-                    <Text
-                        style={{
-                            fontSize: 16,
-                            textAlign: 'center',
-                            marginBottom: 20,
-                        }}
-                    >
-                        By knowing your distance from our blood bank, we can
-                        prioritize contacting you first in urgent situations
-                        where every minute counts. Your location data will not
-                        be stored and is only used to calculate distance.
-                    </Text>
+                    {distance ? (
+                        <Text
+                            style={{
+                                fontSize: 16,
+                                textAlign: 'center',
+                                marginBottom: 20,
+                            }}
+                        >
+                            Tap and drag the map to move the marker to your
+                            location.{' '}
+                        </Text>
+                    ) : (
+                        <Text
+                            style={{
+                                fontSize: 16,
+                                textAlign: 'center',
+                                marginBottom: 20,
+                            }}
+                        >
+                            Knowing your distance from our blood bank allows us
+                            to prioritize contacting you in urgent situations.{'\n\n'}
+                            Your location data is only used to calculate this
+                            distance and will not be stored.
+                        </Text>
+                    )}
                     <View
                         style={{
                             flexDirection: 'column',
@@ -196,22 +211,63 @@ export default function Four({
                                 {distance ? (
                                     <View
                                         style={{
-                                            margin: 'auto',
-                                            borderRadius: 10,
-                                            marginBottom: 20,
-                                            padding: 10,
-                                            backgroundColor: '#7469B6',
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
                                         }}
                                     >
-                                        <Text
+                                        <View
                                             style={{
-                                                fontSize: 16,
-                                                color: 'white',
+                                                borderRadius: 10,
+                                                marginBottom: 20,
+                                                padding: 10,
+                                                backgroundColor:
+                                                    distance < 5
+                                                        ? '#35C759'
+                                                        : distance < 10
+                                                        ? '#FF9503'
+                                                        : '#FF3B31',
                                             }}
                                         >
-                                            {distance.toPrecision(2)} km from
-                                            Blood Bank
-                                        </Text>
+                                            <Text
+                                                style={{
+                                                    fontSize: 16,
+                                                    color: 'white',
+                                                }}
+                                            >
+                                                {parseFloat(
+                                                    (distance < 1
+                                                        ? distance * 1000
+                                                        : distance
+                                                    ).toPrecision(2)
+                                                )
+                                                    .toString()
+                                                    .replace(
+                                                        /\B(?=(\d{3})+(?!\d))/g,
+                                                        ','
+                                                    )}{' '}
+                                                {distance < 1 ? 'm' : 'km'} from
+                                                Blood Bank
+                                            </Text>
+                                        </View>
+                                        <Pressable
+                                            onPress={getLocation}
+                                            style={{
+                                                borderRadius: 10,
+                                                marginBottom: 20,
+                                                padding: 10,
+                                                backgroundColor: '#AD88C6', //'#7469B6',
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    color: 'white',
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                Refresh
+                                            </Text>
+                                        </Pressable>
                                     </View>
                                 ) : null}
                                 <MapView
@@ -249,17 +305,22 @@ export default function Four({
                             </Button>
                         )}
 
-                        <Text style={{ fontSize: 16, textAlign: 'center' }}>
-                            Make sure this is a permanent location. If you are
-                            currently not at your permanent location, please
-                            sign up again when you are.
-                        </Text>
+                        {distance ? (
+                            <Text style={{ fontSize: 16, textAlign: 'center', marginTop: 10, marginBottom: 10 }}>
+                                Please ensure this is your permanent location.
+                                If not, sign up when you are, or move the map to
+                                your location.
+                            </Text>
+                        ) : null}
                     </View>
                 </View>
                 <View
                     style={{
+                        flex: 1,
+                        flexGrow: 1,
                         flexDirection: 'row',
                         justifyContent: 'space-between',
+                        width: '80%',
                         gap: 20,
                     }}
                 >
@@ -279,16 +340,16 @@ export default function Four({
                     </FreeButton>
                     <FreeButton
                         onPress={() => {
-                            navigation.navigate(`three`, {
+                            navigation.navigate(`five`, {
                                 ...route.params,
                                 location: userDefinedLocation,
                                 distance: distance,
                             })
                         }}
+                        disabled={userDefinedLocation ? false : true}
                         style={{
                             width: '40%',
                         }}
-                        disabled={userDefinedLocation ? false : true}
                     >
                         Next
                     </FreeButton>

@@ -48,7 +48,7 @@ export default function Home() {
     async function load(refresh = false) {
         if (refresh) setRefreshing(true)
         let token = await SecureStore.getItemAsync('token')
-        fetch(`http://localhost:3000/getUserData`, {
+        fetch(`http://192.168.0.214:3000/getUserData`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

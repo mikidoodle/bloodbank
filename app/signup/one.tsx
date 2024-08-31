@@ -77,7 +77,7 @@ export default function One({
                         </Text>
                     </View>
                     <Progress.Bar
-                        progress={0.1}
+                        progress={0.2}
                         width={300}
                         height={10}
                         color="#7469B6"
@@ -89,9 +89,10 @@ export default function One({
                         fontSize: 28,
                         textAlign: 'center',
                         margin: 'auto',
+                        marginBottom: 20,
                     }}
                 >
-                    Sign up
+                    Sign up | <Text style={{ color: '#7469B6' }}>General</Text>
                 </Text>
                 <Text
                     style={{

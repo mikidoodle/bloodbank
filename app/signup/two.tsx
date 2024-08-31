@@ -32,16 +32,16 @@ export default function Two({
     let [dob, setDob] = useState<string>(
         route.params?.dob || new Date().toISOString()
     )
-    let [sex, setSex] = useState<string>(route.params?.sex || 'male')
-    let [bloodGroup, setBloodGroup] = useState<string>(
-        route.params?.bloodGroup || 'A+'
+    let [sex, setSex] = useState<string>(route.params?.sex || 'male')   
+    let [bloodtype, setBloodtype] = useState<string>(
+        route.params?.bloodtype || 'A+'
     )
     let [weight, setWeight] = useState<string>(route.params?.weight || '')
     let [height, setHeight] = useState<string>(route.params?.height || '')
     delete route.params?.name
     delete route.params?.dob
     delete route.params?.sex
-    delete route.params?.bloodGroup
+    delete route.params?.bloodtype
     delete route.params?.weight
     delete route.params?.height
 
@@ -91,7 +91,7 @@ export default function Two({
                         </Text>
                     </View>
                     <Progress.Bar
-                        progress={0.3}
+                        progress={0.4}
                         width={300}
                         height={10}
                         color="#7469B6"
@@ -189,8 +189,8 @@ export default function Two({
                 </Text>
                 <View>
                     <Picker
-                        selectedValue={bloodGroup}
-                        onValueChange={setBloodGroup}
+                        selectedValue={bloodtype}
+                        onValueChange={setBloodtype}
                     >
                         <Picker.Item label="A+" value="A+" />
                         <Picker.Item label="A-" value="A-" />
@@ -220,7 +220,7 @@ export default function Two({
                                 name,
                                 dob,
                                 sex,
-                                bloodGroup,
+                                bloodtype,
                                 weight,
                                 height,
                             })
@@ -259,7 +259,7 @@ export default function Two({
                                     name,
                                     dob,
                                     sex,
-                                    bloodGroup,
+                                    bloodtype,
                                     weight,
                                     height,
                                 })
@@ -271,8 +271,9 @@ export default function Two({
                         disabled={
                             name.trim() == '' ||
                             dob.trim() == '' ||
-                            weight.trim() == '' ||
-                            height.trim() == ''
+                            //check if height and weight are numbers
+                            isNaN(Number(weight)) ||
+                            isNaN(Number(height))
                         }
                     >
                         Next
