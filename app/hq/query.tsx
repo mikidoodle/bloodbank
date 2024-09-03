@@ -61,20 +61,30 @@ export default function Query() {
     }, [])
     async function queryDonors(refresh = false, unverified = false) {
         if (refresh) setRefreshing(true)
+        setResultData([])
         setLoading(true)
         let token = await SecureStore.getItemAsync('token')
-        fetch(`http://localhost:3000/hq/queryDonors`, {
+        fetch(`http://192.168.0.146:3000/hq/queryDonors`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                token: token,
-                months: minimumMonths,
-                verified: requireUsersVerified,
-                affiliated: requireUsersAffiliated,
-                distance: radius,
-            }),
+            body: JSON.stringify(
+                unverified
+                    ? {
+                          token: token,
+                          unverified: true,
+                      }
+                    : {
+                          token: token,
+                          months: minimumMonths,
+                          verified: requireUsersVerified,
+                          affiliated: requireUsersAffiliated,
+                          distance: radius,
+                          bloodtype: bloodtype,
+                          unverified: false,
+                      }
+            ),
         })
             .then((response) => response.json())
             .then((response) => {
@@ -96,6 +106,11 @@ export default function Query() {
                     console.log(response.data)
                     setResultData(response.data)
                 }
+            })
+            .catch((error) => {
+                if (refresh) setRefreshing(false)
+                setLoading(false)
+                Alert.alert('Error', 'Failed to fetch data')
             })
     }
     return (
@@ -130,6 +145,9 @@ export default function Query() {
                 </Pressable>
             </View>
             <KeyboardAwareScrollView
+                style={{
+                    width: '100%',
+                }}
                 contentContainerStyle={{
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -177,21 +195,17 @@ export default function Query() {
                         }}
                     >
                         <Text
-                            style={{ color: activeHotswap ? 'white' : 'black' }}
+                            style={{
+                                color: activeHotswap ? 'white' : 'black',
+                                fontSize: 18,
+                            }}
                         >
-                            Conduct a query
+                            Custom Query
                         </Text>
                     </FreeButton>
                     <FreeButton
                         onPress={() => {
                             setResultData([])
-                            setActiveHotswap(false)
-                            setOpenUnverified(true)
-                            setMinimumMonths('')
-                            setRadius('')
-                            setBloodtype('')
-                            setRequireUsersAffiliated(false)
-                            setRequireUsersVerified(false)
                             queryDonors(false, true)
                         }}
                         style={{
@@ -205,6 +219,7 @@ export default function Query() {
                         <Text
                             style={{
                                 color: openUnverified ? 'white' : 'black',
+                                fontSize: 18,
                             }}
                         >
                             Unverified
@@ -372,152 +387,196 @@ export default function Query() {
                         </Button>
                     </View>
                 ) : (
-                    resultData.map((donor: any) => {
-                        return (
-                            <View
-                                style={{
-                                    width: '90%',
-                                    backgroundColor: '#fff',
-                                    borderRadius: 10,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    padding: 20,
-                                    gap: 10,
-                                }}
-                                key={donor.uuid}
-                            >
-                                <View>
-                                    <Text
-                                        style={{
-                                            fontSize: 20,
-                                            fontWeight: 'bold',
-                                        }}
-                                    >
-                                        {donor.name} ({donor.bloodtype})
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            fontSize: 16,
-                                            color: donor.verified
-                                                ? '#26CD41'
-                                                : '#FF3B2F',
-                                        }}
-                                    >
-                                        {donor.verified
-                                            ? 'Verified'
-                                            : 'Unverified'}
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            fontSize: 16,
-                                            color:
-                                                donor.distance < 5
-                                                    ? '#35C759'
-                                                    : donor.distance < 10
-                                                    ? '#FF9503'
-                                                    : '#FF3B31',
-                                        }}
-                                    >
-                                        {parseFloat(
-                                            donor.distance < 1
-                                                ? donor.distance * 1000
-                                                : donor.distance
-                                        )
-                                            .toPrecision(2)
-                                            .toString()
-                                            .replace(
-                                                /\B(?=(\d{3})+(?!\d))/g,
-                                                ','
-                                            )}{' '}
-                                        {donor.distance < 1 ? 'm' : 'km'} away
-                                        from the blood bank
-                                    </Text>
-                                </View>
+                    <View
+                        style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexDirection: 'column',
+                            gap: 20,
+                        }}
+                    >
+                        {resultData.map((donor: any) => {
+                            return (
                                 <View
                                     style={{
-                                        flexDirection: 'row',
-                                        gap: 5,
-                                        justifyContent: 'space-between',
+                                        width: '90%',
+                                        backgroundColor: '#fff',
+                                        borderRadius: 10,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        padding: 20,
+                                        gap: 10,
                                     }}
+                                    key={donor.uuid}
                                 >
                                     <View
                                         style={{
                                             flexDirection: 'column',
-                                            gap: 5,
-                                            backgroundColor: '#F3F3F3',
-                                            padding: 10,
-                                            borderRadius: 10,
+                                            justifyContent: 'space-between',
+                                            width: '100%',
                                         }}
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 16,
+                                                fontSize: 20,
                                                 fontWeight: 'bold',
-                                                textAlign: 'center',
                                             }}
                                         >
-                                            {convertTimestampToShortString(
-                                                donor.lastdonated
+                                            {donor.name} ({donor.bloodtype})
+                                            {'  '}
+                                            {donor.affiliated ? '🏥' : ''}
+                                            {'  '}
+                                            {donor.verified ? (
+                                                <Octicons
+                                                    name="verified"
+                                                    size={24}
+                                                    color="#26CD41"
+                                                />
+                                            ) : (
+                                                <Octicons
+                                                    name="unverified"
+                                                    size={24}
+                                                    color="#FF3B2F"
+                                                />
                                             )}
                                         </Text>
                                         <Text
                                             style={{
                                                 fontSize: 16,
+                                                color: donor.verified
+                                                    ? '#26CD41'
+                                                    : '#FF3B2F',
                                             }}
                                         >
-                                            Last donated
+                                            {donor.verified
+                                                ? 'Verified'
+                                                : 'Unverified'}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                fontSize: 16,
+                                                color:
+                                                    donor.distance < 5
+                                                        ? '#35C759'
+                                                        : donor.distance < 10
+                                                        ? '#FF9503'
+                                                        : '#FF3B31',
+                                            }}
+                                        >
+                                            {parseFloat(
+                                                donor.distance < 1
+                                                    ? donor.distance * 1000
+                                                    : donor.distance
+                                            )
+                                                .toPrecision(2)
+                                                .toString()
+                                                .replace(
+                                                    /\B(?=(\d{3})+(?!\d))/g,
+                                                    ','
+                                                )}{' '}
+                                            {donor.distance < 1 ? 'm' : 'km'}{' '}
+                                            away
                                         </Text>
                                     </View>
                                     <View
                                         style={{
-                                            flexDirection: 'column',
+                                            flexDirection: 'row',
                                             gap: 5,
-                                            backgroundColor: '#F3F3F3',
-                                            padding: 10,
-                                            borderRadius: 10,
+                                            justifyContent: 'space-between',
                                         }}
                                     >
-                                        <Text
+                                        <View
                                             style={{
-                                                fontSize: 16,
-                                                fontWeight: 'bold',
-                                                textAlign: 'center',
+                                                flexDirection: 'column',
+                                                gap: 5,
+                                                backgroundColor: '#F3F3F3',
+                                                padding: 10,
+                                                borderRadius: 10,
                                             }}
                                         >
-                                            {donor.totaldonations || 0}
-                                        </Text>
-                                        <Text
+                                            <Text
+                                                style={{
+                                                    fontSize: 16,
+                                                    fontWeight: 'bold',
+                                                    textAlign: 'center',
+                                                }}
+                                            >
+                                                {convertTimestampToShortString(
+                                                    donor.lastdonated
+                                                )}
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                Last donated
+                                            </Text>
+                                        </View>
+                                        <View
                                             style={{
-                                                fontSize: 16,
+                                                flexDirection: 'column',
+                                                gap: 5,
+                                                backgroundColor: '#F3F3F3',
+                                                padding: 10,
+                                                borderRadius: 10,
                                             }}
                                         >
-                                            Total donations
-                                        </Text>
+                                            <Text
+                                                style={{
+                                                    fontSize: 16,
+                                                    fontWeight: 'bold',
+                                                    textAlign: 'center',
+                                                }}
+                                            >
+                                                {donor.totaldonations || 0}
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                Total donations
+                                            </Text>
+                                        </View>
                                     </View>
-                                </View>
-                                <Pressable
-                                    onPress={() => {
-                                        router.push(`tel:${donor.phone}`)
-                                    }}
-                                    style={{
-                                        alignSelf: 'flex-start',
-                                    }}
-                                >
-                                    <Text
+                                    <Pressable
+                                        onPress={() => {
+                                            router.push(`tel:${donor.phone}`)
+                                        }}
                                         style={{
-                                            fontSize: 16,
-                                            color: '#7469B6',
+                                            alignSelf: 'flex-start',
                                         }}
                                     >
-                                        Call +91 {donor.phone}
-                                    </Text>
-                                </Pressable>
-                                <Button style={{ marginTop: 10 }} onPress={()=>{}}>
-                                    Verify
-                                </Button>
-                            </View>
-                        )
-                    })
+                                        <Text
+                                            style={{
+                                                fontSize: 16,
+                                                color: '#7469B6',
+                                            }}
+                                        >
+                                            Call +91 {donor.phone}
+                                        </Text>
+                                    </Pressable>
+                                    <Button
+                                        style={{ marginTop: 10 }}
+                                        onPress={() => {
+                                            router.push({
+                                                pathname: '/verifydonor',
+                                                params: {
+                                                    uuid: donor.uuid,
+                                                    token: token,
+                                                },
+                                            })
+                                        }}
+                                    >
+                                        {donor.verified
+                                            ? 'View donor'
+                                            : 'Verify'}
+                                    </Button>
+                                </View>
+                            )
+                        })}
+                    </View>
                 )}
             </KeyboardAwareScrollView>
         </SafeAreaView>

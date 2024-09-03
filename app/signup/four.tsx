@@ -266,7 +266,7 @@ export default function Four({
                                                     fontSize: 16,
                                                 }}
                                             >
-                                                Refresh
+                                                Reset
                                             </Text>
                                         </Pressable>
                                     </View>
@@ -293,6 +293,7 @@ export default function Four({
                                         }}
                                         title="Your Location"
                                     />
+                                    <Marker coordinate={{ latitude: 11.953852, longitude: 79.797765 }} title="Blood Bank" pinColor='blue' />
                                 </MapView>
                             </View>
                         ) : (

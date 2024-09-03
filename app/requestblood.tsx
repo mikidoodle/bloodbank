@@ -27,7 +27,7 @@ export default function Modal() {
             return
         }
         console.log(unitsRequired, minimumMonths)
-        fetch(`http://localhost:3000/hq/requestBlood`, {
+        fetch(`http://192.168.0.146:3000/hq/requestBlood`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -35,8 +35,8 @@ export default function Modal() {
             body: JSON.stringify({
                 token: token,
                 type: bloodtype,
-                units: unitsRequired,
-                months: minimumMonths,
+                units: parseInt(unitsRequired),
+                months: parseInt(minimumMonths),
                 contact: phoneNumber,
             }),
         })
@@ -52,7 +52,7 @@ export default function Modal() {
             })
             .catch((error) => {
                 setLoading(false)
-                Alert.alert('Error', error)
+                Alert.alert('Error')
             })
     }
 

@@ -1,4 +1,4 @@
-import { Alert, Platform, Text, View } from 'react-native'
+import { Alert, Platform, Text, useColorScheme, View } from 'react-native'
 import Octicons from '@expo/vector-icons/Octicons'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -18,6 +18,7 @@ Notifications.setNotificationHandler({
         shouldShowAlert: true,
         shouldPlaySound: false,
         shouldSetBadge: false,
+        
     }),
 })
 export default function Index() {
@@ -36,6 +37,7 @@ export default function Index() {
     useEffect(() => {
         async function checkNotifs() {
             let uuid = await SecureStore.getItemAsync('token')
+            
             if (!uuid) {
                 Alert.alert('Error', 'Please login to continue', [
                     {
@@ -53,27 +55,29 @@ export default function Index() {
                         if (token) {
                             setExpoPushToken(token)
                             console.log(token)
-                            fetch(
-                                'http://localhost:3000/updateNotifications',
-                                {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({
-                                        token: uuid,
-                                        notificationToken: token,
-                                    }),
-                                }
-                            )
+                            fetch('http://192.168.0.146:3000/updateNotifications', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    token: uuid,
+                                    notificationToken: token,
+                                }),
+                            })
                                 .then((response) => response.json())
                                 .then((response) => {
                                     if (response.error) {
                                         Alert.alert('Error', response.error)
+                                    } else {
+                                        console.log('Notification token updated')
                                     }
                                 })
                                 .catch((error) => {
-                                    console.log(error)
+                                    console.log(
+                                        'Error',
+                                        "Couldn't update notification token"
+                                    )
                                 })
                         } else {
                             Alert.alert(
@@ -116,11 +120,12 @@ export default function Index() {
         }
         checkNotifs()
     }, [])
+    let isDarkMode = useColorScheme() === 'dark';
     return (
         <>
             <Tab.Navigator
                 sceneContainerStyle={{
-                    backgroundColor: '#efeef7',
+                    backgroundColor: isDarkMode ? '#030303' : '#efeef7',
                 }}
                 screenOptions={{
                     headerShown: false,
@@ -142,8 +147,8 @@ export default function Index() {
                         shadowRadius: 20,
                         borderRadius: 64,
                         elevation: 10,
-                        backgroundColor: '#fff',
-                        backfaceVisibility: 'hidden',
+                        backgroundColor: isDarkMode ? '#3a3b3c' : '#fff',
+                        borderTopWidth: 0,
                     },
                     tabBarActiveTintColor: '#7469B6',
                     tabBarIconStyle: {
@@ -231,7 +236,7 @@ async function registerForPushNotificationsAsync() {
             finalStatus = status
         }
         if (finalStatus !== 'granted') {
-            alert('Failed to get push token for push notification!')
+            throw new Error('Failed to get push token for push notification!')
             return
         }
         // Learn more about projectId:
@@ -254,7 +259,7 @@ async function registerForPushNotificationsAsync() {
             token = `${e}`
         }
     } else {
-        alert('Must use physical device for Push Notifications')
+        throw new Error('physical device required for notifications')
     }
 
     return token

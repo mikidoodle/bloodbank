@@ -26,7 +26,7 @@ export default function Onboarding() {
     })
     function login() {
         setLoginProcess(true)
-        fetch(`http://localhost:3000/hq/login`, {
+        fetch(`http://192.168.0.146:3000/hq/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ export default function Onboarding() {
                 if (response.error) {
                     alert(response.message)
                 } else {
-                    alert(response.message)
+                    //alert(response.message)
                     await SecureStore.setItemAsync('token', 'hq-'+response.token)
                 }
             })

@@ -1,4 +1,4 @@
-import { RefreshControl, ScrollView, Text, View } from 'react-native'
+import { RefreshControl, ScrollView, Text, useColorScheme, View } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
 import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -19,6 +19,7 @@ export default function Settings() {
         console.log('loading')
         load(false)
     }, [])
+    let isDarkMode = useColorScheme() === 'dark'
     return (
         <SafeAreaView
             style={{
@@ -28,7 +29,7 @@ export default function Settings() {
             }}
         >
             <View>
-                <Text style={{ fontSize: 24, textAlign: 'center', margin: 20 }}>
+                <Text style={{ fontSize: 24, textAlign: 'center', margin: 20, color: isDarkMode ? 'white' : 'black' }}>
                     JIPMER <Text style={{ color: '#7469B6' }}>Blood Center</Text>
                 </Text>
             </View>
@@ -36,6 +37,8 @@ export default function Settings() {
                 contentContainerStyle={{
                     justifyContent: 'center',
                     alignItems: 'center',
+                    marginTop: 20,
+                    gap: 20
                 }}
                 //refresh control
                 refreshControl={
@@ -47,7 +50,17 @@ export default function Settings() {
                     />
                 }
             >
-                <Button 
+                <Button onPress={()=>{
+                    router.push('tel:+914132296666')
+                }}>
+                    Call JIPMER Blood Center
+                </Button>
+                <Button onPress={()=>{
+                    router.push('mailto:mihir@pidgon.com')
+                }}>
+                    Get Support
+                </Button>
+                <Button
                 onPress={()=>{
                     SecureStore.deleteItemAsync('token')
                     router.replace('/')

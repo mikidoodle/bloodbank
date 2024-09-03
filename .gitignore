@@ -1,5 +1,6 @@
 node_modules/
 .expo/
+.idea/
 package-lock.json
 yarn.lock
 dist/

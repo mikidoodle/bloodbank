@@ -53,6 +53,14 @@ export default function RootLayout() {
             <Stack.Screen name="hqonboarding/index" />
             <Stack.Screen name="hq/index" />
             <Stack.Screen
+                name="accountmigration"
+                options={{
+                    // Set the presentation mode to modal for our modal route.
+                    presentation: 'modal',
+                    gestureEnabled: false,
+                }}
+            />
+            <Stack.Screen
                 name="logdonor"
                 options={{
                     // Set the presentation mode to modal for our modal route.
@@ -60,19 +68,25 @@ export default function RootLayout() {
                 }}
             />
             <Stack.Screen
-            name="requestblood"
-            options={{
-                // Set the presentation mode to modal for our modal route.
-                presentation: 'modal',
-            }}
-        />
-        <Stack.Screen
-            name="signupcomplete"
-            options={{
-                presentation: 'modal',
-            }}
-            
-        />
+                name="requestblood"
+                options={{
+                    // Set the presentation mode to modal for our modal route.
+                    presentation: 'modal',
+                }}
+            />
+            <Stack.Screen
+                name="verifydonor"
+                options={{
+                    // Set the presentation mode to modal for our modal route.
+                    presentation: 'modal',
+                }}
+            />
+            <Stack.Screen
+                name="signupcomplete"
+                options={{
+                    presentation: 'modal',
+                }}
+            />
         </Stack>
     )
 }

@@ -5,6 +5,7 @@ import {
     Text,
     TextInput,
     TouchableWithoutFeedback,
+    useColorScheme,
     View,
 } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
@@ -49,7 +50,7 @@ export default function Index() {
         }
         console.log(otp)
         setLoginProcess(true)
-        fetch(`http://localhost:3000/sendOTP`, {
+        fetch(`http://192.168.0.146:3000/sendOTP`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

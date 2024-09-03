@@ -28,16 +28,12 @@ export default function Signup() {
                     name="one"
                     component={One}
                     initialParams={{ phoneNumber: local.phoneNumber }}
-                />{' '}
-                {/* affiliation with the hospital */}
-                <Stack.Screen name="two" component={Two} /> {/* biodata */}
-                <Stack.Screen name="twobeta" component={TwoBeta} />{' '}
-                {/* additional affiliation */}
-                <Stack.Screen name="three" component={Three} />{' '}
-                {/* medical conditions and medications */}
-                <Stack.Screen name="four" component={Four} />{' '}
-                {/* location access */}
-                <Stack.Screen name="five" component={Five} /> {/* extras */}
+                />
+                <Stack.Screen name="two" component={Two} />
+                <Stack.Screen name="twobeta" component={TwoBeta} />
+                <Stack.Screen name="three" component={Three} />
+                <Stack.Screen name="four" component={Four} />
+                <Stack.Screen name="five" component={Five} />
             </Stack.Navigator>
         </NavigationContainer>
     )

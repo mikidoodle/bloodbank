@@ -1,4 +1,4 @@
-import { Pressable, RefreshControl, ScrollView, Text, View } from 'react-native'
+import { Pressable, RefreshControl, ScrollView, Text, useColorScheme, View } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
 import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -19,6 +19,7 @@ export default function QR() {
         console.log('loading')
         load(false)
     }, [])
+    let isDarkMode = useColorScheme() === 'dark'
     return (
         <SafeAreaView
             style={{
@@ -36,7 +37,7 @@ export default function QR() {
                     marginTop: 20
                 }}
             >
-                <Text style={{ fontSize: 24, textAlign: 'center' }}>
+                <Text style={{ fontSize: 24, textAlign: 'center', color: isDarkMode ? 'white' : 'black' }}>
                     JIPMER <Text style={{ color: '#7469B6' }}>Blood Center</Text>
                 </Text>
                 <Pressable
@@ -70,6 +71,7 @@ export default function QR() {
                 <QRCode
                     value={'bloodbank-' + (uuid ?? 'notfound')}
                     backgroundColor="transparent"
+                    color={isDarkMode ? 'white' : 'black'}
                     logoSize={50}
                     size={325}
                     
@@ -79,6 +81,7 @@ export default function QR() {
                     fontSize: 14,
                     textAlign: 'center',
                     margin: 20,
+                    color: isDarkMode ? 'white' : 'black'
                 }}>
                     This QR code is unique to you and is used to identify you
                     when you donate.

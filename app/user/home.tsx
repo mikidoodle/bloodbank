@@ -4,6 +4,7 @@ import {
     RefreshControl,
     ScrollView,
     Text,
+    useColorScheme,
     View,
 } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
@@ -26,7 +27,15 @@ export default function Home() {
     function humanizeDate(date: string) {
         let d = new Date(date)
         //return DDth MMM, YYYY at HH:MM AM/PM
-        return `${d.getDate()}th ${
+        return `${d.getDate()}${
+            [1, 21, 31].includes(d.getDate())
+                ? 'st'
+                : [2, 22].includes(d.getDate())
+                ? 'nd'
+                : [3, 23].includes(d.getDate())
+                ? 'rd'
+                : 'th'
+        } ${
             [
                 'Jan',
                 'Feb',
@@ -48,7 +57,7 @@ export default function Home() {
     async function load(refresh = false) {
         if (refresh) setRefreshing(true)
         let token = await SecureStore.getItemAsync('token')
-        fetch(`http://localhost:3000/getUserData`, {
+        fetch(`http://192.168.0.146:3000/getUserData`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -58,9 +67,18 @@ export default function Home() {
             }),
         })
             .then((response) => response.json())
-            .then((response) => {
+            .then(async (response) => {
+                console.log(response)
                 if (refresh) setRefreshing(false)
                 if (response.error) {
+                    await SecureStore.deleteItemAsync('token')
+                    setName('')
+                    setDonated(null)
+                    setLastDonation('')
+                    setTotalDonators(null)
+                    setDonatingSince('')
+                    setLog([])
+
                     Alert.alert(
                         'User not found.',
                         response.error, //login again redirect
@@ -81,6 +99,16 @@ export default function Home() {
                     setTotalDonators(response.data.totalDonators)
                     setDonatingSince(response.data.donatingSince)
                     setLog(response.data.log.reverse())
+                    console.log(response.data.installed)
+                    if(response.data.installed === false) {
+                        router.push({
+                            pathname: '/accountmigration',
+                            params: {
+                                name: response.data.name,
+                                phone: response.data.phone,
+                            }
+                        })
+                    }
                 }
             })
             .catch((error) => {
@@ -92,6 +120,7 @@ export default function Home() {
         console.log('loading')
         load(false)
     }, [])
+    let isDarkMode = useColorScheme() === 'dark'
     return (
         <SafeAreaView
             style={{
@@ -109,7 +138,13 @@ export default function Home() {
                     marginTop: 20,
                 }}
             >
-                <Text style={{ fontSize: 24, textAlign: 'center' }}>
+                <Text
+                    style={{
+                        fontSize: 24,
+                        textAlign: 'center',
+                        color: isDarkMode ? 'white' : 'black',
+                    }}
+                >
                     JIPMER{' '}
                     <Text style={{ color: '#7469B6' }}>Blood Center</Text>
                 </Text>
@@ -124,6 +159,9 @@ export default function Home() {
                 </Pressable>
             </View>
             <ScrollView
+                style={{
+                    width: '100%',
+                }}
                 contentContainerStyle={{
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -145,7 +183,7 @@ export default function Home() {
                         justifyContent: 'center',
                     }}
                 >
-                    <Text style={{ fontSize: 28, textAlign: 'left' }}>
+                    <Text style={{ fontSize: 28, textAlign: 'left', color: isDarkMode ? 'white' : 'black' }}>
                         Hello{name.trim() === '' ? '!' : ', '}
                         <Text style={{ color: '#7469B6', fontWeight: 'bold' }}>
                             {name}
@@ -226,6 +264,7 @@ export default function Home() {
                         alignItems: 'center',
                         width: '100%',
                         gap: 20,
+                        marginBottom: 50,
                     }}
                 >
                     {log.map((item, index) => {
@@ -244,7 +283,9 @@ export default function Home() {
                                 key={index}
                                 style={{
                                     width: '80%',
-                                    backgroundColor: '#fff',
+                                    backgroundColor: isDarkMode
+                                        ? '#242526'
+                                        : '#f3f3f3',
                                     borderRadius: 10,
                                     justifyContent: 'center',
                                     alignItems: 'flex-start',
@@ -260,6 +301,7 @@ export default function Home() {
                                         fontSize: 18,
                                         fontWeight: 'bold',
                                         marginBottom: 10,
+                                        color: isDarkMode ? '#fff' : '#000',
                                     }}
                                 >
                                     {parsedXString}

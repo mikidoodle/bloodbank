@@ -30,7 +30,7 @@ export default function HQHome() {
     async function load(refresh = false) {
         if (refresh) setRefreshing(true)
         let token = await SecureStore.getItemAsync('token')
-        fetch(`http://localhost:3000/hq/getStats`, {
+        fetch(`http://192.168.0.146:3000/hq/getStats`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -60,6 +60,10 @@ export default function HQHome() {
                     setTotalDonators(response.data.totalDonors)
                     setTotalDonations(response.data.totalDonated)
                 }
+            })
+            .catch((error) => {
+                if (refresh) setRefreshing(false)
+                Alert.alert('Error', "Failed to fetch data")
             })
     }
     useEffect(() => {

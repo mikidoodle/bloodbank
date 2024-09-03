@@ -74,7 +74,7 @@ export default function Five({
             distance: route.params.distance,
             birthdayhero: birthdayHero,
         }
-        fetch(`http://localhost:3000/signup`, {
+        fetch(`http://192.168.0.146:3000/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

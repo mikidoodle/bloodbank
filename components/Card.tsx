@@ -1,18 +1,21 @@
 import Octicons from '@expo/vector-icons/Octicons'
-import { View, Text } from 'react-native'
+import { View, Text, useColorScheme } from 'react-native'
 
 export default function Card(props: {
     icon: any
     iconColor: string
     title: string
     subtitle: string
+    border?: boolean
 }) {
+
+    let isDarkMode = useColorScheme() === 'dark';
     return (
         <View
             style={{
                 width: "40%",
                 height: 120,
-                backgroundColor: '#fff',
+                backgroundColor: props.border ? isDarkMode ? '#242526' : '#f3f3f3' : isDarkMode ? '#242526' : '#fff',
                 borderRadius: 10,
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -23,6 +26,8 @@ export default function Card(props: {
                 style={{
                     fontSize: 24,
                     fontWeight: 'bold',
+                    textAlign: 'center',
+                    color: isDarkMode ? '#fff' : '#000',
                 }}
             >
                 {props.title}
