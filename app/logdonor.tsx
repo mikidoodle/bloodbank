@@ -35,7 +35,7 @@ export default function Modal() {
     let [marking, setMarking] = useState<boolean>(false)
     let [loading, setLoading] = useState<boolean>(true)
     useEffect(() => {
-        fetch(`http://192.168.0.146:3000/hq/getDonor`, {
+        fetch(`http://localhost:3000/hq/getDonor`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ export default function Modal() {
 
     function verifyDonor() {
         setVerifying(true)
-        fetch(`http://192.168.0.146:3000/hq/verifyDonor`, {
+        fetch(`http://localhost:3000/hq/verifyDonor`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ export default function Modal() {
 
     function markAsDonated() {
         setMarking(true)
-        fetch(`http://192.168.0.146:3000/hq/markDonated`, {
+        fetch(`http://localhost:3000/hq/markDonated`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

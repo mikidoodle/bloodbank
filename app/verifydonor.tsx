@@ -65,7 +65,7 @@ export default function Modal() {
     let [rejecting, setRejecting] = useState<boolean>(false)
     let [loading, setLoading] = useState<boolean>(true)
     useEffect(() => {
-        fetch(`http://192.168.0.146:3000/hq/requestUserData`, {
+        fetch(`http://localhost:3000/hq/requestUserData`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ export default function Modal() {
 
     function verifyDonor() {
         setVerifying(true)
-        fetch(`http://192.168.0.146:3000/hq/verifyDonor`, {
+        fetch(`http://localhost:3000/hq/verifyDonor`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -137,7 +137,7 @@ export default function Modal() {
 
     function rejectDonor() {
         setRejecting(true)
-        fetch(`http://192.168.0.146:3000/rejectDonor`, {
+        fetch(`http://localhost:3000/rejectDonor`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

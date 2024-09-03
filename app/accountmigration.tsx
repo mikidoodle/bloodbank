@@ -45,7 +45,7 @@ export default function Modal() {
     })
     async function updateLocation() {
         setDisable(true)
-        fetch('http://192.168.0.146:3000/updateLocation', {
+        fetch('http://localhost:3000/updateLocation', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
