@@ -56,6 +56,13 @@ export default function Settings() {
                 >
                     Log out
                 </Button>
+                <Button
+                    onPress={() => {
+                        router.push('mailto:mihir@pidgon.com')
+                    }}
+                >
+                    Get Support
+                </Button>
             </ScrollView>
         </SafeAreaView>
     )

@@ -53,45 +53,14 @@ export default function Modal() {
                 } else {
                     setLoading(false)
                     let localDonor = response.data
-                    localDonor.age = new Date().getFullYear() - new Date(localDonor.dob).getFullYear()
+                    localDonor.age =
+                        new Date().getFullYear() -
+                        new Date(localDonor.dob).getFullYear()
                     setDonorData(localDonor)
                     setBloodtype(response.data.bloodtype)
                 }
             })
     }, [])
-
-    function verifyDonor() {
-        setVerifying(true)
-        fetch(`http://localhost:3000/hq/verifyDonor`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                token: token,
-                uuid: uuid,
-                bloodtype: bloodtype,
-            }),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                if (response.error) {
-                    setVerifying(false)
-                    alert(response.message)
-                } else {
-                    alert(response.message)
-                    //update the donor data
-                    let newDonorData = { ...donorData }
-                    newDonorData.verified = true
-                    newDonorData.bloodtype = bloodtype
-                    setDonorData(newDonorData)
-                }
-            })
-            .catch((error) => {
-                setVerifying(false)
-                alert('An error occurred while verifying the donor')
-            })
-    }
 
     function markAsDonated() {
         setMarking(true)
@@ -215,59 +184,23 @@ export default function Modal() {
                             >
                                 This donor is not verified.
                             </Text>
-                            <Text style={{ fontSize: 18, color: 'black' }}>
-                                Please verify their blood group before allowing
-                                them to donate.
+                            <Text style={{ fontSize: 18 }}>
+                                You cannot mark them as donated until they are
+                                verified. Click the button below to verify{' '}
+                                {donorData.name}.
                             </Text>
-                            <Picker
-                                selectedValue={bloodtype}
-                                onValueChange={(itemValue, itemIndex) =>
-                                    setBloodtype(itemValue)
-                                }
-                                style={{
-                                    margin: 10,
-                                    borderRadius: 9,
-                                    backgroundColor: '#F3F3F3',
-                                }}
-                            >
-                                <Picker.Item label="A+" value="A+" />
-                                <Picker.Item label="A-" value="A-" />
-                                <Picker.Item label="B+" value="B+" />
-                                <Picker.Item label="B-" value="B-" />
-                                <Picker.Item label="AB+" value="AB+" />
-                                <Picker.Item label="AB-" value="AB-" />
-                                <Picker.Item label="O+" value="O+" />
-                                <Picker.Item label="O-" value="O-" />
-                                <Picker.Item
-                                    label="Bombay blood group"
-                                    value="Bombay blood group"
-                                />
-                            </Picker>
                             <Button
                                 onPress={() => {
-                                    if (bloodtype !== donorData.bloodtype) {
-                                        Alert.alert(
-                                            'Warning',
-                                            "The blood type you selected is different from the donor's entered blood type. Are you sure you want to verify the donor with this blood type?",
-                                            [
-                                                {
-                                                    text: 'No',
-                                                    style: 'cancel',
-                                                },
-                                                {
-                                                    text: 'Yes',
-                                                    onPress: verifyDonor,
-                                                    style: 'destructive',
-                                                },
-                                            ]
-                                        )
-                                    } else {
-                                        verifyDonor()
-                                    }
+                                    router.push({
+                                        pathname: '/verifydonor',
+                                        params: {
+                                            uuid: uuid,
+                                            token: token,
+                                        },
+                                    })
                                 }}
-                                disabled={verifying}
                             >
-                                <Text>Verify{verifying ? 'ing...' : ''}</Text>
+                                Verify donor
                             </Button>
                         </View>
                     ) : null}

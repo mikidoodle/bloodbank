@@ -179,7 +179,7 @@ export default function Modal() {
                         {
                             text: 'Get support',
                             onPress: () => {
-                                Linking.openURL(`tel:+919500499912`)
+                                Linking.openURL(`mailto:mihir@pidgon.com`)
                             },
                         },
                     ])

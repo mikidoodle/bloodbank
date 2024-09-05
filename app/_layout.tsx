@@ -37,6 +37,7 @@ export default function RootLayout() {
         }, [])
     }
     useNotificationObserver()
+    
     return (
         <Stack
             screenOptions={{
