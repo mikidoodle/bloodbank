@@ -8,7 +8,7 @@ export default StyleSheet.create({
         width: 300,
         margin: 10,
         borderRadius: 9,
-        backgroundColor: '#F3F3F3',
+        backgroundColor: '#E6E6E6',
     },
     disabledButton: {
         borderColor: '#AD88C6',

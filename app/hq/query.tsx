@@ -29,8 +29,11 @@ export default function Query() {
     let [refreshing, setRefreshing] = useState<boolean>(false)
     let [totalDonators, setTotalDonators] = useState<number | null>(null)
     let [totalDonations, setTotalDonations] = useState<number | null>(null)
+    let [expandCriteria, setExpandCriteria] = useState<boolean>(false)
+    let [expandSearchBox, setExpandSearchBox] = useState<boolean>(true)
     let [activeHotswap, setActiveHotswap] = useState<boolean>(true)
     let [bloodtype, setBloodtype] = useState<string>('')
+    let [name, setName] = useState<string>('')
     let [minimumMonths, setMinimumMonths] = useState<string>('')
     let [modifyValue, setModifyValue] = useState<'distance' | 'months'>(
         'months'
@@ -92,6 +95,7 @@ export default function Query() {
                           affiliated: requireUsersAffiliated,
                           distance: radius,
                           bloodtype: bloodtype,
+                          name: name,
                           unverified: false,
                       }
             ),
@@ -99,6 +103,7 @@ export default function Query() {
             .then((response) => response.json())
             .then((response) => {
                 if (refresh) setRefreshing(false)
+                if (!unverified) setExpandSearchBox(false)
                 if (response.error) {
                     Alert.alert('Error', 'Unauthorized Access', [
                         {
@@ -328,7 +333,6 @@ export default function Query() {
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}
-                //refresh control
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -360,7 +364,7 @@ export default function Query() {
                     style={{
                         flexDirection: 'row',
                         gap: 10,
-                        backgroundColor: '#E6E6E6',
+                        backgroundColor: '#EBEDEF',
                         padding: 10,
                         borderRadius: 20,
                     }}
@@ -417,178 +421,311 @@ export default function Query() {
                     </Pressable>
                 </View>
                 {activeHotswap ? (
-                    <Text
+                    <Pressable
                         style={{
-                            fontSize: 20,
-                            alignSelf: 'flex-start',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            width: '80%',
                             marginTop: 20,
-                            marginLeft: 30,
-                            fontWeight: 'bold',
+                            alignSelf: 'center',
                         }}
+                        onPress={() => setExpandSearchBox(!expandSearchBox)}
                     >
-                        Criteria
-                    </Text>
+                        <Text
+                            style={{
+                                fontSize: 20,
+                                alignSelf: 'flex-start',
+                                fontWeight: 'bold',
+                            }}
+                        >
+                            Search
+                        </Text>
+                        <Octicons
+                            name={
+                                expandSearchBox ? 'chevron-up' : 'chevron-down'
+                            }
+                            size={28}
+                            color="#7469B6"
+                        />
+                    </Pressable>
                 ) : null}
-                {activeHotswap ? (
-                    <ScrollView
-                        horizontal={true}
-                        contentContainerStyle={{
-                            gap: 10,
-                            padding: 9,
-                            borderRadius: 25,
-                        }}
+                {expandSearchBox ? (
+                    <View
                         style={{
                             width: '90%',
-                            backgroundColor: '#fff',
-                            borderRadius: 25,
-                            marginTop: 5,
-                        }}
-                        showsHorizontalScrollIndicator={false}
-                    >
-                        <Pressable
-                            onPress={() => {
-                                setModifyValue('months')
-                                setShowModal(true)
-                                inputRef.current?.focus()
-                            }}
-                            style={{
-                                backgroundColor:
-                                    minimumMonths == '' ? '#E6E6E6' : '#AD88C6',
-                                padding: 10,
-                                borderRadius: 16,
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 16,
-                                    textAlign: 'left',
-                                    color:
-                                        minimumMonths == '' ? 'black' : 'white',
-                                }}
-                            >
-                                {minimumMonths}{' '}
-                                {minimumMonths == '' ? 'M' : 'm'}inimum month
-                                {parseInt(minimumMonths) == 1 ? '' : 's'}
-                            </Text>
-                        </Pressable>
-                        <Pressable
-                            onPress={() => {
-                                setShowBloodTypeModal(true)
-                            }}
-                            style={{
-                                backgroundColor:
-                                    bloodtype == '' ? '#E6E6E6' : '#AD88C6',
-                                padding: 10,
-                                borderRadius: 16,
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 16,
-                                    textAlign: 'left',
-                                    color: bloodtype == '' ? 'black' : 'white',
-                                }}
-                            >
-                                {bloodtype == ''
-                                    ? 'Blood type'
-                                    : `${bloodtype} blood type`}
-                            </Text>
-                        </Pressable>
-                        <Pressable
-                            onPress={() => {
-                                setModifyValue('distance')
-                                setShowModal(true)
-                                inputRef.current?.focus()
-                            }}
-                            style={{
-                                backgroundColor:
-                                    radius == '' ? '#E6E6E6' : '#AD88C6',
-                                padding: 10,
-                                borderRadius: 16,
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 16,
-                                    textAlign: 'left',
-                                    color: radius == '' ? 'black' : 'white',
-                                }}
-                            >
-                                {radius == ''
-                                    ? 'Minimum distance'
-                                    : `${radius} km radius`}
-                            </Text>
-                        </Pressable>
-                        <Pressable
-                            onPress={() => {
-                                setRequireUsersVerified(!requireUsersVerified)
-                            }}
-                            style={{
-                                backgroundColor:
-                                    requireUsersVerified == true
-                                        ? '#AD88C6'
-                                        : '#E6E6E6',
-                                padding: 10,
-                                borderRadius: 16,
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 16,
-                                    textAlign: 'left',
-                                    color:
-                                        requireUsersVerified == true
-                                            ? 'white'
-                                            : 'black',
-                                }}
-                            >
-                                Verification{' '}
-                                {requireUsersVerified
-                                    ? 'required'
-                                    : 'not required'}
-                            </Text>
-                        </Pressable>
-                        <Pressable
-                            onPress={() => {
-                                setRequireUsersAffiliated(
-                                    !requireUsersAffiliated
-                                )
-                            }}
-                            style={{
-                                backgroundColor:
-                                    requireUsersAffiliated == true
-                                        ? '#AD88C6'
-                                        : '#E6E6E6',
-                                padding: 10,
-                                borderRadius: 16,
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 16,
-                                    textAlign: 'left',
-                                    color:
-                                        requireUsersAffiliated == true
-                                            ? 'white'
-                                            : 'black',
-                                }}
-                            >
-                                Affiliation{' '}
-                                {requireUsersAffiliated
-                                    ? 'required'
-                                    : 'not required'}
-                            </Text>
-                        </Pressable>
-                    </ScrollView>
-                ) : null}
-                {activeHotswap ? (
-                    <Button
-                        onPress={() => {
-                            queryDonors(false)
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: 20,
+                            backgroundColor: '#EBEDEF',
+                            borderRadius: 20,
                         }}
                     >
-                        Search!
-                    </Button>
+                        {activeHotswap ? (
+                            <Pressable
+                                onPress={() =>
+                                    setExpandCriteria(!expandCriteria)
+                                }
+                                style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    width: '80%',
+                                    marginTop: 20,
+                                    alignSelf: 'center',
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 20,
+                                        alignSelf: 'flex-start',
+                                        fontWeight: 'bold',
+                                    }}
+                                >
+                                    Criteria
+                                </Text>
+                                <Octicons
+                                    name={
+                                        expandCriteria
+                                            ? 'chevron-up'
+                                            : 'chevron-down'
+                                    }
+                                    size={28}
+                                    color="#7469B6"
+                                />
+                            </Pressable>
+                        ) : null}
+                        {activeHotswap ? (
+                            <ScrollView
+                                horizontal={!expandCriteria}
+                                contentContainerStyle={{
+                                    gap: 10,
+                                    padding: 9,
+                                    borderRadius: 25,
+                                }}
+                                style={{
+                                    width: '85%',
+                                    backgroundColor: '#fff',
+                                    borderRadius: 25,
+                                    marginTop: 5,
+                                }}
+                                showsHorizontalScrollIndicator={false}
+                            >
+                                <Pressable
+                                    onPress={() => {
+                                        setShowBloodTypeModal(true)
+                                    }}
+                                    style={{
+                                        backgroundColor:
+                                            bloodtype == ''
+                                                ? '#DDE1E4'
+                                                : '#AD88C6',
+                                        padding: 10,
+                                        borderRadius: 16,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 16,
+                                            textAlign: 'left',
+                                            color:
+                                                bloodtype == ''
+                                                    ? 'black'
+                                                    : 'white',
+                                        }}
+                                    >
+                                        {bloodtype == ''
+                                            ? 'Blood type'
+                                            : `${bloodtype} blood type`}
+                                    </Text>
+                                </Pressable>
+                                <Pressable
+                                    onPress={() => {
+                                        setModifyValue('distance')
+                                        setShowModal(true)
+                                        inputRef.current?.focus()
+                                    }}
+                                    style={{
+                                        backgroundColor:
+                                            radius == ''
+                                                ? '#DDE1E4'
+                                                : '#AD88C6',
+                                        padding: 10,
+                                        borderRadius: 16,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 16,
+                                            textAlign: 'left',
+                                            color:
+                                                radius == ''
+                                                    ? 'black'
+                                                    : 'white',
+                                        }}
+                                    >
+                                        {radius == ''
+                                            ? 'Minimum distance'
+                                            : `${radius} km radius`}
+                                    </Text>
+                                </Pressable>
+                                <Pressable
+                                    onPress={() => {
+                                        setModifyValue('months')
+                                        setShowModal(true)
+                                        inputRef.current?.focus()
+                                    }}
+                                    style={{
+                                        backgroundColor:
+                                            minimumMonths == ''
+                                                ? '#DDE1E4'
+                                                : '#AD88C6',
+                                        padding: 10,
+                                        borderRadius: 16,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 16,
+                                            textAlign: 'left',
+                                            color:
+                                                minimumMonths == ''
+                                                    ? 'black'
+                                                    : 'white',
+                                        }}
+                                    >
+                                        {minimumMonths}{' '}
+                                        {minimumMonths == '' ? 'M' : 'm'}inimum
+                                        month
+                                        {parseInt(minimumMonths) == 1
+                                            ? ''
+                                            : 's'}
+                                    </Text>
+                                </Pressable>
+                                <Pressable
+                                    onPress={() => {
+                                        setRequireUsersVerified(
+                                            !requireUsersVerified
+                                        )
+                                    }}
+                                    style={{
+                                        backgroundColor:
+                                            requireUsersVerified == true
+                                                ? '#AD88C6'
+                                                : '#DDE1E4',
+                                        padding: 10,
+                                        borderRadius: 16,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 16,
+                                            textAlign: 'left',
+                                            color:
+                                                requireUsersVerified == true
+                                                    ? 'white'
+                                                    : 'black',
+                                        }}
+                                    >
+                                        Verification{' '}
+                                        {requireUsersVerified
+                                            ? 'required'
+                                            : 'not required'}
+                                    </Text>
+                                </Pressable>
+                                <Pressable
+                                    onPress={() => {
+                                        setRequireUsersAffiliated(
+                                            !requireUsersAffiliated
+                                        )
+                                    }}
+                                    style={{
+                                        backgroundColor:
+                                            requireUsersAffiliated == true
+                                                ? '#AD88C6'
+                                                : '#DDE1E4',
+                                        padding: 10,
+                                        borderRadius: 16,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 16,
+                                            textAlign: 'left',
+                                            color:
+                                                requireUsersAffiliated == true
+                                                    ? 'white'
+                                                    : 'black',
+                                        }}
+                                    >
+                                        Affiliation{' '}
+                                        {requireUsersAffiliated
+                                            ? 'required'
+                                            : 'not required'}
+                                    </Text>
+                                </Pressable>
+                            </ScrollView>
+                        ) : null}
+                        {activeHotswap ? (
+                            <View
+                                style={{
+                                    flexDirection: 'column',
+                                    justifyContent: 'space-between',
+                                    width: '90%',
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between',
+                                        width: '90%',
+                                        alignSelf: 'center',
+                                        marginTop: 20,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 20,
+                                            alignSelf: 'flex-start',
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        Name
+                                    </Text>
+                                    <Pressable onPress={() => setName('')}>
+                                        <Text
+                                            style={{
+                                                fontSize: 18,
+                                                color: 'red',
+                                            }}
+                                        >
+                                            Clear
+                                        </Text>
+                                    </Pressable>
+                                </View>
+                                <TextInput
+                                    style={{
+                                        ...styles.input,
+                                        width: '90%',
+                                        alignSelf: 'center',
+                                        marginTop: 10,
+                                        backgroundColor: '#fff',
+                                    }}
+                                    placeholder="Type here"
+                                    value={name}
+                                    onChangeText={setName}
+                                />
+                            </View>
+                        ) : null}
+                        {activeHotswap ? (
+                            <Button
+                                onPress={() => {
+                                    queryDonors(false)
+                                }}
+                            >
+                                Search!
+                            </Button>
+                        ) : null}
+                    </View>
                 ) : null}
                 {loading ? (
                     <Text
