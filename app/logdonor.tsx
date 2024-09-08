@@ -1,4 +1,4 @@
-import { View, Platform, Text, Alert } from 'react-native'
+import { View, Platform, Text, Alert, Pressable } from 'react-native'
 import { Link, router, useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useState } from 'react'
@@ -35,7 +35,7 @@ export default function Modal() {
     let [marking, setMarking] = useState<boolean>(false)
     let [loading, setLoading] = useState<boolean>(true)
     useEffect(() => {
-        fetch(`http://localhost:3000/hq/getDonor`, {
+        fetch(`http://192.168.1.40:3000/hq/getDonor`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ export default function Modal() {
 
     function markAsDonated() {
         setMarking(true)
-        fetch(`http://localhost:3000/hq/markDonated`, {
+        fetch(`http://192.168.1.40:3000/hq/markDonated`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -116,16 +116,26 @@ export default function Modal() {
                         gap: 20,
                     }}
                 >
-                    <Text
+                    <Pressable
+                        onPress={() => router.dismiss()}
                         style={{
-                            fontSize: 36,
-                            fontWeight: 'bold',
-                            textAlign: 'center',
+                            width: '100%',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            marginTop: 20,
                         }}
                     >
-                        {donorData.name}
-                    </Text>
-
+                        <Text
+                            style={{
+                                fontSize: 36,
+                                fontWeight: 'bold',
+                                textAlign: 'center',
+                            }}
+                        >
+                            {donorData.name}
+                        </Text>
+                        <Octicons name="x" size={36} color="black" />
+                    </Pressable>
                     <Text style={{ fontSize: 24, color: 'grey' }}>
                         +91 {donorData.phone}
                     </Text>
@@ -203,7 +213,21 @@ export default function Modal() {
                                 Verify donor
                             </Button>
                         </View>
-                    ) : null}
+                    ) : (
+                        <Button
+                            onPress={() => {
+                                router.push({
+                                    pathname: '/verifydonor',
+                                    params: {
+                                        uuid: uuid,
+                                        token: token,
+                                    },
+                                })
+                            }}
+                        >
+                            View donor data
+                        </Button>
+                    )}
                     <Button
                         onPress={markAsDonated}
                         disabled={!donorData.verified || marking}

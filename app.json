@@ -4,7 +4,7 @@
     "slug": "bloodbank",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/iosicon.png",
     "scheme": "bloodbank",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -28,7 +28,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#EFEEF7"
       },
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
@@ -36,7 +36,13 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.pidgon.jipmer"
+      "package": "com.pidgon.jipmer",
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAugjFEMWV13GCxYTfvsb2xWXdE3j4ZVVc"
+        }
+      }
     },
     "web": {
       "bundler": "metro",
@@ -47,7 +53,7 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/images/icon.png",
+          "icon": "./assets/images/iosicon.png",
           "color": "#ffffff",
           "defaultChannel": "default"
         }

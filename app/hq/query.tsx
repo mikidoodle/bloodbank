@@ -77,7 +77,7 @@ export default function Query() {
         setResultData([])
         setLoading(true)
         let token = await SecureStore.getItemAsync('token')
-        fetch(`http://localhost:3000/hq/queryDonors`, {
+        fetch(`http://192.168.1.40:3000/hq/queryDonors`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -928,6 +928,17 @@ export default function Query() {
                                 </View>
                             )
                         })}
+                        {resultData.length == 0 && !activeHotswap ? (
+                            <Text
+                                style={{
+                                    fontSize: 18,
+                                    textAlign: 'center',
+                                    marginTop: 20,
+                                }}
+                            >
+                                No donors found{'\n'} matching that criteria.
+                            </Text>
+                        ) : null}
                     </View>
                 )}
             </KeyboardAwareScrollView>

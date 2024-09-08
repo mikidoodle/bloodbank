@@ -6,6 +6,7 @@ import {
     TextInput,
     KeyboardAvoidingView,
     Linking,
+    Pressable,
 } from 'react-native'
 import { Link, router, useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
@@ -65,7 +66,7 @@ export default function Modal() {
     let [rejecting, setRejecting] = useState<boolean>(false)
     let [loading, setLoading] = useState<boolean>(true)
     useEffect(() => {
-        fetch(`http://localhost:3000/hq/requestUserData`, {
+        fetch(`http://192.168.1.40:3000/hq/requestUserData`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -106,7 +107,7 @@ export default function Modal() {
 
     function verifyDonor() {
         setVerifying(true)
-        fetch(`http://localhost:3000/hq/verifyDonor`, {
+        fetch(`http://192.168.1.40:3000/hq/verifyDonor`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -137,7 +138,7 @@ export default function Modal() {
 
     function rejectDonor() {
         setRejecting(true)
-        fetch(`http://localhost:3000/rejectDonor`, {
+        fetch(`http://192.168.1.40:3000/rejectDonor`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -216,15 +217,27 @@ export default function Modal() {
                         gap: 20,
                     }}
                 >
-                    <Text
+                    <Pressable
+                        onPress={() => router.dismiss()}
                         style={{
-                            fontSize: 36,
-                            fontWeight: 'bold',
-                            textAlign: 'center',
+                            width: '90%',
+                            alignSelf: 'center',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            marginTop: 20,
                         }}
                     >
-                        {name}
-                    </Text>
+                        <Text
+                            style={{
+                                fontSize: 36,
+                                fontWeight: 'bold',
+                                textAlign: 'center',
+                            }}
+                        >
+                            {name}
+                        </Text>
+                        <Octicons name="x" size={36} color="black" />
+                    </Pressable>
                     <Text
                         style={{
                             fontSize: 24,
@@ -503,25 +516,32 @@ export default function Modal() {
                             }}
                         >
                             <FreeButton
-                                onPress={()=>{
-                                    Alert.alert('Warning', 'Are you sure you want to reject this donor?', [
-                                        {
-                                            text: 'Cancel',
-                                            onPress: () => {},
-                                        },
-                                        {
-                                            text: 'Reject',
-                                            onPress: () => {
-                                                rejectDonor()
+                                onPress={() => {
+                                    Alert.alert(
+                                        'Warning',
+                                        'Are you sure you want to reject this donor?',
+                                        [
+                                            {
+                                                text: 'Cancel',
+                                                onPress: () => {},
                                             },
-                                            style: 'destructive',
-                                        },
-                                    ])
+                                            {
+                                                text: 'Reject',
+                                                onPress: () => {
+                                                    rejectDonor()
+                                                },
+                                                style: 'destructive',
+                                            },
+                                        ]
+                                    )
                                 }}
                                 disabled={rejecting}
                                 style={{ width: '40%', backgroundColor: 'red' }}
                             >
-                                <Text>{verified ? 'Remove' : 'Reject'}{rejecting ? 'ing...' : ''}</Text>
+                                <Text>
+                                    {verified ? 'Remove' : 'Reject'}
+                                    {rejecting ? 'ing...' : ''}
+                                </Text>
                             </FreeButton>
                             <FreeButton
                                 onPress={verifyDonor}

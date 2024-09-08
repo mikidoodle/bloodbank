@@ -1,6 +1,7 @@
 import {
     Alert,
     Keyboard,
+    Platform,
     Pressable,
     ScrollView,
     Text,
@@ -19,7 +20,8 @@ import TwoRowInput from '@/components/TwoRowInput'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as Progress from 'react-native-progress'
 import { Octicons } from '@expo/vector-icons'
-import DateTimePicker from '@react-native-community/datetimepicker'
+import DateTimePicker, {DateTimePickerAndroid} from '@react-native-community/datetimepicker'
+
 import FreeButton from '@/components/FreeButton'
 export default function Two({
     navigation,
@@ -144,9 +146,30 @@ export default function Two({
                 >
                     Enter your date of birth
                 </Text>
-                <DateTimePicker
+                {
+                    Platform.OS === 'android' ?
+                    (
+                        <Pressable onPress={() => {
+                            DateTimePickerAndroid.open({
+                                value: new Date(dob),
+                                mode: 'date',
+                                onChange(event, date) {
+                                    if (date) setDob(date.toISOString())
+                                },
+                            })
+                        }} style={{
+                            padding: 10,
+                            borderRadius: 10,
+                            borderWidth: 1,
+                            borderColor: '#7469B6',
+                            marginBottom: 20,
+                        }}>
+                            <Text>{new Date(dob).toLocaleDateString()}</Text>
+                        </Pressable>
+                    ) : <DateTimePicker
                     value={new Date(dob)}
                     mode="date"
+                    display="calendar"
                     style={{
                         alignSelf: 'center',
                     }}
@@ -154,6 +177,8 @@ export default function Two({
                         if (date) setDob(date.toISOString())
                     }}
                 />
+                }
+                
                 <Text
                     style={{
                         fontSize: 18,

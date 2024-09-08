@@ -16,7 +16,9 @@ import Octicons from '@expo/vector-icons/Octicons'
 
 export default function HQHome() {
     let [refreshing, setRefreshing] = useState<boolean>(false)
-    let [totalDonators, setTotalDonators] = useState<number | null>(null)
+    let [totalDonators, setTotalDonators] = useState<number>(0)
+    let [verifiedDonors, setVerifiedDonors] = useState<number>(0)
+    let [unverifiedDonors, setUnverifiedDonors] = useState<number>(0)
     let [totalDonations, setTotalDonations] = useState<number | null>(null)
     let [token, setToken] = useState<string | null>('')
     useEffect(() => {
@@ -29,8 +31,9 @@ export default function HQHome() {
     }, [])
     async function load(refresh = false) {
         if (refresh) setRefreshing(true)
+
         let token = await SecureStore.getItemAsync('token')
-        fetch(`http://localhost:3000/hq/getStats`, {
+        fetch(`http://192.168.1.40:3000/hq/getStats`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -43,27 +46,35 @@ export default function HQHome() {
             .then((response) => {
                 if (refresh) setRefreshing(false)
                 if (response.error) {
-                    Alert.alert(
-                        'Error',
-                        'Unauthorized Access',
-                        [
-                            {
-                                text: 'Go back',
-                                onPress: () => {
-                                    SecureStore.deleteItemAsync('token')
-                                    router.navigate('/')
-                                },
+                    Alert.alert('Error', 'Unauthorized Access', [
+                        {
+                            text: 'Go back',
+                            onPress: () => {
+                                SecureStore.deleteItemAsync('token')
+                                router.navigate('/')
                             },
-                        ]
-                    )
+                        },
+                    ])
                 } else {
-                    setTotalDonators(response.data.totalDonors)
                     setTotalDonations(response.data.totalDonated)
+
+                    let totalDonors = response.data.totalDonors
+                    let verified = 0,
+                        unverified = 0,
+                        total = totalDonors.length
+
+                    totalDonors.forEach((donor: any) => {
+                        if (donor.verified) verified++
+                        else unverified++
+                    })
+                    setTotalDonators(total)
+                    setVerifiedDonors(verified)
+                    setUnverifiedDonors(unverified)
                 }
             })
             .catch((error) => {
                 if (refresh) setRefreshing(false)
-                Alert.alert('Error', "Failed to fetch data")
+                Alert.alert('Error', 'Failed to fetch data')
             })
     }
     useEffect(() => {
@@ -157,13 +168,36 @@ export default function HQHome() {
                             icon="code-of-conduct"
                             iconColor="#AD88C6"
                             title={totalDonators?.toString() || ''}
-                            subtitle="total donators"
+                            subtitle="total donors"
                         />
                         <Card
                             icon="heart-fill"
                             iconColor="#AD88C6"
                             title={totalDonations?.toString() || ''}
                             subtitle="total donated"
+                        />
+                    </View>
+                    <View
+                        style={{
+                            width: '100%',
+                            gap: 10,
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginBottom: 20,
+                        }}
+                    >
+                        <Card
+                            icon="unverified"
+                            iconColor="#AD88C6"
+                            title={unverifiedDonors?.toString() || ''}
+                            subtitle="unverified"
+                        />
+                        <Card
+                            icon="verified"
+                            iconColor="#AD88C6"
+                            title={verifiedDonors?.toString() || ''}
+                            subtitle="verified"
                         />
                     </View>
                     <Button

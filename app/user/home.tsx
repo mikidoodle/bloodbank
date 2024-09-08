@@ -19,6 +19,7 @@ export default function Home() {
     let [refreshing, setRefreshing] = useState<boolean>(false)
     let [name, setName] = useState<string>('')
     let [donated, setDonated] = useState<number | null>(null)
+    let [verified, setVerified] = useState<boolean>(true)
     let [lastDonation, setLastDonation] = useState<string>('')
     let [totalDonators, setTotalDonators] = useState<number | null>(null)
     let [log, setLog] = useState<{ x: string; y: number }[]>([])
@@ -57,7 +58,7 @@ export default function Home() {
     async function load(refresh = false) {
         if (refresh) setRefreshing(true)
         let token = await SecureStore.getItemAsync('token')
-        fetch(`http://localhost:3000/getUserData`, {
+        fetch(`http://192.168.1.40:3000/getUserData`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -99,14 +100,15 @@ export default function Home() {
                     setTotalDonators(response.data.totalDonators)
                     setDonatingSince(response.data.donatingSince)
                     setLog(response.data.log.reverse())
+                    setVerified(response.data.verified)
                     console.log(response.data.installed)
-                    if(response.data.installed === false) {
+                    if (response.data.installed === false) {
                         router.push({
                             pathname: '/accountmigration',
                             params: {
                                 name: response.data.name,
                                 phone: response.data.phone,
-                            }
+                            },
                         })
                     }
                 }
@@ -183,7 +185,13 @@ export default function Home() {
                         justifyContent: 'center',
                     }}
                 >
-                    <Text style={{ fontSize: 28, textAlign: 'left', color: isDarkMode ? 'white' : 'black' }}>
+                    <Text
+                        style={{
+                            fontSize: 28,
+                            textAlign: 'left',
+                            color: isDarkMode ? 'white' : 'black',
+                        }}
+                    >
                         Hello{name.trim() === '' ? '!' : ', '}
                         <Text style={{ color: '#7469B6', fontWeight: 'bold' }}>
                             {name}
@@ -236,7 +244,7 @@ export default function Home() {
                             icon="code-of-conduct"
                             iconColor="#AD88C6"
                             title={totalDonators?.toString() || ''}
-                            subtitle="total donators"
+                            subtitle="total donors"
                         />
                         <Card
                             icon="graph"
@@ -244,6 +252,36 @@ export default function Home() {
                             title={donatingSince}
                             subtitle="donating since"
                         />
+                    </View>
+                    <View
+                        style={{
+                            width: '80%',
+                            backgroundColor: isDarkMode ? '#242526' : '#fff',
+                            borderRadius: 10,
+                            justifyContent: 'flex-start',
+                            padding: 20,
+                            alignItems: 'center',
+                            flexDirection: 'column',
+                        }}
+                    >
+                        <Text style={{ fontSize: 18, color: 'black' }}>
+                            Verification status:{' '}
+                            <Text
+                                style={{
+                                    color: verified ? '#26CD41' : '#FF3B2F',
+                                }}
+                            >
+                                {verified ? 'Verified' : 'Unverified'}
+                            </Text>
+                        </Text>
+                        {verified ? null : (
+                            <Text style={{ fontSize: 16, color: 'black' }}>
+                                Your details have not been verified yet. Please
+                                allow a few days for verification.
+                                Alternatively, you can visit or call the blood
+                                center to get verified.
+                            </Text>
+                        )}
                     </View>
                 </View>
                 <Text

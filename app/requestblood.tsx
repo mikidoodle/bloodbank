@@ -27,7 +27,7 @@ export default function Modal() {
             return
         }
         console.log(unitsRequired, minimumMonths)
-        fetch(`http://localhost:3000/hq/requestBlood`, {
+        fetch(`http://192.168.1.40:3000/hq/requestBlood`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

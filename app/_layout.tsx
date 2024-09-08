@@ -59,13 +59,14 @@ export default function RootLayout() {
                     // Set the presentation mode to modal for our modal route.
                     presentation: 'modal',
                     gestureEnabled: false,
+                    
                 }}
             />
             <Stack.Screen
                 name="logdonor"
                 options={{
                     // Set the presentation mode to modal for our modal route.
-                    presentation: 'modal',
+                    presentation: 'modal'
                 }}
             />
             <Stack.Screen

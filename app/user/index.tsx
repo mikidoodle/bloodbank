@@ -18,7 +18,6 @@ Notifications.setNotificationHandler({
         shouldShowAlert: true,
         shouldPlaySound: false,
         shouldSetBadge: false,
-        
     }),
 })
 export default function Index() {
@@ -37,7 +36,7 @@ export default function Index() {
     useEffect(() => {
         async function checkNotifs() {
             let uuid = await SecureStore.getItemAsync('token')
-            
+
             if (!uuid) {
                 Alert.alert('Error', 'Please login to continue', [
                     {
@@ -50,27 +49,34 @@ export default function Index() {
             } else {
                 const perms = await Notifications.getPermissionsAsync()
                 let existingStatus = perms.status
+                console.log(`Existing status: ${existingStatus}`)
                 if (existingStatus !== 'granted') {
+                    console.log('Requesting permissions')
                     registerForPushNotificationsAsync().then(async (token) => {
                         if (token) {
                             setExpoPushToken(token)
                             console.log(token)
-                            fetch('http://localhost:3000/updateNotifications', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    token: uuid,
-                                    notificationToken: token,
-                                }),
-                            })
+                            fetch(
+                                'http://192.168.1.40:3000/updateNotifications',
+                                {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        uuid: uuid,
+                                        notificationToken: token,
+                                    }),
+                                }
+                            )
                                 .then((response) => response.json())
                                 .then((response) => {
                                     if (response.error) {
                                         Alert.alert('Error', response.error)
                                     } else {
-                                        console.log('Notification token updated')
+                                        console.log(
+                                            'Notification token updated'
+                                        )
                                     }
                                 })
                                 .catch((error) => {
@@ -120,7 +126,7 @@ export default function Index() {
         }
         checkNotifs()
     }, [])
-    let isDarkMode = useColorScheme() === 'dark';
+    let isDarkMode = useColorScheme() === 'dark'
     return (
         <>
             <Tab.Navigator
@@ -224,7 +230,7 @@ async function registerForPushNotificationsAsync() {
                     allowAlert: true,
                     allowBadge: true,
                     allowSound: true,
-                    allowCriticalAlerts: true,
+                    //allowCriticalAlerts: true,
                 },
                 android: {
                     allowAlert: true,

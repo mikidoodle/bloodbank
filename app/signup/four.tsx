@@ -1,6 +1,7 @@
 import {
     Alert,
     Keyboard,
+    Platform,
     Pressable,
     ScrollView,
     Text,
@@ -13,7 +14,7 @@ import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from '../../assets/styles/styles'
 import { Picker } from '@react-native-picker/picker'
-import MapView, { Marker } from 'react-native-maps'
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Button from '@/components/Button'
 import { Link, router } from 'expo-router'
 import TwoRowInput from '@/components/TwoRowInput'
@@ -271,6 +272,7 @@ export default function Four({
                                         </Pressable>
                                     </View>
                                 ) : null}
+
                                 <MapView
                                     style={{
                                         width: '100%',
@@ -293,7 +295,14 @@ export default function Four({
                                         }}
                                         title="Your Location"
                                     />
-                                    <Marker coordinate={{ latitude: 11.953852, longitude: 79.797765 }} title="Blood Bank" pinColor='blue' />
+                                    <Marker
+                                        coordinate={{
+                                            latitude: 11.953852,
+                                            longitude: 79.797765,
+                                        }}
+                                        title="Blood Bank"
+                                        pinColor="blue"
+                                    />
                                 </MapView>
                             </View>
                         ) : (

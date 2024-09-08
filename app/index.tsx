@@ -50,7 +50,7 @@ export default function Index() {
         }
         console.log(otp)
         setLoginProcess(true)
-        fetch(`http://localhost:3000/sendOTP`, {
+        fetch(`http://192.168.1.40:3000/sendOTP`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -142,6 +142,7 @@ export default function Index() {
                             <TextInput
                                 placeholder="enter OTP"
                                 autoComplete="off"
+                                keyboardType="number-pad"
                                 secureTextEntry={false}
                                 value={otp}
                                 onChangeText={setOtp}
