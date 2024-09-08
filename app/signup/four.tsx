@@ -31,7 +31,6 @@ export default function Four({
     navigation: any
     route: any
 }) {
-    //const [location, setLocation] = useState<Location.LocationObject | null>()
     const [userDefinedLocation, setUserDefinedLocation] = useState<any | null>(
         route.params?.location
     )
