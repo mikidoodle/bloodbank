@@ -14,7 +14,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.pidgon.jipmer",
+      "bundleIdentifier": "",
       "config": {
         "usesNonExemptEncryption": false
       },
@@ -36,11 +36,11 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.pidgon.jipmer",
+      "package": "",
       "googleServicesFile": "./google-services.json",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyAugjFEMWV13GCxYTfvsb2xWXdE3j4ZVVc"
+          "apiKey": ""
         }
       }
     },
@@ -84,7 +84,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "890dc69c-d188-4b09-83a3-e684478b4bce"
+        "projectId": ""
       }
     }
   }

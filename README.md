@@ -16,10 +16,16 @@ I wrote the app using React Native w/ Expo and Next.js route handlers for the ba
 
 # Running The App
 
-> ⚠️ This is an unfinished project. I’ll make a post on #ship when it’s ready, but as it stands nothing will work as you'd need to clone the [backend](https://github.com/mikidoodle/bloodbankapi) and set up an expo access token, a postgres DB and much more.
+# iOS
+cd into the project, and then follow the [Expo guide](https://docs.expo.dev/get-started/set-up-your-environment/). Copy the contents of `app.example.json` into a new file, `app.json`. Make sure you click **Development build** and toggle **Build with Expo Application Services** if you haven’t done this before. After that, run the project with the command ```npx expo start```
 
-cd into the project, and then follow the [Expo guide](https://docs.expo.dev/get-started/set-up-your-environment/)
-Make sure you click **Development build** and toggle **Build with Expo Application Services** if you haven’t done this before. After that, run the project with the command ```npx expo start```
+# Android
+Setup for Android is similar to iOS, but requires more setup for Notifications and Google Maps
+First, follow the instructions for iOS setup, but before running `npx expo start`, follow these instructions:
+- [Google Maps setup](https://docs.expo.dev/versions/latest/sdk/map-view/#android). Make sure you click **For development builds**.
+- [Notifications](https://docs.expo.dev/push-notifications/fcm-credentials/)
 
 
+Finally, set up the backend by following these [instructions](https://github.com/mikidoodle/bloodbankapi)
 ![outline](https://i.imgur.com/8rNSFwg.png)
+
