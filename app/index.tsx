@@ -50,7 +50,7 @@ export default function Index() {
         }
         console.log(otp)
         setLoginProcess(true)
-        fetch(`http://192.168.1.40:3000/sendOTP`, {
+        fetch(`https://bloodbank.pidgon.com/sendOTP`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -89,12 +89,14 @@ export default function Index() {
                 alert(error)
             })
     }
+    let isDarkMode = useColorScheme() === 'dark'
     return (
         <ScrollView
             contentContainerStyle={{
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
+                backgroundColor: isDarkMode ? '#030303' : '#fff',
             }}
         >
             {/* <TouchableWithoutFeedback
@@ -103,7 +105,13 @@ export default function Index() {
                 }}
             > */}
             <SafeAreaView>
-                <Text style={{ fontSize: 24, textAlign: 'center' }}>
+                <Text
+                    style={{
+                        fontSize: 24,
+                        textAlign: 'center',
+                        color: isDarkMode ? '#fff' : '#000',
+                    }}
+                >
                     JIPMER{' '}
                     <Text style={{ color: '#7469B6' }}>Blood Center</Text>
                 </Text>
@@ -114,6 +122,7 @@ export default function Index() {
                         keyboardType="phone-pad"
                         value={phoneNumber}
                         onChangeText={setPhoneNumber}
+                        placeholderTextColor={'grey'}
                         style={{
                             ...styles.input,
                             color: newUser || allowOTP ? 'grey' : 'black',
@@ -140,6 +149,7 @@ export default function Index() {
                                 </Text>
                             </Pressable>
                             <TextInput
+                                placeholderTextColor={'grey'}
                                 placeholder="enter OTP"
                                 autoComplete="off"
                                 keyboardType="number-pad"

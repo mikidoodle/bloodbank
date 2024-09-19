@@ -1,4 +1,11 @@
-import { View, Platform, Text, Alert, TextInput } from 'react-native'
+import {
+    View,
+    Platform,
+    Text,
+    Alert,
+    TextInput,
+    useColorScheme,
+} from 'react-native'
 import { Link, router, useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useState } from 'react'
@@ -17,7 +24,8 @@ export default function Modal() {
     let [unitsRequired, setUnitsRequired] = useState<string>('0')
     let [minimumMonths, setMinimumMonths] = useState<string>('0')
     let [loading, setLoading] = useState<boolean>(false)
-
+    let isDarkMode = useColorScheme() === 'dark'
+    let responsiveColor = isDarkMode ? 'white' : 'black'
     function requestBlood() {
         setLoading(true)
         //check if units and months are numbers
@@ -27,7 +35,7 @@ export default function Modal() {
             return
         }
         console.log(unitsRequired, minimumMonths)
-        fetch(`http://192.168.1.40:3000/hq/requestBlood`, {
+        fetch(`http://localhost:3000/hq/requestBlood`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -59,45 +67,87 @@ export default function Modal() {
     return (
         <KeyboardAwareScrollView
             style={{
-                marginTop: 20,
+                backgroundColor: isDarkMode ? '#121212' : '#fff',
             }}
         >
-            <View style={{
-                justifyContent: 'center',
-                width: '80%',
-                margin: 'auto',
-                gap: 20,
-            }}>
+            <View
+                style={{
+                    justifyContent: 'center',
+                    width: '80%',
+                    margin: 'auto',
+                    gap: 20,
+                }}
+            >
                 <Text
                     style={{
                         fontSize: 36,
                         fontWeight: 'bold',
                         textAlign: 'center',
+                        color: responsiveColor,
                     }}
                 >
                     Request Blood
                 </Text>
-                <Text style={{ fontSize: 18, textAlign: 'center' }}>
+                <Text
+                    style={{
+                        fontSize: 18,
+                        textAlign: 'center',
+                        color: responsiveColor,
+                    }}
+                >
                     What blood type do you need?
                 </Text>
                 <Picker
                     selectedValue={bloodtype}
                     onValueChange={(itemValue) => setBloodtype(itemValue)}
                 >
-                    <Picker.Item label="A+" value="A+" />
-                    <Picker.Item label="A-" value="A-" />
-                    <Picker.Item label="B+" value="B+" />
-                    <Picker.Item label="B-" value="B-" />
-                    <Picker.Item label="AB+" value="AB+" />
-                    <Picker.Item label="AB-" value="AB-" />
-                    <Picker.Item label="O+" value="O+" />
-                    <Picker.Item label="O-" value="O-" />
+                    <Picker.Item
+                        label="A+"
+                        value="A+"
+                        color={responsiveColor}
+                    />
+                    <Picker.Item
+                        label="A-"
+                        value="A-"
+                        color={responsiveColor}
+                    />
+                    <Picker.Item
+                        label="B+"
+                        value="B+"
+                        color={responsiveColor}
+                    />
+                    <Picker.Item
+                        label="B-"
+                        value="B-"
+                        color={responsiveColor}
+                    />
+                    <Picker.Item
+                        label="AB+"
+                        value="AB+"
+                        color={responsiveColor}
+                    />
+                    <Picker.Item
+                        label="AB-"
+                        value="AB-"
+                        color={responsiveColor}
+                    />
+                    <Picker.Item
+                        label="O+"
+                        value="O+"
+                        color={responsiveColor}
+                    />
+                    <Picker.Item
+                        label="O-"
+                        value="O-"
+                        color={responsiveColor}
+                    />
                     <Picker.Item
                         label="Bombay blood group"
                         value="Bombay blood group"
+                        color={responsiveColor}
                     />
                 </Picker>
-                <Text style={{ fontSize: 18, textAlign: 'center' }}>
+                <Text style={{ fontSize: 18, textAlign: 'center',color: responsiveColor, }}>
                     How many units do you need?
                 </Text>
                 <TwoRowInput
@@ -108,7 +158,7 @@ export default function Modal() {
                 >
                     units
                 </TwoRowInput>
-                <Text style={{ fontSize: 18, textAlign: 'center' }}>
+                <Text style={{ fontSize: 18, textAlign: 'center',color: responsiveColor, }}>
                     What is the minimum month gap required from the last
                     donation?
                 </Text>
@@ -120,11 +170,12 @@ export default function Modal() {
                 >
                     months
                 </TwoRowInput>
-                <Text style={{ fontSize: 18, textAlign: 'center' }}>
+                <Text style={{ fontSize: 18, textAlign: 'center',color: responsiveColor, }}>
                     What phone number should the donors contact?
                 </Text>
                 <TextInput
                     style={styles.input}
+                    placeholderTextColor={'grey'}
                     placeholder="9123456789"
                     keyboardType="phone-pad"
                     value={phoneNumber}

@@ -4,6 +4,7 @@ import {
     RefreshControl,
     ScrollView,
     Text,
+    useColorScheme,
     View,
 } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
@@ -33,7 +34,7 @@ export default function HQHome() {
         if (refresh) setRefreshing(true)
 
         let token = await SecureStore.getItemAsync('token')
-        fetch(`http://192.168.1.40:3000/hq/getStats`, {
+        fetch(`https://bloodbank.pidgon.com/hq/getStats`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -81,6 +82,7 @@ export default function HQHome() {
         console.log('loading')
         load(false)
     }, [])
+    let responsiveColor = useColorScheme() === 'dark' ? 'white' : 'black'
     return (
         <SafeAreaView
             style={{
@@ -98,7 +100,7 @@ export default function HQHome() {
                     marginTop: 20,
                 }}
             >
-                <Text style={{ fontSize: 24, textAlign: 'center' }}>
+                <Text style={{ fontSize: 24, textAlign: 'center', color: responsiveColor }}>
                     JIPMER{' '}
                     <Text style={{ color: '#7469B6' }}>Blood Center HQ</Text>
                 </Text>

@@ -7,6 +7,7 @@ import {
     Text,
     TextInput,
     TouchableWithoutFeedback,
+    useColorScheme,
     View,
 } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
@@ -52,7 +53,10 @@ export default function Four({
             return
         }
 
-        let location = await Location.getCurrentPositionAsync({})
+        let location = await Location.getLastKnownPositionAsync({})
+        if (!location) {
+            location = await Location.getCurrentPositionAsync({})
+        }
         setUserDefinedLocation({
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
@@ -93,6 +97,9 @@ export default function Four({
     function toRad(v: number) {
         return (v * Math.PI) / 180
     }
+
+    let responsiveDark = useColorScheme() === 'dark' ? 'white' : 'black'
+
     return (
         <KeyboardAwareScrollView
             contentContainerStyle={{
@@ -109,6 +116,7 @@ export default function Four({
                         marginBottom: 40,
                         marginTop: 20,
                         gap: 20,
+                        alignSelf: 'center',
                     }}
                 >
                     <View
@@ -123,10 +131,16 @@ export default function Four({
                             <Octicons
                                 name="arrow-left"
                                 size={24}
-                                color="black"
+                                color={responsiveDark}
                             />
                         </Pressable>
-                        <Text style={{ fontSize: 24, textAlign: 'center' }}>
+                        <Text
+                            style={{
+                                fontSize: 24,
+                                textAlign: 'center',
+                                color: responsiveDark,
+                            }}
+                        >
                             JIPMER{' '}
                             <Text style={{ color: '#7469B6' }}>
                                 Blood Center
@@ -147,6 +161,7 @@ export default function Four({
                         textAlign: 'center',
                         margin: 'auto',
                         marginBottom: 20,
+                        color: responsiveDark,
                     }}
                 >
                     Sign up | <Text style={{ color: '#7469B6' }}>Location</Text>
@@ -162,6 +177,7 @@ export default function Four({
                                 fontSize: 16,
                                 textAlign: 'center',
                                 marginBottom: 20,
+                                color: responsiveDark,
                             }}
                         >
                             Tap and drag the map to move the marker to your
@@ -173,6 +189,7 @@ export default function Four({
                                 fontSize: 16,
                                 textAlign: 'center',
                                 marginBottom: 20,
+                                color: responsiveDark,
                             }}
                         >
                             Knowing your distance from our blood bank allows us
@@ -284,6 +301,11 @@ export default function Four({
                                         calcCrow(r)
                                     }}
                                     zoomControlEnabled={true}
+                                    provider={
+                                        Platform.OS === 'ios'
+                                            ? undefined
+                                            : 'google'
+                                    }
                                 >
                                     <Marker
                                         coordinate={{

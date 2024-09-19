@@ -9,6 +9,7 @@ import {
     Switch,
     Text,
     TouchableOpacity,
+    useColorScheme,
     View,
 } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
@@ -74,10 +75,11 @@ export default function Query() {
     }, [])
     async function queryDonors(refresh = false, unverified = false) {
         if (refresh) setRefreshing(true)
+        if (unverified) setOpenUnverified(true)
         setResultData([])
         setLoading(true)
         let token = await SecureStore.getItemAsync('token')
-        fetch(`http://192.168.1.40:3000/hq/queryDonors`, {
+        fetch(`https://bloodbank.pidgon.com/hq/queryDonors`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -116,7 +118,7 @@ export default function Query() {
                     ])
                 } else {
                     setLoading(false)
-                    if (unverified) setOpenUnverified(true)
+
                     console.log(response.data)
                     setResultData(response.data)
                 }
@@ -127,6 +129,7 @@ export default function Query() {
                 Alert.alert('Error', 'Failed to fetch data')
             })
     }
+    let isDarkMode = useColorScheme() === 'dark'
     return (
         <SafeAreaView
             style={{
@@ -157,7 +160,7 @@ export default function Query() {
                         borderRadius: 25,
                         padding: 16,
                         marginTop: 'auto',
-                        backgroundColor: 'white',
+                        backgroundColor: isDarkMode ? '#121212' : 'white',
                     }}
                 >
                     <KeyboardAwareScrollView>
@@ -168,7 +171,7 @@ export default function Query() {
                                 alignItems: 'center',
                             }}
                         >
-                            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+                            <Text style={{ fontSize: 18, fontWeight: 'bold', color: isDarkMode ? 'white' : 'black' }}>
                                 Set minimum {modifyValue}
                             </Text>
                             <Pressable
@@ -191,7 +194,7 @@ export default function Query() {
                                 </Text>
                             </Pressable>
                         </View>
-                        <Text style={{ fontSize: 16, marginTop: 10 }}>
+                        <Text style={{ fontSize: 16, marginTop: 10,color: isDarkMode ? 'white' : 'black' }}>
                             {modifyValue == 'months'
                                 ? 'Set the minimum number of months required before the last donation'
                                 : 'Set the minimum distance in kilometers from the donors to the blood bank'}
@@ -202,6 +205,7 @@ export default function Query() {
                                 width: '90%',
                                 alignSelf: 'center',
                             }}
+                            placeholderTextColor={'grey'}
                             keyboardType="number-pad"
                             value={
                                 modifyValue == 'months' ? minimumMonths : radius
@@ -244,7 +248,7 @@ export default function Query() {
                         borderRadius: 25,
                         padding: 16,
                         marginTop: 'auto',
-                        backgroundColor: 'white',
+                        backgroundColor: isDarkMode ? '#121212' : 'white',
                     }}
                 >
                     <KeyboardAwareScrollView>
@@ -255,7 +259,13 @@ export default function Query() {
                                 alignItems: 'center',
                             }}
                         >
-                            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+                            <Text
+                                style={{
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    color: isDarkMode ? 'white' : 'black',
+                                }}
+                            >
                                 Set required blood type
                             </Text>
                             <Pressable
@@ -278,25 +288,68 @@ export default function Query() {
                                 </Text>
                             </Pressable>
                         </View>
-                        <Text style={{ fontSize: 16, marginTop: 10 }}>
+                        <Text
+                            style={{
+                                fontSize: 16,
+                                marginTop: 10,
+                                color: isDarkMode ? 'white' : 'black',
+                            }}
+                        >
                             Set the required blood type of the donors.
                         </Text>
                         <Picker
                             selectedValue={bloodtype}
                             onValueChange={setBloodtype}
                         >
-                            <Picker.Item label="Not required" value="" />
-                            <Picker.Item label="A+" value="A+" />
-                            <Picker.Item label="A-" value="A-" />
-                            <Picker.Item label="B+" value="B+" />
-                            <Picker.Item label="B-" value="B-" />
-                            <Picker.Item label="AB+" value="AB+" />
-                            <Picker.Item label="AB-" value="AB-" />
-                            <Picker.Item label="O+" value="O+" />
-                            <Picker.Item label="O-" value="O-" />
+                            <Picker.Item
+                                label="Not required"
+                                value=""
+                                color={isDarkMode ? 'white' : 'black'}
+                            />
+                            <Picker.Item
+                                label="A+"
+                                value="A+"
+                                color={isDarkMode ? 'white' : 'black'}
+                            />
+                            <Picker.Item
+                                label="A-"
+                                value="A-"
+                                color={isDarkMode ? 'white' : 'black'}
+                            />
+                            <Picker.Item
+                                label="B+"
+                                value="B+"
+                                color={isDarkMode ? 'white' : 'black'}
+                            />
+                            <Picker.Item
+                                label="B-"
+                                value="B-"
+                                color={isDarkMode ? 'white' : 'black'}
+                            />
+                            <Picker.Item
+                                label="AB+"
+                                value="AB+"
+                                color={isDarkMode ? 'white' : 'black'}
+                            />
+                            <Picker.Item
+                                label="AB-"
+                                value="AB-"
+                                color={isDarkMode ? 'white' : 'black'}
+                            />
+                            <Picker.Item
+                                label="O+"
+                                value="O+"
+                                color={isDarkMode ? 'white' : 'black'}
+                            />
+                            <Picker.Item
+                                label="O-"
+                                value="O-"
+                                color={isDarkMode ? 'white' : 'black'}
+                            />
                             <Picker.Item
                                 label="Bombay blood group"
                                 value="Bombay blood group"
+                                color={isDarkMode ? 'white' : 'black'}
                             />
                         </Picker>
                     </KeyboardAwareScrollView>
@@ -311,7 +364,13 @@ export default function Query() {
                     marginTop: 20,
                 }}
             >
-                <Text style={{ fontSize: 24, textAlign: 'center' }}>
+                <Text
+                    style={{
+                        fontSize: 24,
+                        textAlign: 'center',
+                        color: isDarkMode ? 'white' : 'black',
+                    }}
+                >
                     JIPMER{' '}
                     <Text style={{ color: '#7469B6' }}>Blood Center HQ</Text>
                 </Text>
@@ -355,6 +414,7 @@ export default function Query() {
                             textAlign: 'left',
                             color: '#7469B6',
                             fontWeight: 'bold',
+                            marginBottom: 20,
                         }}
                     >
                         Donors
@@ -364,7 +424,7 @@ export default function Query() {
                     style={{
                         flexDirection: 'row',
                         gap: 10,
-                        backgroundColor: '#EBEDEF',
+                        backgroundColor: isDarkMode ? '#242526' : '#EBEDEF',
                         padding: 10,
                         borderRadius: 20,
                     }}
@@ -377,7 +437,7 @@ export default function Query() {
                         style={{
                             padding: 10,
                             borderRadius: 10,
-                            width: '40%',
+                            width: '45%',
                             backgroundColor: activeHotswap
                                 ? '#AD88C6'
                                 : '#D3D3D3',
@@ -402,7 +462,7 @@ export default function Query() {
                         style={{
                             padding: 10,
                             borderRadius: 10,
-                            width: '40%',
+                            width: '45%',
                             borderColor: '#D3D3D3',
                             backgroundColor: openUnverified
                                 ? '#AD88C6'
@@ -436,6 +496,7 @@ export default function Query() {
                                 fontSize: 20,
                                 alignSelf: 'flex-start',
                                 fontWeight: 'bold',
+                                color: '#7469B6',
                             }}
                         >
                             Search
@@ -457,7 +518,7 @@ export default function Query() {
                             justifyContent: 'center',
                             alignItems: 'center',
                             marginTop: 20,
-                            backgroundColor: '#EBEDEF',
+                            backgroundColor: isDarkMode ? '#242526' : '#EBEDEF',
                             borderRadius: 20,
                         }}
                     >
@@ -479,6 +540,7 @@ export default function Query() {
                                         fontSize: 20,
                                         alignSelf: 'flex-start',
                                         fontWeight: 'bold',
+                                        color: isDarkMode ? 'white' : 'black',
                                     }}
                                 >
                                     Criteria
@@ -504,7 +566,9 @@ export default function Query() {
                                 }}
                                 style={{
                                     width: '85%',
-                                    backgroundColor: '#fff',
+                                    backgroundColor: isDarkMode
+                                        ? '#3A3B3C'
+                                        : '#fff',
                                     borderRadius: 25,
                                     marginTop: 5,
                                 }}
@@ -687,6 +751,9 @@ export default function Query() {
                                             fontSize: 20,
                                             alignSelf: 'flex-start',
                                             fontWeight: 'bold',
+                                            color: isDarkMode
+                                                ? 'white'
+                                                : 'black',
                                         }}
                                     >
                                         Name
@@ -710,6 +777,7 @@ export default function Query() {
                                         marginTop: 10,
                                         backgroundColor: '#fff',
                                     }}
+                                    placeholderTextColor={'grey'}
                                     placeholder="Type here"
                                     value={name}
                                     onChangeText={setName}
@@ -733,6 +801,7 @@ export default function Query() {
                             fontSize: 20,
                             textAlign: 'center',
                             marginTop: 20,
+                            color: isDarkMode ? 'white' : 'black',
                         }}
                     >
                         Loading...
@@ -753,7 +822,7 @@ export default function Query() {
                                 <View
                                     style={{
                                         width: '90%',
-                                        backgroundColor: '#fff',
+                                        backgroundColor: isDarkMode ? '#242526' : '#fff',
                                         borderRadius: 10,
                                         justifyContent: 'center',
                                         alignItems: 'center',
@@ -766,6 +835,7 @@ export default function Query() {
                                         style={{
                                             fontSize: 20,
                                             fontWeight: 'bold',
+                                            color: isDarkMode ? 'white' : 'black',
                                         }}
                                     >
                                         {donor.name}{' '}
@@ -833,7 +903,7 @@ export default function Query() {
                                             style={{
                                                 flexDirection: 'column',
                                                 gap: 5,
-                                                backgroundColor: '#F3F3F3',
+                                                backgroundColor: isDarkMode ? '#3a3b3c' : '#F3F3F3',
                                                 padding: 10,
                                                 borderRadius: 10,
                                             }}
@@ -843,6 +913,7 @@ export default function Query() {
                                                     fontSize: 16,
                                                     fontWeight: 'bold',
                                                     textAlign: 'center',
+                                                    color: isDarkMode ? 'white' : 'black',
                                                 }}
                                             >
                                                 {convertTimestampToShortString(
@@ -852,6 +923,7 @@ export default function Query() {
                                             <Text
                                                 style={{
                                                     fontSize: 16,
+                                                    color: isDarkMode ? 'white' : 'black',
                                                 }}
                                             >
                                                 Last donated
@@ -861,7 +933,7 @@ export default function Query() {
                                             style={{
                                                 flexDirection: 'column',
                                                 gap: 5,
-                                                backgroundColor: '#F3F3F3',
+                                                backgroundColor: isDarkMode ? '#3a3b3c' : '#F3F3F3',
                                                 padding: 10,
                                                 borderRadius: 10,
                                             }}
@@ -871,6 +943,7 @@ export default function Query() {
                                                     fontSize: 16,
                                                     fontWeight: 'bold',
                                                     textAlign: 'center',
+                                                    color: isDarkMode ? 'white' : 'black',
                                                 }}
                                             >
                                                 {donor.totaldonations || 0}
@@ -878,13 +951,14 @@ export default function Query() {
                                             <Text
                                                 style={{
                                                     fontSize: 16,
+                                                    color: isDarkMode ? 'white' : 'black',
                                                 }}
                                             >
                                                 Total donations
                                             </Text>
                                         </View>
                                     </View>
-                                    <Pressable
+                                    <Button
                                         onPress={() => {
                                             router.push(`tel:${donor.phone}`)
                                         }}
@@ -895,13 +969,13 @@ export default function Query() {
                                         <Text
                                             style={{
                                                 fontSize: 16,
-                                                color: '#7469B6',
+                                                color: 'white',
                                                 textAlign: 'center',
                                             }}
                                         >
                                             Call +91 {donor.phone}
                                         </Text>
-                                    </Pressable>
+                                    </Button>
                                     <View
                                         style={{
                                             flexDirection: 'row',
@@ -934,6 +1008,7 @@ export default function Query() {
                                     fontSize: 18,
                                     textAlign: 'center',
                                     marginTop: 20,
+                                    color: isDarkMode ? 'white' : 'black',
                                 }}
                             >
                                 No donors found{'\n'} matching that criteria.

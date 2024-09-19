@@ -45,7 +45,7 @@ export default function Modal() {
     })
     async function updateLocation() {
         setDisable(true)
-        fetch('http://192.168.1.40:3000/updateLocation', {
+        fetch('https://bloodbank.pidgon.com/updateLocation', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

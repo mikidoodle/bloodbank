@@ -5,6 +5,7 @@ import {
     Text,
     TextInput,
     TouchableWithoutFeedback,
+    useColorScheme,
     View,
 } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
@@ -26,7 +27,7 @@ export default function Onboarding() {
     })
     function login() {
         setLoginProcess(true)
-        fetch(`http://192.168.1.40:3000/hq/login`, {
+        fetch(`https://bloodbank.pidgon.com/hq/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -50,12 +51,14 @@ export default function Onboarding() {
                 alert(error)
             })
     }
+    let isDarkMode = useColorScheme() === 'dark'
     return (
         <ScrollView
             contentContainerStyle={{
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
+                backgroundColor: isDarkMode ? '#030303' : '#efeef7',
             }}
         >
             {/* <TouchableWithoutFeedback
@@ -64,7 +67,7 @@ export default function Onboarding() {
                 }}
             > */}
             <SafeAreaView>
-                <Text style={{ fontSize: 24, textAlign: 'center' }}>
+                <Text style={{ fontSize: 24, textAlign: 'center', color: isDarkMode ? 'white' : 'black' }}>
                     JIPMER <Text style={{ color: '#7469B6' }}>Blood Center</Text>
                 </Text>
                 <View style={{ marginTop: 20 }}>
@@ -76,6 +79,7 @@ export default function Onboarding() {
                     <TextInput
                         placeholder="login code"
                         autoComplete="off"
+                        placeholderTextColor={'grey'}
                         secureTextEntry={true}
                         value={loginCode}
                         onChangeText={setLoginCode}

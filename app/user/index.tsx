@@ -57,7 +57,7 @@ export default function Index() {
                             setExpoPushToken(token)
                             console.log(token)
                             fetch(
-                                'http://192.168.1.40:3000/updateNotifications',
+                                'https://bloodbank.pidgon.com/updateNotifications',
                                 {
                                     method: 'POST',
                                     headers: {

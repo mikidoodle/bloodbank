@@ -7,6 +7,7 @@ import {
     KeyboardAvoidingView,
     Linking,
     Pressable,
+    useColorScheme,
 } from 'react-native'
 import { Link, router, useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
@@ -65,8 +66,10 @@ export default function Modal() {
     let [verifying, setVerifying] = useState<boolean>(false)
     let [rejecting, setRejecting] = useState<boolean>(false)
     let [loading, setLoading] = useState<boolean>(true)
+    let isDarkMode = useColorScheme() === 'dark'
+    let responsiveColor = isDarkMode ? 'white' : 'black'
     useEffect(() => {
-        fetch(`http://192.168.1.40:3000/hq/requestUserData`, {
+        fetch(`https://bloodbank.pidgon.com/hq/requestUserData`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -107,7 +110,7 @@ export default function Modal() {
 
     function verifyDonor() {
         setVerifying(true)
-        fetch(`http://192.168.1.40:3000/hq/verifyDonor`, {
+        fetch(`https://bloodbank.pidgon.com/hq/verifyDonor`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -138,7 +141,7 @@ export default function Modal() {
 
     function rejectDonor() {
         setRejecting(true)
-        fetch(`http://192.168.1.40:3000/rejectDonor`, {
+        fetch(`https://bloodbank.pidgon.com/rejectDonor`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -195,9 +198,11 @@ export default function Modal() {
 
     return (
         <KeyboardAwareScrollView
+            style={{
+                backgroundColor: isDarkMode ? '#121212' : '#fff',
+            }}
             contentContainerStyle={{
                 justifyContent: 'center',
-                marginTop: 40,
             }}
         >
             {loading ? (
@@ -206,6 +211,7 @@ export default function Modal() {
                         fontSize: 36,
                         fontWeight: 'bold',
                         textAlign: 'center',
+                        color: responsiveColor,
                     }}
                 >
                     Loading donor...
@@ -231,12 +237,13 @@ export default function Modal() {
                             style={{
                                 fontSize: 36,
                                 fontWeight: 'bold',
-                                textAlign: 'center',
+                                textAlign: 'left',
+                                color: responsiveColor,
                             }}
                         >
                             {name}
                         </Text>
-                        <Octicons name="x" size={36} color="black" />
+                        <Octicons name="x" size={36} color={responsiveColor} />
                     </Pressable>
                     <Text
                         style={{
@@ -292,7 +299,7 @@ export default function Modal() {
                                     )
                                 }`}
                                 icon="person"
-                                iconColor={'black'}
+                                iconColor={responsiveColor}
                                 subtitle={'years old'}
                                 border={true}
                             />
@@ -316,14 +323,14 @@ export default function Modal() {
                             <Card
                                 title={`${height} cm`}
                                 icon="diff"
-                                iconColor={'black'}
+                                iconColor={responsiveColor}
                                 subtitle={'height'}
                                 border={true}
                             />
                             <Card
                                 title={`${weight} kg`}
                                 icon="diff"
-                                iconColor={'black'}
+                                iconColor={responsiveColor}
                                 subtitle={'weight'}
                                 border={true}
                             />
@@ -340,14 +347,14 @@ export default function Modal() {
                                     lastDonated
                                 )}
                                 icon="graph"
-                                iconColor={'#'}
+                                iconColor={responsiveColor}
                                 subtitle={'Last Donated'}
                                 border={true}
                             />
                             <Card
                                 title={totalDonations}
                                 icon="sort-asc"
-                                iconColor={'black'}
+                                iconColor={responsiveColor}
                                 subtitle={'total donations'}
                                 border={true}
                             />
@@ -358,6 +365,7 @@ export default function Modal() {
                                     style={{
                                         fontSize: 24,
                                         textAlign: 'center',
+                                        color: responsiveColor,
                                     }}
                                 >
                                     Affiliation Data
@@ -380,7 +388,7 @@ export default function Modal() {
                                                 affiliatedData?.department || ''
                                             }
                                             icon="id-badge"
-                                            iconColor={'black'}
+                                            iconColor={responsiveColor}
                                             subtitle={'Department'}
                                             border={true}
                                         />
@@ -390,7 +398,7 @@ export default function Modal() {
                                                 ''
                                             }
                                             icon="people"
-                                            iconColor={'black'}
+                                            iconColor={responsiveColor}
                                             subtitle={'Designation'}
                                             border={true}
                                         />
@@ -408,7 +416,7 @@ export default function Modal() {
                                                 ''
                                             }
                                             icon="hourglass"
-                                            iconColor={'black'}
+                                            iconColor={responsiveColor}
                                             subtitle={'Joining year'}
                                             border={true}
                                         />
@@ -421,9 +429,9 @@ export default function Modal() {
                         style={{
                             borderColor: '#FF3B2F',
                             borderWidth: 2,
-                            backgroundColor: '#FAF9F6',
+                            backgroundColor: isDarkMode ? '#242526' : '#FAF9F6',
                             padding: 10,
-                            borderRadius: 5,
+                            borderRadius: 10,
                             width: '90%',
                             margin: 'auto',
                             marginBottom: 50,
@@ -441,11 +449,15 @@ export default function Modal() {
                                 : 'This donor is not verified.'}
                         </Text>
                         {verified ? (
-                            <Text style={{ fontSize: 18, color: 'black' }}>
+                            <Text
+                                style={{ fontSize: 18, color: responsiveColor }}
+                            >
                                 Modify blood type
                             </Text>
                         ) : (
-                            <Text style={{ fontSize: 18, color: 'black' }}>
+                            <Text
+                                style={{ fontSize: 18, color: responsiveColor }}
+                            >
                                 Please verify their blood group before allowing
                                 them to donate.
                             </Text>
@@ -458,34 +470,82 @@ export default function Modal() {
                             style={{
                                 margin: 10,
                                 borderRadius: 9,
-                                backgroundColor: '#F3F3F3',
+                                backgroundColor: isDarkMode
+                                    ? '#242526'
+                                    : '#F3F3F3',
                             }}
                         >
-                            <Picker.Item label="A+" value="A+" />
-                            <Picker.Item label="A-" value="A-" />
-                            <Picker.Item label="B+" value="B+" />
-                            <Picker.Item label="B-" value="B-" />
-                            <Picker.Item label="AB+" value="AB+" />
-                            <Picker.Item label="AB-" value="AB-" />
-                            <Picker.Item label="O+" value="O+" />
-                            <Picker.Item label="O-" value="O-" />
+                            <Picker.Item
+                                label="A+"
+                                value="A+"
+                                color={responsiveColor}
+                            />
+                            <Picker.Item
+                                label="A-"
+                                value="A-"
+                                color={responsiveColor}
+                            />
+                            <Picker.Item
+                                label="B+"
+                                value="B+"
+                                color={responsiveColor}
+                            />
+                            <Picker.Item
+                                label="B-"
+                                value="B-"
+                                color={responsiveColor}
+                            />
+                            <Picker.Item
+                                label="AB+"
+                                value="AB+"
+                                color={responsiveColor}
+                            />
+                            <Picker.Item
+                                label="AB-"
+                                value="AB-"
+                                color={responsiveColor}
+                            />
+                            <Picker.Item
+                                label="O+"
+                                value="O+"
+                                color={responsiveColor}
+                            />
+                            <Picker.Item
+                                label="O-"
+                                value="O-"
+                                color={responsiveColor}
+                            />
                             <Picker.Item
                                 label="Bombay blood group"
                                 value="Bombay blood group"
+                                color={responsiveColor}
                             />
                         </Picker>
-                        <Text style={{ fontSize: 18, margin: 10 }}>
+                        <Text
+                            style={{
+                                fontSize: 18,
+                                margin: 10,
+                                color: responsiveColor,
+                            }}
+                        >
                             {conditions.trim() == '' && medications.trim() == ''
                                 ? 'No'
                                 : null}{' '}
                             Conditions and Medications
                         </Text>
-                        <Text style={{ fontSize: 18, margin: 10 }}>
+                        <Text
+                            style={{
+                                fontSize: 18,
+                                margin: 10,
+                                color: responsiveColor,
+                            }}
+                        >
                             If the donor has any conditions or medications,
                             please enter them here. Leave blank if none.
                         </Text>
                         <TextInput
                             placeholder="Conditions"
+                            placeholderTextColor={'grey'}
                             value={conditions}
                             onChangeText={setConditions}
                             multiline={true}
@@ -498,6 +558,7 @@ export default function Modal() {
                         />
                         <TextInput
                             placeholder="Medications"
+                            placeholderTextColor={'grey'}
                             value={medications}
                             onChangeText={setMedications}
                             multiline={true}

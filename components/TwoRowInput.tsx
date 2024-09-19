@@ -20,6 +20,7 @@ export default function TwoRowInput(props: {
                 placeholder={props.placeholder}
                 keyboardType={props.keyboardType}
                 value={props.value}
+                placeholderTextColor={'grey'}
                 onChangeText={props.setValue}
                 style={{ ...styles.input, width: '75%' }}
             />

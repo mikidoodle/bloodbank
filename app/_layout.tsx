@@ -2,7 +2,9 @@ import { router, Stack } from 'expo-router'
 import { useEffect } from 'react'
 import * as Notifications from 'expo-notifications'
 import * as SecureStore from 'expo-secure-store'
+import { useColorScheme } from 'react-native'
 export default function RootLayout() {
+    let isDarkMode = useColorScheme() === 'dark'
     function useNotificationObserver() {
         useEffect(() => {
             let isMounted = true
@@ -86,7 +88,7 @@ export default function RootLayout() {
             <Stack.Screen
                 name="signupcomplete"
                 options={{
-                    presentation: 'modal',
+                    presentation: 'modal'
                 }}
             />
         </Stack>

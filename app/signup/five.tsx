@@ -6,6 +6,7 @@ import {
     Text,
     TextInput,
     TouchableWithoutFeedback,
+    useColorScheme,
     View,
 } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
@@ -74,7 +75,7 @@ export default function Five({
             distance: route.params.distance,
             birthdayhero: birthdayHero,
         }
-        fetch(`http://192.168.1.40:3000/signup`, {
+        fetch(`https://bloodbank.pidgon.com/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -99,6 +100,8 @@ export default function Five({
                 alert(error)
             })
     }
+    let responsiveDark = useColorScheme() === 'dark' ? 'white' : 'black'
+
     return (
         <KeyboardAwareScrollView
             contentContainerStyle={{
@@ -115,6 +118,7 @@ export default function Five({
                         marginBottom: 40,
                         marginTop: 20,
                         gap: 20,
+                        alignSelf: 'center',
                     }}
                 >
                     <View
@@ -129,10 +133,16 @@ export default function Five({
                             <Octicons
                                 name="arrow-left"
                                 size={24}
-                                color="black"
+                                color={responsiveDark}
                             />
                         </Pressable>
-                        <Text style={{ fontSize: 24, textAlign: 'center' }}>
+                        <Text
+                            style={{
+                                fontSize: 24,
+                                textAlign: 'center',
+                                color: responsiveDark,
+                            }}
+                        >
                             JIPMER{' '}
                             <Text style={{ color: '#7469B6' }}>
                                 Blood Center
@@ -153,6 +163,7 @@ export default function Five({
                         textAlign: 'center',
                         margin: 'auto',
                         marginBottom: 20,
+                        color: responsiveDark,
                     }}
                 >
                     Sign up | <Text style={{ color: '#7469B6' }}>Extras</Text>
@@ -166,13 +177,20 @@ export default function Five({
                         style={{
                             fontSize: 18,
                             marginBottom: 20,
+                            color: responsiveDark,
                         }}
                     >
                         As you celebrate yet another year of life, give someone
                         else the chance too. Be a real hero in your life by
                         participating in "Birthday Heroes" initiative.
                     </Text>
-                    <Text style={{ fontSize: 18, marginBottom: 20 }}>
+                    <Text
+                        style={{
+                            fontSize: 18,
+                            marginBottom: 20,
+                            color: responsiveDark,
+                        }}
+                    >
                         Kindly give your consent for the Birthday Heroes project
                         and be a hero!
                     </Text>
@@ -183,8 +201,16 @@ export default function Five({
                                 setBirthdayHero(itemValue)
                             }}
                         >
-                            <Picker.Item label="Yes" value={true} />
-                            <Picker.Item label="No" value={false} />
+                            <Picker.Item
+                                label="Yes"
+                                value={true}
+                                color={responsiveDark}
+                            />
+                            <Picker.Item
+                                label="No"
+                                value={false}
+                                color={responsiveDark}
+                            />
                         </Picker>
                     </View>
                 </View>

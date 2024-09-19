@@ -1,4 +1,4 @@
-import { ImageBackground } from 'react-native'
+import { ImageBackground, useColorScheme } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
@@ -13,13 +13,14 @@ const Stack = createNativeStackNavigator()
 
 export default function Signup() {
     const local = useLocalSearchParams()
+    let isDarkMode = useColorScheme() === 'dark'
     return (
         <NavigationContainer independent={true}>
             <Stack.Navigator
                 screenOptions={{
                     headerShown: false,
                     contentStyle: {
-                        backgroundColor: '#fff',
+                        backgroundColor: isDarkMode ? '#030303' : '#efeef7',
                     },
                     animation: 'fade',
                 }}

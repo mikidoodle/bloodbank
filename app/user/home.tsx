@@ -58,7 +58,7 @@ export default function Home() {
     async function load(refresh = false) {
         if (refresh) setRefreshing(true)
         let token = await SecureStore.getItemAsync('token')
-        fetch(`http://192.168.1.40:3000/getUserData`, {
+        fetch(`https://bloodbank.pidgon.com/getUserData`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -264,7 +264,12 @@ export default function Home() {
                             flexDirection: 'column',
                         }}
                     >
-                        <Text style={{ fontSize: 18, color: 'black' }}>
+                        <Text
+                            style={{
+                                fontSize: 18,
+                                color: isDarkMode ? 'white' : 'black',
+                            }}
+                        >
                             Verification status:{' '}
                             <Text
                                 style={{

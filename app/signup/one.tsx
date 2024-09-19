@@ -6,6 +6,7 @@ import {
     Text,
     TextInput,
     TouchableWithoutFeedback,
+    useColorScheme,
     View,
 } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
@@ -35,7 +36,7 @@ export default function One({
     )
     delete route.params?.affiliated
     console.log(route.params)
-
+    let isDarkMode = useColorScheme() === 'dark'
     return (
         <KeyboardAwareScrollView
             contentContainerStyle={{
@@ -52,6 +53,7 @@ export default function One({
                         marginBottom: 40,
                         marginTop: 20,
                         gap: 20,
+                        alignSelf: 'center',
                     }}
                 >
                     <View
@@ -66,10 +68,16 @@ export default function One({
                             <Octicons
                                 name="arrow-left"
                                 size={24}
-                                color="black"
+                                color={isDarkMode ? 'white' : 'black'}
                             />
                         </Pressable>
-                        <Text style={{ fontSize: 24, textAlign: 'center' }}>
+                        <Text
+                            style={{
+                                fontSize: 24,
+                                textAlign: 'center',
+                                color: isDarkMode ? 'white' : 'black',
+                            }}
+                        >
                             JIPMER{' '}
                             <Text style={{ color: '#7469B6' }}>
                                 Blood Center
@@ -90,6 +98,7 @@ export default function One({
                         textAlign: 'center',
                         margin: 'auto',
                         marginBottom: 20,
+                        color: isDarkMode ? 'white' : 'black',
                     }}
                 >
                     Sign up | <Text style={{ color: '#7469B6' }}>General</Text>
@@ -98,6 +107,7 @@ export default function One({
                     style={{
                         fontSize: 20,
                         marginBottom: 20,
+                        color: isDarkMode ? 'white' : 'black',
                     }}
                 >
                     Are you affiliated with JIPMER?
@@ -106,17 +116,27 @@ export default function One({
                     <Picker
                         selectedValue={affiliated}
                         onValueChange={(itemValue) => setAffiliated(itemValue)}
+                        style={{
+                            color: isDarkMode ? 'white' : 'black',
+                        }}
                     >
-                        <Picker.Item label="No" value="no" />
-                        <Picker.Item label="Yes" value="yes" />
+                        <Picker.Item
+                            label="No"
+                            value="no"
+                            color={isDarkMode ? 'white' : 'black'}
+                        />
+                        <Picker.Item
+                            label="Yes"
+                            value="yes"
+                            color={isDarkMode ? 'white' : 'black'}
+                        />
                     </Picker>
                 </View>
                 <Button
                     onPress={() => {
                         navigation.navigate(
                             `two${affiliated == 'yes' ? 'beta' : ''}`,
-                            { ...route.params,
-                                phoneNumber, affiliated }
+                            { ...route.params, phoneNumber, affiliated }
                         )
                     }}
                 >

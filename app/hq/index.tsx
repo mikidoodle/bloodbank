@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native'
+import { Text, useColorScheme, View } from 'react-native'
 import Octicons from '@expo/vector-icons/Octicons'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -11,12 +11,12 @@ import Settings from './settings'
 import Query from './query'
 
 export default function HQIndex() {
-    
+    let isDarkMode = useColorScheme() === 'dark'
     return (
         <>
             <Tab.Navigator
                 sceneContainerStyle={{
-                    backgroundColor: '#efeef7',
+                    backgroundColor: isDarkMode ? '#030303' : '#efeef7',
                 }}
                 screenOptions={{
                     headerShown: false,
@@ -33,8 +33,9 @@ export default function HQIndex() {
                         shadowOpacity: 0.3,
                         shadowRadius: 20,
                         borderRadius: 64,
+                        borderTopWidth: 0,
                         elevation: 10,
-                        backgroundColor: '#fff',
+                        backgroundColor: isDarkMode ? '#3a3b3c' : '#fff',
                         backfaceVisibility: 'hidden',
                     },
                     tabBarActiveTintColor: '#7469B6',

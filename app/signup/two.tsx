@@ -7,6 +7,7 @@ import {
     Text,
     TextInput,
     TouchableWithoutFeedback,
+    useColorScheme,
     View,
 } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
@@ -20,7 +21,9 @@ import TwoRowInput from '@/components/TwoRowInput'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as Progress from 'react-native-progress'
 import { Octicons } from '@expo/vector-icons'
-import DateTimePicker, {DateTimePickerAndroid} from '@react-native-community/datetimepicker'
+import DateTimePicker, {
+    DateTimePickerAndroid,
+} from '@react-native-community/datetimepicker'
 
 import FreeButton from '@/components/FreeButton'
 export default function Two({
@@ -51,7 +54,7 @@ export default function Two({
     let timestamp18YearsAgo = new Date()
 
     timestamp18YearsAgo.setFullYear(timestamp18YearsAgo.getFullYear() - 18)
-
+    let responsiveDark = useColorScheme() === 'dark' ? 'white' : 'black'
     return (
         <KeyboardAwareScrollView
             contentContainerStyle={{
@@ -68,6 +71,7 @@ export default function Two({
                         marginBottom: 40,
                         marginTop: 20,
                         gap: 20,
+                        alignSelf: 'center',
                     }}
                 >
                     <View
@@ -82,10 +86,16 @@ export default function Two({
                             <Octicons
                                 name="arrow-left"
                                 size={24}
-                                color="black"
+                                color={responsiveDark}
                             />
                         </Pressable>
-                        <Text style={{ fontSize: 24, textAlign: 'center' }}>
+                        <Text
+                            style={{
+                                fontSize: 24,
+                                textAlign: 'center',
+                                color: responsiveDark,
+                            }}
+                        >
                             JIPMER{' '}
                             <Text style={{ color: '#7469B6' }}>
                                 Blood Center
@@ -106,6 +116,7 @@ export default function Two({
                         textAlign: 'center',
                         margin: 'auto',
                         marginBottom: 20,
+                        color: responsiveDark,
                     }}
                 >
                     Sign up | <Text style={{ color: '#7469B6' }}>Biodata</Text>
@@ -114,6 +125,7 @@ export default function Two({
                     style={{
                         fontSize: 18,
                         marginBottom: 20,
+                        color: responsiveDark,
                     }}
                 >
                     Enter your name
@@ -121,6 +133,7 @@ export default function Two({
                 <TextInput
                     style={styles.input}
                     value={name}
+                    placeholderTextColor={'grey'}
                     onChangeText={(text) => setName(text)}
                     autoComplete="name"
                     placeholder="Name"
@@ -129,27 +142,40 @@ export default function Two({
                     style={{
                         fontSize: 18,
                         marginBottom: 20,
+                        color: responsiveDark,
                     }}
                 >
                     Enter your sex
                 </Text>
                 <Picker selectedValue={sex} onValueChange={setSex}>
-                    <Picker.Item label="Male" value={'male'} />
-                    <Picker.Item label="Female" value={'female'} />
-                    <Picker.Item label="Other" value={'other'} />
+                    <Picker.Item
+                        label="Male"
+                        value={'male'}
+                        color={responsiveDark}
+                    />
+                    <Picker.Item
+                        label="Female"
+                        value={'female'}
+                        color={responsiveDark}
+                    />
+                    <Picker.Item
+                        label="Other"
+                        value={'other'}
+                        color={responsiveDark}
+                    />
                 </Picker>
                 <Text
                     style={{
                         fontSize: 18,
                         marginBottom: 20,
+                        color: responsiveDark,
                     }}
                 >
                     Enter your date of birth
                 </Text>
-                {
-                    Platform.OS === 'android' ?
-                    (
-                        <Pressable onPress={() => {
+                {Platform.OS === 'android' ? (
+                    <Pressable
+                        onPress={() => {
                             DateTimePickerAndroid.open({
                                 value: new Date(dob),
                                 mode: 'date',
@@ -157,33 +183,39 @@ export default function Two({
                                     if (date) setDob(date.toISOString())
                                 },
                             })
-                        }} style={{
+                        }}
+                        style={{
                             padding: 10,
                             borderRadius: 10,
                             borderWidth: 1,
                             borderColor: '#7469B6',
                             marginBottom: 20,
-                        }}>
-                            <Text>{new Date(dob).toLocaleDateString()}</Text>
-                        </Pressable>
-                    ) : <DateTimePicker
-                    value={new Date(dob)}
-                    mode="date"
-                    display="calendar"
-                    style={{
-                        alignSelf: 'center',
-                    }}
-                    onChange={(event, date) => {
-                        if (date) setDob(date.toISOString())
-                    }}
-                />
-                }
-                
+                        }}
+                    >
+                        <Text style={{ color: responsiveDark }}>
+                            {new Date(dob).toLocaleDateString()}
+                        </Text>
+                    </Pressable>
+                ) : (
+                    <DateTimePicker
+                        value={new Date(dob)}
+                        mode="date"
+                        display="default"
+                        style={{
+                            alignSelf: 'center',
+                        }}
+                        onChange={(event, date) => {
+                            if (date) setDob(date.toISOString())
+                        }}
+                    />
+                )}
+
                 <Text
                     style={{
                         fontSize: 18,
                         marginBottom: 20,
                         marginTop: 20,
+                        color: responsiveDark,
                     }}
                 >
                     Enter your weight and height
@@ -208,6 +240,7 @@ export default function Two({
                     style={{
                         fontSize: 18,
                         marginBottom: 20,
+                        color: responsiveDark,
                     }}
                 >
                     Enter your blood group
@@ -217,17 +250,50 @@ export default function Two({
                         selectedValue={bloodtype}
                         onValueChange={setBloodtype}
                     >
-                        <Picker.Item label="A+" value="A+" />
-                        <Picker.Item label="A-" value="A-" />
-                        <Picker.Item label="B+" value="B+" />
-                        <Picker.Item label="B-" value="B-" />
-                        <Picker.Item label="AB+" value="AB+" />
-                        <Picker.Item label="AB-" value="AB-" />
-                        <Picker.Item label="O+" value="O+" />
-                        <Picker.Item label="O-" value="O-" />
+                        <Picker.Item
+                            label="A+"
+                            value="A+"
+                            color={responsiveDark}
+                        />
+                        <Picker.Item
+                            label="A-"
+                            value="A-"
+                            color={responsiveDark}
+                        />
+                        <Picker.Item
+                            label="B+"
+                            value="B+"
+                            color={responsiveDark}
+                        />
+                        <Picker.Item
+                            label="B-"
+                            value="B-"
+                            color={responsiveDark}
+                        />
+                        <Picker.Item
+                            label="AB+"
+                            value="AB+"
+                            color={responsiveDark}
+                        />
+                        <Picker.Item
+                            label="AB-"
+                            value="AB-"
+                            color={responsiveDark}
+                        />
+                        <Picker.Item
+                            label="O+"
+                            value="O+"
+                            color={responsiveDark}
+                        />
+                        <Picker.Item
+                            label="O-"
+                            value="O-"
+                            color={responsiveDark}
+                        />
                         <Picker.Item
                             label="Bombay blood group"
                             value="Bombay blood group"
+                            color={responsiveDark}
                         />
                     </Picker>
                 </View>
@@ -240,7 +306,9 @@ export default function Two({
                 >
                     <FreeButton
                         onPress={() => {
-                            navigation.navigate(`one`, {
+                            navigation.navigate(
+                                route.params?.affiliated == 'yes' ? `twobeta` : `one`
+                                , {
                                 ...route.params,
                                 name,
                                 dob,

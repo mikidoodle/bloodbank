@@ -1,4 +1,4 @@
-import { View, Platform, Text, Alert } from 'react-native'
+import { View, Platform, Text, Alert, useColorScheme } from 'react-native'
 import { Link, router, useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useState } from 'react'
@@ -22,6 +22,8 @@ export default function Modal() {
         }
         setToken()
     })
+    let isDarkMode = useColorScheme() === 'dark'
+    let responsiveColor = isDarkMode ? 'white' : 'black'
     return (
         <View
             style={{
@@ -29,11 +31,13 @@ export default function Modal() {
                 margin: 30,
                 width: '80%',
                 gap: 20,
+                backgroundColor: isDarkMode ? '#121212' : 'white',
             }}
         >
             <Text
                 style={{
                     fontSize: 28,
+                    color: responsiveColor,
                 }}
             >
                 Thanks for signing up,{'\n'}{' '}
@@ -91,6 +95,7 @@ export default function Modal() {
                         <Text
                             style={{
                                 fontSize: 16,
+                                color: responsiveColor,
                             }}
                         >
                             A reviewer from the Blood Center will review your
@@ -120,6 +125,7 @@ export default function Modal() {
                         <Text
                             style={{
                                 fontSize: 16,
+                                color: responsiveColor,
                             }}
                         >
                             You might receive a call on your number,{' '}
@@ -149,6 +155,7 @@ export default function Modal() {
                         <Text
                             style={{
                                 fontSize: 16,
+                                color: responsiveColor,
                             }}
                         >
                             Even if you haven't been verified, you can donate at

@@ -6,6 +6,7 @@ import {
     Text,
     TextInput,
     TouchableWithoutFeedback,
+    useColorScheme,
     View,
 } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
@@ -35,27 +36,24 @@ export default function Three({
         route.params?.medications || ''
     )
     const allConditions = [
-        "Epilepsy",
-        "Fainting",
-        "Heart Disease",
-        "Leprosy",
-        "Tuberculosis",
-        "Kidney Disease",
-        "Cancer",
-        "Diabetes-on insulin",
-        "Endocrine Disease",
-        "Hypotension",
-        "Hypertension",
-        "Abnormal bleeding tendencies"
-    ] 
-    const allMedications = [
-        "NSAIDs",
-        "Antibiotics",
-        "Steroids",
-        "Other"
+        'Epilepsy',
+        'Fainting',
+        'Heart Disease',
+        'Leprosy',
+        'Tuberculosis',
+        'Kidney Disease',
+        'Cancer',
+        'Diabetes-on insulin',
+        'Endocrine Disease',
+        'Hypotension',
+        'Hypertension',
+        'Abnormal bleeding tendencies',
     ]
+    const allMedications = ['NSAIDs', 'Antibiotics', 'Steroids', 'Other']
     delete route.params?.conditions
     delete route.params?.medications
+
+    let responsiveDark = useColorScheme() === 'dark' ? 'white' : 'black'
     return (
         <KeyboardAwareScrollView
             contentContainerStyle={{
@@ -72,6 +70,7 @@ export default function Three({
                         marginBottom: 40,
                         marginTop: 20,
                         gap: 20,
+                        alignSelf: 'center',
                     }}
                 >
                     <View
@@ -86,10 +85,10 @@ export default function Three({
                             <Octicons
                                 name="arrow-left"
                                 size={24}
-                                color="black"
+                                color={responsiveDark}
                             />
                         </Pressable>
-                        <Text style={{ fontSize: 24, textAlign: 'center' }}>
+                        <Text style={{ fontSize: 24, textAlign: 'center', color: responsiveDark }}>
                             JIPMER{' '}
                             <Text style={{ color: '#7469B6' }}>
                                 Blood Center
@@ -110,6 +109,7 @@ export default function Three({
                         textAlign: 'center',
                         margin: 'auto',
                         marginBottom: 20,
+                        color: responsiveDark
                     }}
                 >
                     Sign up |{' '}
@@ -125,18 +125,21 @@ export default function Three({
                         style={{
                             fontSize: 18,
                             marginBottom: 30,
+                            color: responsiveDark
                         }}
                     >
                         If you do not have any medical conditions or take any
                         medications, click{' '}
                         <Text style={{ color: '#7469B6', fontSize: 18 }}>
                             Next
-                        </Text> at the bottom of the page.
+                        </Text>{' '}
+                        at the bottom of the page.
                     </Text>
                     <Text
                         style={{
                             fontSize: 18,
                             marginBottom: 20,
+                            color: responsiveDark
                         }}
                     >
                         Do you have any medical conditions? If yes, please list
@@ -157,6 +160,7 @@ export default function Three({
                     <TextInput
                         style={{ ...styles.input, height: 100 }}
                         value={conditions}
+                        placeholderTextColor={'grey'}
                         onChangeText={setConditions}
                         autoComplete="off"
                         multiline={true}
@@ -166,6 +170,7 @@ export default function Three({
                         style={{
                             fontSize: 18,
                             marginBottom: 20,
+                            color: responsiveDark
                         }}
                     >
                         Do you take any chronic medications? If yes, please list
@@ -174,6 +179,7 @@ export default function Three({
                     <TextInput
                         style={{ ...styles.input, height: 100 }}
                         value={medications}
+                        placeholderTextColor={'grey'}
                         onChangeText={setMedications}
                         autoComplete="off"
                         multiline={true}

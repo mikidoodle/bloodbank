@@ -5,6 +5,7 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
+    useColorScheme,
     View,
 } from 'react-native'
 import Button from '@/components/Button'
@@ -46,14 +47,15 @@ export default function Camera() {
                     alignItems: 'center',
                 }}
             >
-                <Text>We need your permission to show the camera.</Text>
+                <Text style={{
+                    color: "#7469B6",
+                }}>We need your permission to show the camera.</Text>
                 <Button onPress={requestPermission} disabled={false}>
                     Allow Camera Access
                 </Button>
             </View>
         )
     }
-
     return (
         <View style={styles.container}>
             <CameraView
