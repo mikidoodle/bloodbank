@@ -5,6 +5,7 @@ import {
     Alert,
     TextInput,
     useColorScheme,
+    Pressable,
 } from 'react-native'
 import { Link, router, useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
@@ -42,7 +43,7 @@ export default function Modal() {
             },
             body: JSON.stringify({
                 token: token,
-                type: bloodtype,    
+                type: bloodtype,
                 units: parseInt(unitsRequired),
                 months: parseInt(minimumMonths),
                 contact: phoneNumber,
@@ -78,16 +79,29 @@ export default function Modal() {
                     gap: 20,
                 }}
             >
-                <Text
+                <Pressable
+                    onPress={() => router.dismiss()}
                     style={{
-                        fontSize: 36,
-                        fontWeight: 'bold',
-                        textAlign: 'center',
-                        color: responsiveColor,
+                        width: '90%',
+                        alignSelf: 'center',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginTop: 20,
                     }}
                 >
-                    Request Blood
-                </Text>
+                    <Text
+                        style={{
+                            fontSize: 36,
+                            fontWeight: 'bold',
+                            textAlign: 'left',
+                            color: responsiveColor,
+                        }}
+                    >
+                        Request Blood
+                    </Text>
+                    <Octicons name="x" size={36} color={responsiveColor} />
+                </Pressable>
+
                 <Text
                     style={{
                         fontSize: 18,
@@ -147,7 +161,13 @@ export default function Modal() {
                         color={responsiveColor}
                     />
                 </Picker>
-                <Text style={{ fontSize: 18, textAlign: 'center',color: responsiveColor, }}>
+                <Text
+                    style={{
+                        fontSize: 18,
+                        textAlign: 'center',
+                        color: responsiveColor,
+                    }}
+                >
                     How many units do you need?
                 </Text>
                 <TwoRowInput
@@ -158,7 +178,13 @@ export default function Modal() {
                 >
                     units
                 </TwoRowInput>
-                <Text style={{ fontSize: 18, textAlign: 'center',color: responsiveColor, }}>
+                <Text
+                    style={{
+                        fontSize: 18,
+                        textAlign: 'center',
+                        color: responsiveColor,
+                    }}
+                >
                     What is the minimum month gap required from the last
                     donation?
                 </Text>
@@ -170,7 +196,13 @@ export default function Modal() {
                 >
                     months
                 </TwoRowInput>
-                <Text style={{ fontSize: 18, textAlign: 'center',color: responsiveColor, }}>
+                <Text
+                    style={{
+                        fontSize: 18,
+                        textAlign: 'center',
+                        color: responsiveColor,
+                    }}
+                >
                     What phone number should the donors contact?
                 </Text>
                 <TextInput
