@@ -142,6 +142,7 @@ export default function HQHome() {
                             textAlign: 'left',
                             color: '#7469B6',
                             fontWeight: 'bold',
+                            
                         }}
                     >
                         Stats

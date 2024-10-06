@@ -40,15 +40,6 @@ export default function QR() {
                 <Text style={{ fontSize: 24, textAlign: 'center', color: isDarkMode ? 'white' : 'black' }}>
                     JIPMER <Text style={{ color: '#7469B6' }}>Blood Center</Text>
                 </Text>
-                <Pressable
-                    onPress={() => load(true)}
-                    style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Octicons name="sync" size={24} color="#7469B6" />
-                </Pressable>
             </View>
             <ScrollView
                 contentContainerStyle={{

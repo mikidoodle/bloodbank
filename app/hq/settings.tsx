@@ -1,4 +1,4 @@
-import { RefreshControl, ScrollView, Text, View } from 'react-native'
+import { RefreshControl, ScrollView, Text, useColorScheme, View } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
 import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -19,6 +19,7 @@ export default function Settings() {
         console.log('loading')
         load(false)
     }, [])
+    let responsiveColor = useColorScheme() === 'dark' ? '#fff' : '#000'
     return (
         <SafeAreaView
             style={{
@@ -28,7 +29,7 @@ export default function Settings() {
             }}
         >
             <View>
-                <Text style={{ fontSize: 24, textAlign: 'center', margin: 20 }}>
+                <Text style={{ fontSize: 24, textAlign: 'center', margin: 20, color: responsiveColor }}>
                     JIPMER{' '}
                     <Text style={{ color: '#7469B6' }}>Blood Center HQ</Text>
                 </Text>

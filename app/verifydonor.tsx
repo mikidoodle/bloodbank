@@ -62,7 +62,7 @@ export default function Modal() {
     let [verified, setVerified] = useState<boolean>(false)
     let [lastDonated, setLastDonated] = useState<string>('')
     let [totalDonations, setTotalDonations] = useState<string>('0')
-
+    let [address, setAddress] = useState<string>('')
     let [verifying, setVerifying] = useState<boolean>(false)
     let [rejecting, setRejecting] = useState<boolean>(false)
     let [loading, setLoading] = useState<boolean>(true)
@@ -100,6 +100,7 @@ export default function Modal() {
                     setVerified(response.data.verified)
                     setLastDonated(response.data.lastdonated)
                     setTotalDonations(response.data.totaldonated)
+                    setAddress(response.data.coords)
                 }
             })
             .catch((error) => {
@@ -260,6 +261,54 @@ export default function Modal() {
                             gap: 10,
                         }}
                     >
+                        <View
+                            style={{
+                                width: '81%',
+                                height: 120,
+                                backgroundColor: isDarkMode
+                                    ? '#242526'
+                                    : '#f3f3f3',
+                                borderRadius: 10,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                padding: 5,
+                            }}
+                        >
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    width: '80%',
+                                    gap: 20,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 20,
+                                        textAlign: 'left',
+                                        color: isDarkMode ? '#fff' : '#000',
+                                    }}
+                                >
+                                    {address.slice(0, 50)}
+                                    {address.length > 50 ? '...' : ''}
+                                </Text>
+                            </View>
+                            <FreeButton
+                                onPress={() => {
+                                    Linking.openURL(
+                                        `https://www.google.com/maps/search/?api=1&query=${address}`
+                                    )
+                                }}
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                Open in Maps
+                            </FreeButton>
+                        </View>
                         <View
                             style={{
                                 flexDirection: 'row',

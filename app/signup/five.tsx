@@ -74,6 +74,7 @@ export default function Five({
             medications: route.params.medications,
             distance: route.params.distance,
             birthdayhero: birthdayHero,
+            coords: route.params.location ? `${route.params.location.latitude},${route.params.location.longitude}` : '',
         }
         fetch(`https://bloodbank.pidgon.com/signup`, {
             method: 'POST',

@@ -53,6 +53,7 @@ export default function Modal() {
             body: JSON.stringify({
                 uuid: uuid,
                 distance: distance,
+                coords: userDefinedLocation ? `${userDefinedLocation.latitude},${userDefinedLocation.longitude}` : '',
             }),
         })
             .then((res) => res.json())
@@ -304,9 +305,6 @@ export default function Modal() {
                         >
                             Knowing your distance from our blood bank allows us
                             to prioritize contacting you in urgent situations.
-                            {'\n\n'}
-                            Your location data is only used to calculate this
-                            distance and will not be stored.
                         </Text>
                     )}
                 </View>

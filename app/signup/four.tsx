@@ -194,9 +194,6 @@ export default function Four({
                         >
                             Knowing your distance from our blood bank allows us
                             to prioritize contacting you in urgent situations.
-                            {'\n\n'}
-                            Your location data is only used to calculate this
-                            distance and will not be stored.
                         </Text>
                     )}
                     <View

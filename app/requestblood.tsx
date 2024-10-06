@@ -35,14 +35,14 @@ export default function Modal() {
             return
         }
         console.log(unitsRequired, minimumMonths)
-        fetch(`http://localhost:3000/hq/requestBlood`, {
+        fetch(`https://bloodbank.pidgon.com/hq/requestBlood`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 token: token,
-                type: bloodtype,
+                type: bloodtype,    
                 units: parseInt(unitsRequired),
                 months: parseInt(minimumMonths),
                 contact: phoneNumber,
