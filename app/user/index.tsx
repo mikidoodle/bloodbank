@@ -14,259 +14,245 @@ import { useEffect, useRef, useState } from 'react'
 import Constants from 'expo-constants'
 import { router, useLocalSearchParams } from 'expo-router'
 Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: false,
-        shouldSetBadge: false,
-    }),
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
 })
 export default function Index() {
-    const [expoPushToken, setExpoPushToken] = useState('')
-    const [channels, setChannels] = useState<
-        Notifications.NotificationChannel[]
-    >([])
-    const [notification, setNotification] = useState<
-        Notifications.Notification | undefined
-    >(undefined)
-    const notificationListener = useRef<Notifications.Subscription>()
-    const responseListener = useRef<Notifications.Subscription>()
+  const [expoPushToken, setExpoPushToken] = useState('')
+  const [channels, setChannels] = useState<Notifications.NotificationChannel[]>(
+    []
+  )
+  const [notification, setNotification] = useState<
+    Notifications.Notification | undefined
+  >(undefined)
+  const notificationListener = useRef<Notifications.Subscription>()
+  const responseListener = useRef<Notifications.Subscription>()
 
-    let local: any = useLocalSearchParams()
+  let local: any = useLocalSearchParams()
 
-    useEffect(() => {
-        async function checkNotifs() {
-            let uuid = await SecureStore.getItemAsync('token')
+  useEffect(() => {
+    async function checkNotifs() {
+      let uuid = await SecureStore.getItemAsync('token')
 
-            if (!uuid) {
-                Alert.alert('Error', 'Please login to continue', [
-                    {
-                        text: 'Login',
-                        onPress: () => {
-                            router.navigate('/')
-                        },
-                    },
-                ])
+      if (!uuid) {
+        Alert.alert('Error', 'Please login to continue', [
+          {
+            text: 'Login',
+            onPress: () => {
+              router.navigate('/')
+            },
+          },
+        ])
+      } else {
+        const perms = await Notifications.getPermissionsAsync()
+        let existingStatus = perms.status
+        console.log(`Existing status: ${existingStatus}`)
+        if (existingStatus !== 'granted') {
+          console.log('Requesting permissions')
+          registerForPushNotificationsAsync().then(async (token) => {
+            if (token) {
+              setExpoPushToken(token)
+              console.log(token)
+              fetch('https://bloodbank.pidgon.com/updateNotifications', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  uuid: uuid,
+                  notificationToken: token,
+                }),
+              })
+                .then((response) => response.json())
+                .then((response) => {
+                  if (response.error) {
+                    Alert.alert('Error', response.error)
+                  } else {
+                    console.log('Notification token updated')
+                  }
+                })
+                .catch((error) => {
+                  console.log('Error', "Couldn't update notification token")
+                })
             } else {
-                const perms = await Notifications.getPermissionsAsync()
-                let existingStatus = perms.status
-                console.log(`Existing status: ${existingStatus}`)
-                if (existingStatus !== 'granted') {
-                    console.log('Requesting permissions')
-                    registerForPushNotificationsAsync().then(async (token) => {
-                        if (token) {
-                            setExpoPushToken(token)
-                            console.log(token)
-                            fetch(
-                                'https://bloodbank.pidgon.com/updateNotifications',
-                                {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({
-                                        uuid: uuid,
-                                        notificationToken: token,
-                                    }),
-                                }
-                            )
-                                .then((response) => response.json())
-                                .then((response) => {
-                                    if (response.error) {
-                                        Alert.alert('Error', response.error)
-                                    } else {
-                                        console.log(
-                                            'Notification token updated'
-                                        )
-                                    }
-                                })
-                                .catch((error) => {
-                                    console.log(
-                                        'Error',
-                                        "Couldn't update notification token"
-                                    )
-                                })
-                        } else {
-                            Alert.alert(
-                                'Error',
-                                'Failed to get notification token'
-                            )
-                        }
-                    })
-                    if (Platform.OS === 'android') {
-                        Notifications.getNotificationChannelsAsync().then(
-                            (value) => setChannels(value ?? [])
-                        )
-                    }
-                    notificationListener.current =
-                        Notifications.addNotificationReceivedListener(
-                            (notification) => {
-                                setNotification(notification)
-                            }
-                        )
-
-                    responseListener.current =
-                        Notifications.addNotificationResponseReceivedListener(
-                            (response) => {
-                                console.log(response)
-                            }
-                        )
-
-                    return () => {
-                        notificationListener.current &&
-                            Notifications.removeNotificationSubscription(
-                                notificationListener.current
-                            )
-                        responseListener.current &&
-                            Notifications.removeNotificationSubscription(
-                                responseListener.current
-                            )
-                    }
-                }
+              Alert.alert('Error', 'Failed to get notification token')
             }
+          })
+          if (Platform.OS === 'android') {
+            Notifications.getNotificationChannelsAsync().then((value) =>
+              setChannels(value ?? [])
+            )
+          }
+          notificationListener.current =
+            Notifications.addNotificationReceivedListener((notification) => {
+              setNotification(notification)
+            })
+
+          responseListener.current =
+            Notifications.addNotificationResponseReceivedListener(
+              (response) => {
+                console.log(response)
+              }
+            )
+
+          return () => {
+            notificationListener.current &&
+              Notifications.removeNotificationSubscription(
+                notificationListener.current
+              )
+            responseListener.current &&
+              Notifications.removeNotificationSubscription(
+                responseListener.current
+              )
+          }
         }
-        checkNotifs()
-    }, [])
-    let isDarkMode = useColorScheme() === 'dark'
-    return (
-        <>
-            <Tab.Navigator
-                sceneContainerStyle={{
-                    backgroundColor: isDarkMode ? '#030303' : '#efeef7',
-                }}
-                screenOptions={{
-                    headerShown: false,
-                    tabBarShowLabel: false,
-                    tabBarStyle: {
-                        /*position: "absolute",
+      }
+    }
+    checkNotifs()
+  }, [])
+  let isDarkMode = useColorScheme() === 'dark'
+  return (
+    <>
+      <Tab.Navigator
+        sceneContainerStyle={{
+          backgroundColor: isDarkMode ? '#030303' : '#efeef7',
+        }}
+        screenOptions={{
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            /*position: "absolute",
             bottom: 25,
             left: 33.5,
             width: 325,*/
-                        position: 'absolute',
-                        bottom: '0%',
-                        left: '0%',
-                        width: '100%',
-                        alignSelf: 'center',
-                        height: 80,
-                        paddingTop: 15,
-                        shadowColor: '#7469B6',
-                        shadowOpacity: 0.3,
-                        shadowRadius: 20,
-                        borderRadius: 64,
-                        elevation: 10,
-                        backgroundColor: isDarkMode ? '#3a3b3c' : '#fff',
-                        borderTopWidth: 0,
-                    },
-                    tabBarActiveTintColor: '#7469B6',
-                    tabBarIconStyle: {
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flex: 1,
-                    },
-                }}
-                initialRouteName="home"
-            >
-                <Tab.Screen
-                    name="qr"
-                    component={QR}
-                    options={{
-                        tabBarIcon: ({ color, size }) => (
-                            <Octicons name="heart" color={color} size={size} />
-                        ),
-                    }}
-                />
-                <Tab.Screen
-                    name="home"
-                    component={Home}
-                    options={{
-                        tabBarIcon: ({ color, size }) => (
-                            <Octicons name="home" color={color} size={size} />
-                        ),
-                    }}
-                />
-                <Tab.Screen
-                    name="settings"
-                    component={Settings}
-                    options={{
-                        tabBarIcon: ({ color, size }) => (
-                            <Octicons name="gear" color={color} size={size} />
-                        ),
-                    }}
-                />
-            </Tab.Navigator>
-        </>
-    )
+            position: 'absolute',
+            bottom: '0%',
+            left: '0%',
+            width: '100%',
+            alignSelf: 'center',
+            height: 80,
+            paddingTop: 15,
+            shadowColor: '#7469B6',
+            shadowOpacity: 0.3,
+            shadowRadius: 20,
+            borderRadius: 64,
+            elevation: 10,
+            backgroundColor: isDarkMode ? '#3a3b3c' : '#fff',
+            borderTopWidth: 0,
+          },
+          tabBarActiveTintColor: '#7469B6',
+          tabBarIconStyle: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            flex: 1,
+          },
+        }}
+        initialRouteName="home"
+      >
+        <Tab.Screen
+          name="qr"
+          component={QR}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Octicons name="heart" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="home"
+          component={Home}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Octicons name="home" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="settings"
+          component={Settings}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Octicons name="gear" color={color} size={size} />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    </>
+  )
 }
 
 async function schedulePushNotification() {
-    await Notifications.scheduleNotificationAsync({
-        content: {
-            title: "You've got mail! 📬",
-            body: 'Here is the notification body',
-            data: { data: 'goes here', test: { test1: 'more data' } },
-        },
-        trigger: { seconds: 2 },
-    })
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: "You've got mail! 📬",
+      body: 'Here is the notification body',
+      data: { data: 'goes here', test: { test1: 'more data' } },
+    },
+    trigger: { seconds: 2 },
+  })
 }
 
 async function registerForPushNotificationsAsync() {
-    let token
+  let token
 
-    if (Platform.OS === 'android') {
-        await Notifications.setNotificationChannelAsync('default', {
-            name: 'default',
-            importance: Notifications.AndroidImportance.MAX,
-            vibrationPattern: [0, 250, 250, 250],
-            lightColor: '#FF231F7C',
+  if (Platform.OS === 'android') {
+    await Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    })
+  }
+
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync()
+    let finalStatus = existingStatus
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync({
+        ios: {
+          allowAlert: true,
+          allowBadge: true,
+          allowSound: true,
+          allowCriticalAlerts: true,
+        },
+        android: {
+          allowAlert: true,
+          allowBadge: true,
+          allowSound: true,
+          allowVibration: true,
+        },
+      })
+      finalStatus = status
+    }
+    if (finalStatus !== 'granted') {
+      throw new Error('Failed to get push token for push notification!')
+      return
+    }
+    // Learn more about projectId:
+    // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
+    // EAS projectId is used here.
+    try {
+      const projectId =
+        Constants?.expoConfig?.extra?.eas?.projectId ??
+        Constants?.easConfig?.projectId
+      if (!projectId) {
+        throw new Error('Project ID not found')
+      }
+      token = (
+        await Notifications.getExpoPushTokenAsync({
+          projectId,
         })
+      ).data
+      console.log(token)
+    } catch (e) {
+      token = `${e}`
     }
+  } else {
+    throw new Error('physical device required for notifications')
+  }
 
-    if (Device.isDevice) {
-        const { status: existingStatus } =
-            await Notifications.getPermissionsAsync()
-        let finalStatus = existingStatus
-        if (existingStatus !== 'granted') {
-            const { status } = await Notifications.requestPermissionsAsync({
-                ios: {
-                    allowAlert: true,
-                    allowBadge: true,
-                    allowSound: true,
-                    //allowCriticalAlerts: true,
-                },
-                android: {
-                    allowAlert: true,
-                    allowBadge: true,
-                    allowSound: true,
-                    allowVibration: true,
-                },
-            })
-            finalStatus = status
-        }
-        if (finalStatus !== 'granted') {
-            throw new Error('Failed to get push token for push notification!')
-            return
-        }
-        // Learn more about projectId:
-        // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
-        // EAS projectId is used here.
-        try {
-            const projectId =
-                Constants?.expoConfig?.extra?.eas?.projectId ??
-                Constants?.easConfig?.projectId
-            if (!projectId) {
-                throw new Error('Project ID not found')
-            }
-            token = (
-                await Notifications.getExpoPushTokenAsync({
-                    projectId,
-                })
-            ).data
-            console.log(token)
-        } catch (e) {
-            token = `${e}`
-        }
-    } else {
-        throw new Error('physical device required for notifications')
-    }
-
-    return token
+  return token
 }

@@ -11,78 +11,79 @@ import Settings from './settings'
 import Query from './query'
 
 export default function HQIndex() {
-    let isDarkMode = useColorScheme() === 'dark'
-    return (
-        <>
-            <Tab.Navigator
-                sceneContainerStyle={{
-                    backgroundColor: isDarkMode ? '#030303' : '#efeef7',
-                }}
-                screenOptions={{
-                    headerShown: false,
-                    tabBarShowLabel: false,
-                    tabBarStyle: {
-                        position: 'absolute',
-                        bottom: '0%',
-                        left: '0%',
-                        width: '100%',
-                        alignSelf: 'center',
-                        height: 80,
-                        paddingTop: 15,
-                        shadowColor: '#7469B6',
-                        shadowOpacity: 0.3,
-                        shadowRadius: 20,
-                        borderRadius: 64,
-                        borderTopWidth: 0,
-                        elevation: 10,
-                        backgroundColor: isDarkMode ? '#3a3b3c' : '#fff',
-                        backfaceVisibility: 'hidden',
-                    },
-                    tabBarActiveTintColor: '#7469B6',
-                    tabBarIconStyle: {
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flex: 1,
-                    },
-                }}
-                initialRouteName="home"
-            ><Tab.Screen
-            name="camera"
-            component={Camera}
-            options={{
-                tabBarIcon: ({ color, size }) => (
-                    <Octicons name="database" color={color} size={size} />
-                ),
-            }}
+  let isDarkMode = useColorScheme() === 'dark'
+  return (
+    <>
+      <Tab.Navigator
+        sceneContainerStyle={{
+          backgroundColor: isDarkMode ? '#030303' : '#efeef7',
+        }}
+        screenOptions={{
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            position: 'absolute',
+            bottom: '0%',
+            left: '0%',
+            width: '100%',
+            alignSelf: 'center',
+            height: 80,
+            paddingTop: 15,
+            shadowColor: '#7469B6',
+            shadowOpacity: 0.3,
+            shadowRadius: 20,
+            borderRadius: 64,
+            borderTopWidth: 0,
+            elevation: 10,
+            backgroundColor: isDarkMode ? '#3a3b3c' : '#fff',
+            backfaceVisibility: 'hidden',
+          },
+          tabBarActiveTintColor: '#7469B6',
+          tabBarIconStyle: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            flex: 1,
+          },
+        }}
+        initialRouteName="home"
+      >
+        <Tab.Screen
+          name="camera"
+          component={Camera}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Octicons name="database" color={color} size={size} />
+            ),
+          }}
         />
-                <Tab.Screen
-                    name="home"
-                    component={HQHome}
-                    options={{
-                        tabBarIcon: ({ color, size }) => (
-                            <Octicons name="home" color={color} size={size} />
-                        ),
-                    }}
-                />
-                <Tab.Screen
-                    name="query"
-                    component={Query}
-                    options={{
-                        tabBarIcon: ({ color, size }) => (
-                            <Octicons name="person" color={color} size={size} />
-                        ),
-                    }}
-                />
-                <Tab.Screen
-                    name="settings"
-                    component={Settings}
-                    options={{
-                        tabBarIcon: ({ color, size }) => (
-                            <Octicons name="gear" color={color} size={size} />
-                        ),
-                    }}
-                />
-            </Tab.Navigator>
-        </>
-    )
+        <Tab.Screen
+          name="home"
+          component={HQHome}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Octicons name="home" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="query"
+          component={Query}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Octicons name="person" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="settings"
+          component={Settings}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Octicons name="gear" color={color} size={size} />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    </>
+  )
 }

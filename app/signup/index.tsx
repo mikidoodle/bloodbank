@@ -12,30 +12,30 @@ import Five from './five'
 const Stack = createNativeStackNavigator()
 
 export default function Signup() {
-    const local = useLocalSearchParams()
-    let isDarkMode = useColorScheme() === 'dark'
-    return (
-        <NavigationContainer independent={true}>
-            <Stack.Navigator
-                screenOptions={{
-                    headerShown: false,
-                    contentStyle: {
-                        backgroundColor: isDarkMode ? '#030303' : '#efeef7',
-                    },
-                    animation: 'fade',
-                }}
-            >
-                <Stack.Screen
-                    name="one"
-                    component={One}
-                    initialParams={{ phoneNumber: local.phoneNumber }}
-                />
-                <Stack.Screen name="two" component={Two} />
-                <Stack.Screen name="twobeta" component={TwoBeta} />
-                <Stack.Screen name="three" component={Three} />
-                <Stack.Screen name="four" component={Four} />
-                <Stack.Screen name="five" component={Five} />
-            </Stack.Navigator>
-        </NavigationContainer>
-    )
+  const local = useLocalSearchParams()
+  let isDarkMode = useColorScheme() === 'dark'
+  return (
+    <NavigationContainer independent={true}>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+          contentStyle: {
+            backgroundColor: isDarkMode ? '#030303' : '#efeef7',
+          },
+          animation: 'fade',
+        }}
+      >
+        <Stack.Screen
+          name="one"
+          component={One}
+          initialParams={{ phoneNumber: local.phoneNumber }}
+        />
+        <Stack.Screen name="two" component={Two} />
+        <Stack.Screen name="twobeta" component={TwoBeta} />
+        <Stack.Screen name="three" component={Three} />
+        <Stack.Screen name="four" component={Four} />
+        <Stack.Screen name="five" component={Five} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
 }
