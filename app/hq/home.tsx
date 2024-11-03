@@ -34,7 +34,7 @@ export default function HQHome() {
     if (refresh) setRefreshing(true)
 
     let token = await SecureStore.getItemAsync('token')
-    fetch(`http://192.168.1.29:3000/hq/getStats`, {
+    fetch(`http://localhost:3000/hq/getStats`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

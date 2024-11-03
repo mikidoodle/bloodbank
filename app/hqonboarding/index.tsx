@@ -27,7 +27,7 @@ export default function Onboarding() {
   })
   function login() {
     setLoginProcess(true)
-    fetch(`http://192.168.1.29:3000/hq/login`, {
+    fetch(`http://localhost:3000/hq/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

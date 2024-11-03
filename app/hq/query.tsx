@@ -86,7 +86,7 @@ export default function Query() {
     setResultData([])
     setLoading(true)
     let token = await SecureStore.getItemAsync('token')
-    fetch(`http://192.168.1.29:3000/hq/queryDonors`, {
+    fetch(`http://localhost:3000/hq/queryDonors`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

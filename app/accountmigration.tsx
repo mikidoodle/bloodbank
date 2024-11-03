@@ -83,7 +83,7 @@ export default function Modal() {
       return
     } else {
       setDisable(true)
-      fetch('http://192.168.1.29:3000/updateLocation', {
+      fetch('http://localhost:3000/updateLocation', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -179,7 +179,7 @@ export default function Modal() {
 
   async function geocodeAddress() {
     setIsLocatingCustomAddress(true)
-    fetch(`http://192.168.1.29:3000/geocodeAndCalculate`, {
+    fetch(`http://localhost:3000/geocodeAndCalculate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -69,7 +69,7 @@ export default function Modal() {
   let isDarkMode = useColorScheme() === 'dark'
   let responsiveColor = isDarkMode ? 'white' : 'black'
   useEffect(() => {
-    fetch(`http://192.168.1.29:3000/hq/requestUserData`, {
+    fetch(`http://localhost:3000/hq/requestUserData`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -111,7 +111,7 @@ export default function Modal() {
 
   function verifyDonor() {
     setVerifying(true)
-    fetch(`http://192.168.1.29:3000/hq/verifyDonor`, {
+    fetch(`http://localhost:3000/hq/verifyDonor`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ export default function Modal() {
 
   function rejectDonor() {
     setRejecting(true)
-    fetch(`http://192.168.1.29:3000/hq/rejectDonor`, {
+    fetch(`http://localhost:3000/hq/rejectDonor`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
