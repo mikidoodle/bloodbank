@@ -69,7 +69,7 @@ export default function Modal() {
   let isDarkMode = useColorScheme() === 'dark'
   let responsiveColor = isDarkMode ? 'white' : 'black'
   useEffect(() => {
-    fetch(`https://bloodbank.pidgon.com/hq/requestUserData`, {
+    fetch(`http://192.168.1.29:3000/hq/requestUserData`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -111,7 +111,7 @@ export default function Modal() {
 
   function verifyDonor() {
     setVerifying(true)
-    fetch(`https://bloodbank.pidgon.com/hq/verifyDonor`, {
+    fetch(`http://192.168.1.29:3000/hq/verifyDonor`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -130,6 +130,7 @@ export default function Modal() {
           setVerifying(false)
           alert(response.message)
         } else {
+          setVerifying(false) 
           alert(response.message)
           setVerified(true)
         }
@@ -142,7 +143,7 @@ export default function Modal() {
 
   function rejectDonor() {
     setRejecting(true)
-    fetch(`https://bloodbank.pidgon.com/rejectDonor`, {
+    fetch(`http://192.168.1.29:3000/hq/rejectDonor`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -602,7 +603,7 @@ export default function Modal() {
               >
                 <Text>
                   {verified ? 'Confirm' : 'Verify'}
-                  {verifying ? 'ing...' : ''}
+                  {verifying ? 'ing' : ''}
                 </Text>
               </FreeButton>
             </View>

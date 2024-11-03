@@ -53,6 +53,7 @@ export default function Five({
      * @params {distance} number
      * @params {birthdayHero} boolean
      */
+    console.log(route.params.location.latitude, route.params.location.longitude)
     var payload = {
       phonenumber: route.params.phoneNumber,
       affiliated: route.params.affiliated === 'yes',
@@ -75,10 +76,13 @@ export default function Five({
       distance: route.params.distance,
       birthdayhero: birthdayHero,
       coords: route.params.location
-        ? `${route.params.location.latitude},${route.params.location.longitude}`
+        ? route.params.location.hasOwnProperty('latitude') ?
+        `${route.params.location.latitude},${route.params.location.longitude}`
+        : route.params.location.address
         : '',
+      lookupid: route.params.location ? route.params.location.hasOwnProperty('lookup') ? route.params.location.lookup : '' : ''
     }
-    fetch(`https://bloodbank.pidgon.com/signup`, {
+    fetch(`http://192.168.1.29:3000/signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -92,6 +96,7 @@ export default function Five({
           alert(response.message)
         } else {
           await SecureStore.setItemAsync('token', response.data.uuid)
+          await SecureStore.deleteItemAsync('lookup')
           router.push({
             pathname: '/signupcomplete',
             params: response.data,

@@ -58,7 +58,7 @@ export default function Home() {
   async function load(refresh = false) {
     if (refresh) setRefreshing(true)
     let token = await SecureStore.getItemAsync('token')
-    fetch(`https://bloodbank.pidgon.com/getUserData`, {
+    fetch(`http://192.168.1.29:3000/getUserData`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -108,6 +108,7 @@ export default function Home() {
               params: {
                 name: response.data.name,
                 phone: response.data.phone,
+                coords: response.data.coords,
               },
             })
           }
@@ -277,7 +278,7 @@ export default function Home() {
               </Text>
             </Text>
             {verified ? null : (
-              <Text style={{ fontSize: 16, color: 'black' }}>
+              <Text style={{ fontSize: 16, color: isDarkMode ? 'white' : 'black' }}>
                 Your details have not been verified yet. Please allow a few days
                 for verification. Alternatively, you can visit or call the blood
                 center to get verified.

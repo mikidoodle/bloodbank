@@ -3,6 +3,7 @@ import {
   Keyboard,
   Pressable,
   ScrollView,
+  Switch,
   Text,
   TextInput,
   TouchableWithoutFeedback,
@@ -35,6 +36,8 @@ export default function Three({
   let [medications, setMedications] = useState<string>(
     route.params?.medications || ''
   )
+  let [showConditions, setShowConditions] = useState<boolean>(false)
+  let [showMedications, setShowMedications] = useState<boolean>(false)
   const allConditions = [
     'Epilepsy',
     'Fainting',
@@ -53,6 +56,7 @@ export default function Three({
   delete route.params?.conditions
   delete route.params?.medications
 
+  let isDarkMode = useColorScheme() === 'dark'
   let responsiveDark = useColorScheme() === 'dark' ? 'white' : 'black'
   return (
     <KeyboardAwareScrollView
@@ -124,6 +128,7 @@ export default function Three({
               fontSize: 18,
               marginBottom: 30,
               color: responsiveDark,
+              fontFamily: 'S',
             }}
           >
             If you do not have any medical conditions or take any medications,
@@ -137,28 +142,58 @@ export default function Three({
               color: responsiveDark,
             }}
           >
-            Do you have any medical conditions? If yes, please list them below.
+            Do you have any medical conditions?
           </Text>
-          <Text
+          <View
             style={{
-              fontSize: 14,
-              marginBottom: 20,
-              color: 'gray',
+              display: 'flex',
+              flexDirection: 'row',
+              gap: 20,
+              alignSelf: 'center',
+              alignItems: 'center',
             }}
           >
-            This includes Epilepsy, Fainting, Heart Disease, Leprosy,
-            Tuberculosis, Kidney Disease, Cancer, Diabetes-on insulin, Endocrine
-            Disease, Hypo/Hypertension, Abnormal bleeding tendencies
-          </Text>
-          <TextInput
-            style={{ ...styles.input, height: 100 }}
-            value={conditions}
-            placeholderTextColor={'grey'}
-            onChangeText={setConditions}
-            autoComplete="off"
-            multiline={true}
-            placeholder="Enter your conditions here"
-          />
+            <Text
+              style={{
+                fontSize: 18,
+              }}
+            >
+              No
+            </Text>
+            <Switch value={showConditions} onValueChange={setShowConditions} />
+            <Text
+              style={{
+                fontSize: 18,
+              }}
+            >
+              Yes
+            </Text>
+          </View>
+          {showConditions ? (
+            <>
+              <Text
+                style={{
+                  fontSize: 14,
+                  marginBottom: 20,
+                  color: 'gray',
+                }}
+              >
+                This includes Epilepsy, Fainting, Heart Disease, Leprosy,
+                Tuberculosis, Kidney Disease, Cancer, Diabetes-on insulin,
+                Endocrine Disease, Hypo/Hypertension, Abnormal bleeding
+                tendencies
+              </Text>
+              <TextInput
+                style={{ ...styles.input, height: 100 }}
+                value={conditions}
+                placeholderTextColor={'grey'}
+                onChangeText={setConditions}
+                autoComplete="off"
+                multiline={true}
+                placeholder="Enter your conditions here"
+              />
+            </>
+          ) : null}
           <Text
             style={{
               fontSize: 18,
@@ -166,17 +201,48 @@ export default function Three({
               color: responsiveDark,
             }}
           >
-            Do you take any chronic medications? If yes, please list them below.
+            Do you take any chronic medications?
           </Text>
-          <TextInput
-            style={{ ...styles.input, height: 100 }}
-            value={medications}
-            placeholderTextColor={'grey'}
-            onChangeText={setMedications}
-            autoComplete="off"
-            multiline={true}
-            placeholder="Enter your medications here"
-          />
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              gap: 20,
+              alignSelf: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 18,
+              }}
+            >
+              No
+            </Text>
+            <Switch
+              value={showMedications}
+              onValueChange={setShowMedications}
+            />
+            <Text
+              style={{
+                fontSize: 18,
+              }}
+            >
+              Yes
+            </Text>
+          </View>
+
+          {showMedications ? (
+            <TextInput
+              style={{ ...styles.input, height: 100 }}
+              value={medications}
+              placeholderTextColor={'grey'}
+              onChangeText={setMedications}
+              autoComplete="off"
+              multiline={true}
+              placeholder="Enter your medications here"
+            />
+          ) : null}
         </View>
         <View
           style={{
@@ -206,14 +272,19 @@ export default function Three({
             onPress={() => {
               navigation.navigate(`four`, {
                 ...route.params,
-                conditions,
-                medications,
+                conditions: showConditions ? conditions : '',
+                medications: showMedications ? medications : '',
               })
             }}
             style={{
               width: '40%',
             }}
-            disabled={false}
+            disabled={
+              (showConditions && conditions.trim() == '') ||
+              (showMedications && medications.trim() == '')
+                ? true
+                : false
+            }
           >
             Next
           </FreeButton>

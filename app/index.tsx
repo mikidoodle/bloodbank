@@ -38,7 +38,7 @@ export default function Index() {
     }
     console.log(otp)
     setLoginProcess(true)
-    fetch(`https://bloodbank.pidgon.com/sendOTP`, {
+    fetch(`http://192.168.1.29:3000/sendOTP`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -69,6 +69,7 @@ export default function Index() {
             console.log('new user')
           } else if (response.uuid) {
             await SecureStore.setItemAsync('token', response.uuid)
+            router.push('/user')
           }
         }
       })

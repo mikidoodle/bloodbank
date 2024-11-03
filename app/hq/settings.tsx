@@ -25,6 +25,7 @@ export default function Settings() {
     console.log('loading')
     load(false)
   }, [])
+  let isDarkMode = useColorScheme() === 'dark'
   let responsiveColor = useColorScheme() === 'dark' ? '#fff' : '#000'
   return (
     <SafeAreaView
@@ -34,13 +35,20 @@ export default function Settings() {
         alignItems: 'center',
       }}
     >
-      <View>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          width: '80%',
+          marginBottom: 40,
+          marginTop: 20,
+        }}
+      >
         <Text
           style={{
             fontSize: 24,
             textAlign: 'center',
-            margin: 20,
-            color: responsiveColor,
+            color: isDarkMode ? 'white' : 'black',
           }}
         >
           JIPMER <Text style={{ color: '#7469B6' }}>Blood Center HQ</Text>

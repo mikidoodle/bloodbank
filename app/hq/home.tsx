@@ -34,7 +34,7 @@ export default function HQHome() {
     if (refresh) setRefreshing(true)
 
     let token = await SecureStore.getItemAsync('token')
-    fetch(`https://bloodbank.pidgon.com/hq/getStats`, {
+    fetch(`http://192.168.1.29:3000/hq/getStats`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -101,7 +101,11 @@ export default function HQHome() {
         }}
       >
         <Text
-          style={{ fontSize: 24, textAlign: 'center', color: responsiveColor }}
+          style={{
+            fontSize: 24,
+            textAlign: 'center',
+            color: responsiveColor
+          }}
         >
           JIPMER <Text style={{ color: '#7469B6' }}>Blood Center HQ</Text>
         </Text>

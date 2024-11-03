@@ -86,7 +86,7 @@ export default function Query() {
     setResultData([])
     setLoading(true)
     let token = await SecureStore.getItemAsync('token')
-    fetch(`https://bloodbank.pidgon.com/hq/queryDonors`, {
+    fetch(`http://192.168.1.29:3000/hq/queryDonors`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -407,7 +407,9 @@ export default function Query() {
             <View>
               <View
                 style={{
-                  width: '80%',
+                  flexDirection: 'row',
+                  justifyContent: 'space-evenly',
+                  width: '100%',
                 }}
               >
                 <Text
@@ -833,7 +835,7 @@ export default function Query() {
                       marginTop: 20,
                     }}
                   >
-                    {resultData.length} donors found in{' '}
+                    {resultData.length.toLocaleString()} donors found in{' '}
                     {(timeTaken / 1000).toFixed(2)} seconds.
                   </Text>
                 ) : null}

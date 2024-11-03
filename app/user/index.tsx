@@ -32,9 +32,70 @@ export default function Index() {
   const responseListener = useRef<Notifications.Subscription>()
 
   let local: any = useLocalSearchParams()
+  async function checkNotifs() {
+    let uuid = await SecureStore.getItemAsync('token')
+    const perms = await Notifications.getPermissionsAsync()
+    let existingStatus = perms.status
+    console.log(`Existing status: ${existingStatus}`)
+    if (existingStatus !== 'granted') {
+      console.log('Requesting permissions')
+      registerForPushNotificationsAsync().then(async (token) => {
+        if (token) {
+          setExpoPushToken(token)
+          console.log(token)
+          fetch('http://192.168.1.29:3000/updateNotifications', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              uuid: uuid,
+              notificationToken: token,
+            }),
+          })
+            .then((response) => response.json())
+            .then((response) => {
+              if (response.error) {
+                Alert.alert('Error', response.error)
+              } else {
+                console.log('Notification token updated')
+              }
+            })
+            .catch((error) => {
+              console.log('Error', "Couldn't update notification token")
+            })
+        } else {
+          Alert.alert('Error', 'Failed to get notification token')
+        }
+      })
+      if (Platform.OS === 'android') {
+        Notifications.getNotificationChannelsAsync().then((value) =>
+          setChannels(value ?? [])
+        )
+      }
+      notificationListener.current =
+        Notifications.addNotificationReceivedListener((notification) => {
+          setNotification(notification)
+        })
 
+      responseListener.current =
+        Notifications.addNotificationResponseReceivedListener((response) => {
+          console.log(response)
+        })
+
+      return () => {
+        notificationListener.current &&
+          Notifications.removeNotificationSubscription(
+            notificationListener.current
+          )
+        responseListener.current &&
+          Notifications.removeNotificationSubscription(responseListener.current)
+      }
+    }
+  }
   useEffect(() => {
-    async function checkNotifs() {
+    //checkNotifs()
+    async function askUser() {
       let uuid = await SecureStore.getItemAsync('token')
 
       if (!uuid) {
@@ -52,66 +113,28 @@ export default function Index() {
         console.log(`Existing status: ${existingStatus}`)
         if (existingStatus !== 'granted') {
           console.log('Requesting permissions')
-          registerForPushNotificationsAsync().then(async (token) => {
-            if (token) {
-              setExpoPushToken(token)
-              console.log(token)
-              fetch('https://bloodbank.pidgon.com/updateNotifications', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
+          Alert.alert(
+            `Notifications`,
+            `We need your permission to send you critical notifications when the blood center needs your help. Please allow notifications to continue.`,
+            [
+              {
+                text: 'Allow',
+                onPress: checkNotifs,
+              },
+              {
+                text: 'Log out',
+                onPress: () => {
+                  SecureStore.deleteItemAsync('token')
+                  router.navigate('/')
                 },
-                body: JSON.stringify({
-                  uuid: uuid,
-                  notificationToken: token,
-                }),
-              })
-                .then((response) => response.json())
-                .then((response) => {
-                  if (response.error) {
-                    Alert.alert('Error', response.error)
-                  } else {
-                    console.log('Notification token updated')
-                  }
-                })
-                .catch((error) => {
-                  console.log('Error', "Couldn't update notification token")
-                })
-            } else {
-              Alert.alert('Error', 'Failed to get notification token')
-            }
-          })
-          if (Platform.OS === 'android') {
-            Notifications.getNotificationChannelsAsync().then((value) =>
-              setChannels(value ?? [])
-            )
-          }
-          notificationListener.current =
-            Notifications.addNotificationReceivedListener((notification) => {
-              setNotification(notification)
-            })
-
-          responseListener.current =
-            Notifications.addNotificationResponseReceivedListener(
-              (response) => {
-                console.log(response)
-              }
-            )
-
-          return () => {
-            notificationListener.current &&
-              Notifications.removeNotificationSubscription(
-                notificationListener.current
-              )
-            responseListener.current &&
-              Notifications.removeNotificationSubscription(
-                responseListener.current
-              )
-          }
+                style: 'destructive',
+              },
+            ]
+          )
         }
       }
     }
-    checkNotifs()
+    askUser()
   }, [])
   let isDarkMode = useColorScheme() === 'dark'
   return (

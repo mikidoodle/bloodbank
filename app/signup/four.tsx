@@ -4,6 +4,7 @@ import {
   Platform,
   Pressable,
   ScrollView,
+  Switch,
   Text,
   TextInput,
   TouchableWithoutFeedback,
@@ -41,7 +42,25 @@ export default function Four({
   delete route.params?.location
   delete route.params?.distance
   const [errorMsg, setErrorMsg] = useState<string>('')
+  let [addressText, setAddressText] = useState<string>('')
+  let [useCustomLocation, setUseCustomLocation] = useState<boolean>(false)
+  let [customAddressLookupID, setCustomAddressLookupID] = useState<string>('')
+
+  let [isLocatingCustomAddress, setIsLocatingCustomAddress] =
+    useState<boolean>(false)
+  let [customLocationFormattedAddress, setCustomLocationFormattedAddress] =
+    useState<string>('')
   let text = ''
+
+  useEffect(() => {
+    SecureStore.getItemAsync('lookup').then((res) => {
+      if (res) {
+        console.log('Found lookup')
+        setCustomAddressLookupID(res)
+      }
+    })
+  }, [])
+
   async function getLocation() {
     setErrorMsg('')
     text = 'Getting location...'
@@ -96,6 +115,55 @@ export default function Four({
   }
 
   let responsiveDark = useColorScheme() === 'dark' ? 'white' : 'black'
+
+  async function geocodeAddress() {
+    setIsLocatingCustomAddress(true)
+    fetch(`http://192.168.1.29:3000/geocodeAndCalculate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        address: addressText,
+        uuid: customAddressLookupID,
+      }),
+    })
+      .then((res) => res.json())
+      .then(async (res) => {
+        if (res.error) {
+          if (res.message == 'ratelimit') {
+            Alert.alert(
+              'Error',
+              `You've reached the monthly limit for address lookups. Please try again next month, or use the map to locate your address.`
+            )
+          } else {
+            Alert.alert(
+              'Error',
+              'We could not locate the address you entered. Please try again, or use the map to locate your address.'
+            )
+          }
+          setIsLocatingCustomAddress(false)
+        } else {
+          Alert.alert(
+            'Address located!',
+            'For security reasons, your exact address cannot be displayed. Please ensure that the distance is roughly accurate. If not, enter a more specific address and try again.'
+          )
+          setIsLocatingCustomAddress(false)
+          setDistance(res.data.distance)
+          setCustomLocationFormattedAddress(res.data.formattedAddress)
+          console.log(distance)
+          setCustomAddressLookupID(res.data.uuid)
+          await SecureStore.setItemAsync('lookup', res.data.uuid)
+        }
+      })
+      .catch((e) => {
+        console.log(e)
+        setIsLocatingCustomAddress(false)
+        setErrorMsg('An error occurred. Please try again.')
+        setDistance(null)
+        setUserDefinedLocation(null)
+      })
+  }
 
   return (
     <KeyboardAwareScrollView
@@ -161,7 +229,7 @@ export default function Four({
             width: '80%',
           }}
         >
-          {distance ? (
+          {distance && !useCustomLocation ? (
             <Text
               style={{
                 fontSize: 16,
@@ -205,7 +273,7 @@ export default function Four({
                   Try Again
                 </Button>
               </>
-            ) : userDefinedLocation ? (
+            ) : userDefinedLocation && !useCustomLocation ? (
               <View
                 style={{
                   width: '100%',
@@ -270,20 +338,15 @@ export default function Four({
                     </Pressable>
                   </View>
                 ) : null}
-
                 <MapView
-                  style={{
-                    width: '100%',
-                    height: 300,
-                    borderRadius: 20,
-                  }}
+                  provider={Platform.OS === 'ios' ? undefined : PROVIDER_GOOGLE}
+                  style={{ width: '100%', height: 300, borderRadius: 20 }}
                   region={userDefinedLocation}
                   onRegionChangeComplete={(r) => {
                     setUserDefinedLocation(r)
                     calcCrow(r)
                   }}
                   zoomControlEnabled={true}
-                  provider={Platform.OS === 'ios' ? undefined : 'google'}
                 >
                   <Marker
                     coordinate={{
@@ -302,7 +365,7 @@ export default function Four({
                   />
                 </MapView>
               </View>
-            ) : (
+            ) : !useCustomLocation ? (
               <Button
                 onPress={getLocation}
                 style={{
@@ -311,9 +374,9 @@ export default function Four({
               >
                 Get Location
               </Button>
-            )}
+            ) : null}
 
-            {distance ? (
+            {!useCustomLocation ? (
               <Text
                 style={{
                   fontSize: 16,
@@ -322,10 +385,107 @@ export default function Four({
                   marginBottom: 10,
                 }}
               >
-                Please ensure this is your permanent location. If not, sign up
-                when you are, or move the map to your location.
+                Please ensure you are at your permanent location. If not, enter
+                your address below and we'll locate you.
               </Text>
             ) : null}
+            <>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  gap: 10,
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 16,
+                    textAlign: 'center',
+                    marginBottom: 10,
+                    alignSelf: 'center',
+                  }}
+                >
+                  Use custom address (limited)
+                </Text>
+                <Switch
+                  onValueChange={() => {
+                    let future = !useCustomLocation
+                    if (future) {
+                      setDistance(null)
+                      setUserDefinedLocation(null)
+                    } else getLocation()
+                    setUseCustomLocation(future)
+                  }}
+                  value={useCustomLocation}
+                />
+              </View>
+              {distance &&
+              customLocationFormattedAddress !== '' &&
+              useCustomLocation ? (
+                <>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      textAlign: 'center',
+                      borderRadius: 10,
+                      borderWidth: 1,
+                      padding: 10,
+                      width: 320,
+                    }}
+                  >
+                    {customLocationFormattedAddress}
+                  </Text>
+                  <View
+                    style={{
+                      borderRadius: 10,
+                      width: '90%',
+                      marginBottom: 20,
+                      padding: 10,
+                      backgroundColor:
+                        distance < 5
+                          ? '#35C759'
+                          : distance < 10
+                          ? '#FF9503'
+                          : '#FF3B31',
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        color: 'white',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {parseFloat(
+                        (distance < 1 ? distance * 1000 : distance).toPrecision(
+                          2
+                        )
+                      )
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}{' '}
+                      {distance < 1 ? 'm' : 'km'} from Blood Bank
+                    </Text>
+                  </View>
+                </>
+              ) : null}
+              {useCustomLocation ? (
+                <View>
+                  <TextInput
+                    placeholder="Enter your address"
+                    style={styles.input}
+                    value={addressText}
+                    onChangeText={setAddressText}
+                  />
+                  <FreeButton
+                    onPress={geocodeAddress}
+                    disabled={isLocatingCustomAddress}
+                  >
+                    {isLocatingCustomAddress ? 'Locating...' : 'Locate Address'}
+                  </FreeButton>
+                </View>
+              ) : null}
+            </>
           </View>
         </View>
         <View
@@ -356,11 +516,22 @@ export default function Four({
             onPress={() => {
               navigation.navigate(`five`, {
                 ...route.params,
-                location: userDefinedLocation,
+                location: useCustomLocation
+                  ? {
+                      lookup: customAddressLookupID,
+                      address: customLocationFormattedAddress,
+                    }
+                  : userDefinedLocation,
                 distance: distance,
               })
             }}
-            disabled={userDefinedLocation ? false : true}
+            disabled={
+              userDefinedLocation
+                ? false
+                : useCustomLocation
+                ? customAddressLookupID === ''
+                : true
+            }
             style={{
               width: '40%',
             }}

@@ -27,7 +27,7 @@ export default function Onboarding() {
   })
   function login() {
     setLoginProcess(true)
-    fetch(`https://bloodbank.pidgon.com/hq/login`, {
+    fetch(`http://192.168.1.29:3000/hq/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

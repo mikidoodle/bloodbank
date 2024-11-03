@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import QRCode from 'react-native-qrcode-svg'
 import Octicons from '@expo/vector-icons/Octicons'
-
 export default function QR() {
   let [uuid, setUUID] = useState<string | null>('notfound')
   let [refreshing, setRefreshing] = useState<boolean>(false)
@@ -78,7 +77,6 @@ export default function QR() {
             value={'bloodbank-' + (uuid ?? 'notfound')}
             backgroundColor="transparent"
             color={isDarkMode ? 'white' : 'black'}
-            logoSize={50}
             size={325}
           />
         </View>

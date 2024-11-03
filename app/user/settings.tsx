@@ -34,12 +34,19 @@ export default function Settings() {
         alignItems: 'center',
       }}
     >
-      <View>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          width: '80%',
+          marginBottom: 40,
+          marginTop: 20,
+        }}
+      >
         <Text
           style={{
             fontSize: 24,
             textAlign: 'center',
-            margin: 20,
             color: isDarkMode ? 'white' : 'black',
           }}
         >

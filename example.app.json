@@ -2,9 +2,9 @@
     "expo": {
         "name": "JIPMER",
         "slug": "bloodbank",
-        "version": "1.0.7",
+        "version": "1.1.0",
         "orientation": "portrait",
-        "icon": "./assets/images/iosicon.png",
+        "icon": "./assets/images/icon.png",
         "scheme": "bloodbank",
         "userInterfaceStyle": "automatic",
         "splash": {
@@ -13,11 +13,17 @@
             "backgroundColor": "#ffffff"
         },
         "ios": {
-            "icon": "./assets/images/iosicon.png",
+            "icon": "./assets/images/icon.png",
             "supportsTablet": true,
-            "bundleIdentifier": "com.pidgon.jipmer",
+            "bundleIdentifier": "",
             "config": {
                 "usesNonExemptEncryption": false
+            },
+            "infoPlist": {
+                "com.apple.developer.usernotifications.critical-alerts": 1
+            },
+            "entitlements": {
+                "com.apple.developer.usernotifications.critical-alerts": true
             },
             "splash": {
                 "image": "./assets/images/splash.png",
@@ -31,7 +37,7 @@
             }
         },
         "android": {
-            "icon": "./assets/images/androidicon.png",
+            "icon": "./assets/images/icon.png",
             "adaptiveIcon": {
                 "foregroundImage": "./assets/images/adaptive-icon.png",
                 "backgroundColor": "#EFEEF7"
@@ -52,7 +58,7 @@
                     "backgroundColor": "#000000"
                 }
             },
-            "package": "com.pidgon.jipmer",
+            "package": "",
             "googleServicesFile": "./google-services.json",
             "config": {
                 "googleMaps": {
@@ -69,7 +75,7 @@
             [
                 "expo-notifications",
                 {
-                    "icon": "./assets/images/iosicon.png",
+                    "icon": "./assets/images/icon.png",
                     "color": "#ffffff",
                     "defaultChannel": "default"
                 }
