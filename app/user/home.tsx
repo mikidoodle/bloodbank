@@ -193,7 +193,40 @@ export default function Home() {
             }}
           >
             Hello{name.trim() === '' ? '!' : ', '}
-            <Text style={{ color: '#7469B6', fontWeight: 'bold' }}>{name}</Text>
+            <Text style={{ color: '#7469B6', fontWeight: 'bold' }}>
+              {name}
+            </Text>{' '}
+            <Pressable
+              onPress={() => {
+                if (verified) {
+                  Alert.alert(
+                    'Verified user',
+                    'Your details have been verified by the blood center.'
+                  )
+                } else {
+                  Alert.alert(
+                    'Unverified user',
+                    'Your details have not been verified yet. Please allow a few days for verification. Alternatively, you can visit or call the blood center to get verified.'
+                  )
+                }
+              }}
+            >
+              {verified ? (
+                <Octicons
+                  name="verified"
+                  size={24}
+                  color="#7469B6"
+                  style={{ marginLeft: 5 }}
+                />
+              ) : (
+                <Octicons
+                  name="unverified"
+                  size={24}
+                  color="#FF3B2F"
+                  style={{ marginLeft: 5 }}
+                />
+              )}
+            </Pressable>
           </Text>
         </View>
         <View
@@ -251,40 +284,43 @@ export default function Home() {
               subtitle="donating since"
             />
           </View>
-          <View
-            style={{
-              width: '80%',
-              backgroundColor: isDarkMode ? '#242526' : '#fff',
-              borderRadius: 10,
-              justifyContent: 'flex-start',
-              padding: 20,
-              alignItems: 'center',
-              flexDirection: 'column',
-            }}
-          >
-            <Text
+          {verified == false ? (
+            <View
               style={{
-                fontSize: 18,
-                color: isDarkMode ? 'white' : 'black',
+                width: '80%',
+                backgroundColor: isDarkMode ? '#242526' : '#fff',
+                borderRadius: 10,
+                justifyContent: 'flex-start',
+                padding: 20,
+                alignItems: 'center',
+                flexDirection: 'column',
               }}
             >
-              Verification status:{' '}
               <Text
                 style={{
-                  color: verified ? '#26CD41' : '#FF3B2F',
+                  fontSize: 18,
+                  color: isDarkMode ? 'white' : 'black',
+                  marginBottom: 10,
                 }}
               >
-                {verified ? 'Verified' : 'Unverified'}
+                Verification status:{' '}
+                <Text
+                  style={{
+                    color: '#FF3B2F',
+                  }}
+                >
+                  Unverified
+                </Text>
               </Text>
-            </Text>
-            {verified ? null : (
-              <Text style={{ fontSize: 16, color: isDarkMode ? 'white' : 'black' }}>
+              <Text
+                style={{ fontSize: 16, color: isDarkMode ? 'white' : 'black' }}
+              >
                 Your details have not been verified yet. Please allow a few days
                 for verification. Alternatively, you can visit or call the blood
                 center to get verified.
               </Text>
-            )}
-          </View>
+            </View>
+          ) : null}
         </View>
         <Text
           style={{
