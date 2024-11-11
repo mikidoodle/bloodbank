@@ -8,10 +8,11 @@ import {
   View,
 } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Button from '@/components/Button'
 import { Link, router } from 'expo-router'
+import * as SplashScreen from 'expo-splash-screen';
 import Card from '@/components/Card'
 import Octicons from '@expo/vector-icons/Octicons'
 
@@ -22,6 +23,7 @@ export default function HQHome() {
   let [unverifiedDonors, setUnverifiedDonors] = useState<number>(0)
   let [totalDonations, setTotalDonations] = useState<number | null>(null)
   let [token, setToken] = useState<string | null>('')
+  let [appReady, setAppReady] = useState(false)
   useEffect(() => {
     async function getToken() {
       let t = await SecureStore.getItemAsync('token')
@@ -34,7 +36,7 @@ export default function HQHome() {
     if (refresh) setRefreshing(true)
 
     let token = await SecureStore.getItemAsync('token')
-    fetch(`http://localhost:3000/hq/getStats`, {
+    fetch(`https://api.jipmer.pidgon.com/hq/getStats`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -79,10 +81,22 @@ export default function HQHome() {
       })
   }
   useEffect(() => {
-    console.log('loading')
     load(false)
+    setAppReady(true)
   }, [])
+  
   let responsiveColor = useColorScheme() === 'dark' ? 'white' : 'black'
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appReady]);
+
+  if (!appReady) {
+    return null;
+  }
+
   return (
     <SafeAreaView
       style={{
@@ -216,7 +230,9 @@ export default function HQHome() {
                 },
               })
             }
+          
           >
+            <Octicons name="heart" size={22} color="white" />{' '}
             Request Blood
           </Button>
         </View>

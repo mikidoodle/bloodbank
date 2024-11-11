@@ -69,7 +69,7 @@ export default function Modal() {
   let isDarkMode = useColorScheme() === 'dark'
   let responsiveColor = isDarkMode ? 'white' : 'black'
   useEffect(() => {
-    fetch(`http://localhost:3000/hq/requestUserData`, {
+    fetch(`https://api.jipmer.pidgon.com/hq/requestUserData`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -111,7 +111,7 @@ export default function Modal() {
 
   function verifyDonor() {
     setVerifying(true)
-    fetch(`http://localhost:3000/hq/verifyDonor`, {
+    fetch(`https://api.jipmer.pidgon.com/hq/verifyDonor`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ export default function Modal() {
 
   function rejectDonor() {
     setRejecting(true)
-    fetch(`http://localhost:3000/hq/rejectDonor`, {
+    fetch(`https://api.jipmer.pidgon.com/hq/rejectDonor`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

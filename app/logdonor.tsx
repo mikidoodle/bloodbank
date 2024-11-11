@@ -35,7 +35,7 @@ export default function Modal() {
   let [marking, setMarking] = useState<boolean>(false)
   let [loading, setLoading] = useState<boolean>(true)
   useEffect(() => {
-    fetch(`http://localhost:3000/hq/getDonor`, {
+    fetch(`https://api.jipmer.pidgon.com/hq/getDonor`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export default function Modal() {
 
   function markAsDonated() {
     setMarking(true)
-    fetch(`http://localhost:3000/hq/markDonated`, {
+    fetch(`https://api.jipmer.pidgon.com/hq/markDonated`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

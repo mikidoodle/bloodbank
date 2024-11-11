@@ -86,7 +86,7 @@ export default function Query() {
     setResultData([])
     setLoading(true)
     let token = await SecureStore.getItemAsync('token')
-    fetch(`http://localhost:3000/hq/queryDonors`, {
+    fetch(`https://api.jipmer.pidgon.com/hq/queryDonors`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -369,8 +369,10 @@ export default function Query() {
           alignItems: 'center',
           flexDirection: 'column',
           gap: 10,
-          marginTop: 20,
+          marginTop: 100,
           marginBottom: 100,
+          height: '100%',
+          width: '100%',
         }}
       >
         <FlatList
@@ -408,8 +410,10 @@ export default function Query() {
               <View
                 style={{
                   flexDirection: 'row',
-                  justifyContent: 'space-evenly',
-                  width: '100%',
+                  width: '80%',
+                  justifyContent: 'space-between',
+                  alignSelf: 'center',
+                  marginTop: 20,
                 }}
               >
                 <Text
@@ -832,7 +836,8 @@ export default function Query() {
                       color: isDarkMode ? 'white' : 'black',
                       textAlign: 'left',
                       alignSelf: 'flex-start',
-                      marginTop: 20,
+                      margin: 30,
+                      marginBottom: 10,
                     }}
                   >
                     {resultData.length.toLocaleString()} donors found in{' '}

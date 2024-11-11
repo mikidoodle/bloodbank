@@ -82,7 +82,7 @@ export default function Five({
         : '',
       lookupid: route.params.location ? route.params.location.hasOwnProperty('lookup') ? route.params.location.lookup : '' : ''
     }
-    fetch(`http://localhost:3000/signup`, {
+    fetch(`https://api.jipmer.pidgon.com/signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

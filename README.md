@@ -1,6 +1,8 @@
 # Untitled Blood Center Companion App
 Open source blood donation app built for large-scale blood banks to facilitate donor logging, donor certificates, emergency blood donation and the works.
 
+![outline](https://i.imgur.com/DPutcQh.png)
+
 ## Why?
 A hospital/medical institute near me has a massive blood bank. When someone wants to donate blood, they fill out a form and an employee manually enters it into a massive Excel sheet. When they need blood urgently, they have one person painstakingly go through the sheet, filter out donors who haven’t donated in over three months, check if they meet certain other criteria, and individually call them on the phone and ask if they can donate.
 
@@ -29,5 +31,5 @@ First, follow the instructions for iOS setup, but before running `npx expo start
 Finally, set up the backend by following these [instructions](https://github.com/mikidoodle/bloodbankapi)
 
 
-![outline](https://i.imgur.com/8rNSFwg.png)
+
 

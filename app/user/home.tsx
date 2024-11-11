@@ -8,12 +8,14 @@ import {
   View,
 } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Button from '@/components/Button'
 import { Link, router, useLocalSearchParams } from 'expo-router'
 import Card from '@/components/Card'
 import Octicons from '@expo/vector-icons/Octicons'
+import * as SplashScreen from 'expo-splash-screen';
+SplashScreen.preventAutoHideAsync();
 
 export default function Home() {
   let [refreshing, setRefreshing] = useState<boolean>(false)
@@ -24,6 +26,7 @@ export default function Home() {
   let [totalDonators, setTotalDonators] = useState<number | null>(null)
   let [log, setLog] = useState<{ x: string; y: number }[]>([])
   let [donatingSince, setDonatingSince] = useState<string>('')
+  let [appReady, setAppReady] = useState<boolean>(false)  
 
   function humanizeDate(date: string) {
     let d = new Date(date)
@@ -58,7 +61,7 @@ export default function Home() {
   async function load(refresh = false) {
     if (refresh) setRefreshing(true)
     let token = await SecureStore.getItemAsync('token')
-    fetch(`http://localhost:3000/getUserData`, {
+    fetch(`https://api.jipmer.pidgon.com/getUserData`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -122,8 +125,20 @@ export default function Home() {
   useEffect(() => {
     console.log('loading')
     load(false)
+    setAppReady(true)
   }, [])
   let isDarkMode = useColorScheme() === 'dark'
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appReady]);
+
+  if (!appReady) {
+    return null;
+  }
+
   return (
     <SafeAreaView
       style={{
@@ -182,7 +197,7 @@ export default function Home() {
           style={{
             alignContent: 'flex-start',
             width: '80%',
-            justifyContent: 'center',
+            justifyContent: 'center'
           }}
         >
           <Text
@@ -197,35 +212,40 @@ export default function Home() {
               {name}
             </Text>{' '}
             <Pressable
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
               onPress={() => {
-                if (verified) {
+                if (verified === true) {
                   Alert.alert(
-                    'Verified user',
+                    'Verified!',
                     'Your details have been verified by the blood center.'
                   )
                 } else {
                   Alert.alert(
-                    'Unverified user',
+                    'Unverified',
                     'Your details have not been verified yet. Please allow a few days for verification. Alternatively, you can visit or call the blood center to get verified.'
                   )
                 }
               }}
             >
-              {verified ? (
+              {verified === true && name !== '' ? (
                 <Octicons
                   name="verified"
                   size={24}
                   color="#7469B6"
                   style={{ marginLeft: 5 }}
                 />
-              ) : (
+              ) : name !== '' ? (
                 <Octicons
                   name="unverified"
                   size={24}
                   color="#FF3B2F"
                   style={{ marginLeft: 5 }}
                 />
-              )}
+              ) : null}
             </Pressable>
           </Text>
         </View>

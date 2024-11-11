@@ -43,7 +43,7 @@ export default function Index() {
         if (token) {
           setExpoPushToken(token)
           console.log(token)
-          fetch('http://localhost:3000/updateNotifications', {
+          fetch('https://api.jipmer.pidgon.com/updateNotifications', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

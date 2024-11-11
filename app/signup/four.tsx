@@ -118,7 +118,7 @@ export default function Four({
 
   async function geocodeAddress() {
     setIsLocatingCustomAddress(true)
-    fetch(`http://localhost:3000/geocodeAndCalculate`, {
+    fetch(`https://api.jipmer.pidgon.com/geocodeAndCalculate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

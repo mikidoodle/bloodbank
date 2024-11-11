@@ -83,7 +83,7 @@ export default function Modal() {
       return
     } else {
       setDisable(true)
-      fetch('http://localhost:3000/updateLocation', {
+      fetch('https://api.jipmer.pidgon.com/updateLocation', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -179,7 +179,7 @@ export default function Modal() {
 
   async function geocodeAddress() {
     setIsLocatingCustomAddress(true)
-    fetch(`http://localhost:3000/geocodeAndCalculate`, {
+    fetch(`https://api.jipmer.pidgon.com/geocodeAndCalculate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

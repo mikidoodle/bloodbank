@@ -11,6 +11,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import QRCode from 'react-native-qrcode-svg'
 import { router } from 'expo-router'
 import Button from '@/components/Button'
+import * as Application from 'expo-application'
+import Octicons from '@expo/vector-icons/Octicons'
 export default function Settings() {
   let [uuid, setUUID] = useState<string | null>('notfound')
   let [refreshing, setRefreshing] = useState<boolean>(false)
@@ -25,6 +27,11 @@ export default function Settings() {
     console.log('loading')
     load(false)
   }, [])
+  function reportBug() {
+    router.push(
+      'mailto:mihir@pidgon.com?subject=JIPMER%20Blood%20Center%20Bug%20Report'
+    )
+  }
   let isDarkMode = useColorScheme() === 'dark'
   let responsiveColor = useColorScheme() === 'dark' ? '#fff' : '#000'
   return (
@@ -58,6 +65,8 @@ export default function Settings() {
         contentContainerStyle={{
           justifyContent: 'center',
           alignItems: 'center',
+          marginTop: 20,
+          gap: 10,
         }}
         //refresh control
         refreshControl={
@@ -71,19 +80,40 @@ export default function Settings() {
       >
         <Button
           onPress={() => {
-            SecureStore.deleteItemAsync('token')
-            router.replace('/')
-          }}
-        >
-          Log out
-        </Button>
-        <Button
-          onPress={() => {
             router.push('mailto:mihir@pidgon.com')
           }}
         >
-          Get Support
+          <Octicons name="mail" size={20} /> Get Support
         </Button>
+        <Button onPress={reportBug}>
+          <Octicons name="bug" size={20} /> Report a Bug
+        </Button>
+        <Button
+          onPress={() => {
+            SecureStore.deleteItemAsync('token')
+            router.replace('/')
+          }}
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <Octicons name="sign-out" size={20} /> Log out
+        </Button>
+        <View style={{ alignItems: 'center' }}>
+          <Text
+            style={{
+              color: 'gray',
+              marginTop: 20,
+              fontSize: 16,
+              
+            }}
+          >
+            JIPMER Blood Bank HQ {Application.nativeApplicationVersion}{' '}
+            [{Application.nativeBuildVersion}]
+          </Text>
+        </View>
       </ScrollView>
     </SafeAreaView>
   )

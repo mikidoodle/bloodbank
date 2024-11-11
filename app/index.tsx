@@ -38,7 +38,7 @@ export default function Index() {
     }
     console.log(otp)
     setLoginProcess(true)
-    fetch(`http://localhost:3000/sendOTP`, {
+    fetch(`https://api.jipmer.pidgon.com/sendOTP`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -156,7 +156,7 @@ export default function Index() {
               : 'Loading...'
             : newUser
             ? 'Sign up!'
-            : 'Log in'}
+            : 'Continue'}
         </Button>
         {/*<Pressable
                     onPress={() => {
