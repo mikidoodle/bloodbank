@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import { Link, router, useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Octicons from '@expo/vector-icons/Octicons'
 import { Picker } from '@react-native-picker/picker'
 import Button from '@/components/Button'
@@ -37,7 +37,6 @@ export default function Modal() {
     useState<boolean>(false)
 
   useEffect(() => {
-
     SecureStore.getItemAsync('lookup').then((res) => {
       if (res) {
         console.log('Found lookup', res)
@@ -54,7 +53,6 @@ export default function Modal() {
   } | null>(coords.hasOwnProperty('latitude') ? coords : null)
   let [errorMsg, setErrorMsg] = useState<string>('')
   let [disable, setDisable] = useState<boolean>(false)
-  let text = ''
   let [uuid, setUUID] = useState<string | null>(null)
   useEffect(() => {
     async function setToken() {
@@ -64,6 +62,7 @@ export default function Modal() {
     setToken()
   })
   async function updateLocation() {
+    console.log('updating locations')
     let nowDate = new Date()
     //check if user is 18
     let dobDate = new Date(dob)
@@ -83,7 +82,8 @@ export default function Modal() {
       return
     } else {
       setDisable(true)
-      fetch('https://api.jipmer.pidgon.com/updateLocation', {
+      console.log('updating location: conditions met')
+      fetch('http://localhost:3000/donor/update-location', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -91,9 +91,10 @@ export default function Modal() {
         body: JSON.stringify({
           uuid: uuid,
           distance: distance,
-          coords: useCustomLocation ?
-            formattedAddress
-          : userDefinedLocation
+          dob: dob,
+          coords: useCustomLocation
+            ? formattedAddress
+            : userDefinedLocation
             ? `${userDefinedLocation.latitude},${userDefinedLocation.longitude}`
             : '',
           lookupid: geocodeLookupId,
@@ -129,8 +130,8 @@ export default function Modal() {
   }
 
   async function getLocation() {
+    console.log('getting location')
     setErrorMsg('')
-    text = 'Getting location...'
     let { status } = await Location.requestForegroundPermissionsAsync()
     if (status !== 'granted') {
       setErrorMsg('Permission to access location was denied')
@@ -138,20 +139,33 @@ export default function Modal() {
       setUserDefinedLocation(null)
       return
     }
-    let location = await Location.getCurrentPositionAsync({})
-    setUserDefinedLocation({
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    })
-    calcCrow({
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-    })
+    try {
+      let location = await Location.getCurrentPositionAsync() || {
+        coords: {
+          latitude: 11.953852,
+          longitude: 79.797765,
+        },
+      }
+      setUserDefinedLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      })
+      calcCrow({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      })
 
-    console.log(location)
+      console.log(location)
+    } catch (e) {
+      console.log(e)
+      setErrorMsg('An error occurred. Please try again.')
+      setDistance(null)
+      setUserDefinedLocation(null)
+    }
   }
+
   function calcCrow(region: { latitude: number; longitude: number }) {
     let lat = region.latitude
     let lon = region.longitude
@@ -171,7 +185,6 @@ export default function Modal() {
     setDistance(d)
   }
 
-  
   // Converts numeric degrees to radians
   function toRad(v: number) {
     return (v * Math.PI) / 180
@@ -179,7 +192,7 @@ export default function Modal() {
 
   async function geocodeAddress() {
     setIsLocatingCustomAddress(true)
-    fetch(`https://api.jipmer.pidgon.com/geocodeAndCalculate`, {
+    fetch(`http://localhost:3000/donor/geocode-location`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -617,9 +630,7 @@ export default function Modal() {
                   value={useCustomLocation}
                 />
               </View>
-              {distance &&
-              formattedAddress !== '' &&
-              useCustomLocation ? (
+              {distance && formattedAddress !== '' && useCustomLocation ? (
                 <>
                   <Text
                     style={{

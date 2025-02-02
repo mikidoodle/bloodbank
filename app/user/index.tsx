@@ -1,3 +1,4 @@
+import React from 'react'
 import { Alert, Platform, Text, useColorScheme, View } from 'react-native'
 import Octicons from '@expo/vector-icons/Octicons'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -42,8 +43,8 @@ export default function Index() {
       registerForPushNotificationsAsync().then(async (token) => {
         if (token) {
           setExpoPushToken(token)
-          console.log(token)
-          fetch('https://api.jipmer.pidgon.com/updateNotifications', {
+          console.log('notif token', token)
+          fetch('http://localhost:3000/donor/update-notifications', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -140,9 +141,6 @@ export default function Index() {
   return (
     <>
       <Tab.Navigator
-        sceneContainerStyle={{
-          backgroundColor: isDarkMode ? '#030303' : '#efeef7',
-        }}
         screenOptions={{
           headerShown: false,
           tabBarShowLabel: false,
@@ -207,20 +205,8 @@ export default function Index() {
   )
 }
 
-async function schedulePushNotification() {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "You've got mail! 📬",
-      body: 'Here is the notification body',
-      data: { data: 'goes here', test: { test1: 'more data' } },
-    },
-    trigger: { seconds: 2 },
-  })
-}
-
 async function registerForPushNotificationsAsync() {
-  let token
-
+  let token;
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync('default', {
       name: 'default',

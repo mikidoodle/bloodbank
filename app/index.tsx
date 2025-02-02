@@ -14,6 +14,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from '@/assets/styles/styles'
 import Button from '@/components/Button'
 import { Link, router } from 'expo-router'
+import { fetch } from 'expo/fetch';
+import React from 'react'
 export default function Index() {
   let [phoneNumber, setPhoneNumber] = useState<string>('')
   let [password, setPassword] = useState<string>('')
@@ -38,7 +40,7 @@ export default function Index() {
     }
     console.log(otp)
     setLoginProcess(true)
-    fetch(`https://api.jipmer.pidgon.com/sendOTP`, {
+    fetch(`http://localhost:3000/donor/send-otp`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

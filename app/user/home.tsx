@@ -61,7 +61,7 @@ export default function Home() {
   async function load(refresh = false) {
     if (refresh) setRefreshing(true)
     let token = await SecureStore.getItemAsync('token')
-    fetch(`https://api.jipmer.pidgon.com/getUserData`, {
+    fetch(`http://localhost:3000/donor/user-stats`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -36,7 +36,7 @@ export default function Modal() {
       return
     }
     console.log(unitsRequired, minimumMonths)
-    fetch(`https://api.jipmer.pidgon.com/hq/requestBlood`, {
+    fetch(`http://localhost:3000/hq/request-blood`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

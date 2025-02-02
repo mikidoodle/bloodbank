@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   Alert,
   Keyboard,
@@ -118,7 +119,7 @@ export default function Four({
 
   async function geocodeAddress() {
     setIsLocatingCustomAddress(true)
-    fetch(`https://api.jipmer.pidgon.com/geocodeAndCalculate`, {
+    fetch(`http://localhost:3000/donor/geocode-location`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -36,7 +36,7 @@ export default function HQHome() {
     if (refresh) setRefreshing(true)
 
     let token = await SecureStore.getItemAsync('token')
-    fetch(`https://api.jipmer.pidgon.com/hq/getStats`, {
+    fetch(`http://localhost:3000/hq/get-stats`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

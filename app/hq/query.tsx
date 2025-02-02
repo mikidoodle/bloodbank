@@ -86,7 +86,7 @@ export default function Query() {
     setResultData([])
     setLoading(true)
     let token = await SecureStore.getItemAsync('token')
-    fetch(`https://api.jipmer.pidgon.com/hq/queryDonors`, {
+    fetch(`http://localhost:3000/hq/query-donor`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -99,10 +99,10 @@ export default function Query() {
             }
           : {
               token: token,
-              months: minimumMonths,
+              months: minimumMonths == '' ? null : minimumMonths,
               verified: requireUsersVerified,
               affiliated: requireUsersAffiliated,
-              distance: radius,
+              distance: radius == '' ? null : radius,
               bloodtype: bloodtype,
               name: name,
               unverified: false,
@@ -536,6 +536,7 @@ export default function Query() {
                       name={expandSearchBox ? 'chevron-up' : 'chevron-down'}
                       size={28}
                       color="#7469B6"
+
                     />
                   </Pressable>
                 ) : null}
@@ -781,6 +782,7 @@ export default function Query() {
                               fontWeight: 'bold',
                               color: isDarkMode ? 'white' : 'black',
                             }}
+                    
                           >
                             Name/Phone
                           </Text>
@@ -809,6 +811,8 @@ export default function Query() {
                           onChangeText={(val) => (nameInputTemp = val)}
                           onEndEditing={() => setName(nameInputTemp)}
                           defaultValue={name}
+                          autoComplete='off'
+                          autoCorrect={false}
                         />
                       </View>
                     ) : null}

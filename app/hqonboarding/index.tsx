@@ -27,7 +27,7 @@ export default function Onboarding() {
   })
   function login() {
     setLoginProcess(true)
-    fetch(`https://api.jipmer.pidgon.com/hq/login`, {
+    fetch(`http://localhost:3000/hq/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
